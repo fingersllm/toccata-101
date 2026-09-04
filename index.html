@@ -3,43 +3,81 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>Toccata 101</title>
-<meta name="description" content="A collection of cards walking through what the Toccata hardfork changed in Kaspa, and what a single KAS (or a single sompi) can do now.">
+<meta name="description" content="Toccata 101. Table of content.">
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
 <style>
-  body{max-width:720px;margin:2rem auto;padding:0 1rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:#1a1a1a;background:#fbfbf9}
-  h1{font-size:1.9rem;margin-bottom:.3rem} h2{font-size:1rem;margin-top:2.2rem;text-transform:uppercase;letter-spacing:.05em;color:#5a5a5a}
-  .lead{font-size:1.1rem;color:#333} ol{padding-left:1.3rem} li{margin:.35rem 0} .soon{color:#8a8a8a}
-  a{color:#1f5f8b} .foot{margin-top:3rem;padding-top:1rem;border-top:1px solid #e3e3e3;font-size:.9rem;color:#555}
+  :root{
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60;
+    --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+      --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+    --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+  }
+  html{background:var(--bg)}
+  body{max-width:720px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  a{color:var(--link)}
+  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+  h1{font-size:2rem;line-height:1.15;margin:0;color:var(--head);letter-spacing:-.01em}
+  h1::after{content:"";display:block;width:3rem;height:3px;background:var(--accent);margin-top:.5rem}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer;margin-top:.5rem}
+  .theme:hover{color:var(--head);border-color:var(--accent)}
+  .theme{display:inline-flex;align-items:center;gap:.4rem}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .lead{font-size:1.05rem;color:var(--muted);margin:1rem 0 0}
+  h2{font-size:.86rem;margin:2.2rem 0 .5rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  ol{padding-left:1.4rem;margin:0}
+  li{margin:.4rem 0;padding-left:.2rem}
+  li::marker{color:var(--muted);font-size:.9rem}
+  .soon li{color:var(--soon)}
+  .foot{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
 </style>
 </head>
 <body>
-<h1>Toccata 101</h1>
+<div class="top">
+  <h1>Toccata 101</h1>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
 <p class="lead">Table of content</p>
 
-<h2>Part 0 — Start here</h2>
+<h2>Start here</h2>
 <ol start="1">
   <li><a href="card-0.1.html">What Toccata changed for someone who holds KAS</a></li>
 </ol>
 
-<h2>Part 1 — How Kaspa holds and moves money</h2>
+<h2>How Kaspa holds and moves money</h2>
 <ol class="soon">
-  <li>UTXO — a balance is a set of unspent pieces</li>
-  <li>Transaction — inputs, outputs, signatures, fee; all or nothing</li>
-  <li>Fee and mass — why a very small output costs more</li>
-  <li>Addresses and locks — key-locked and script-locked outputs</li>
-  <li>Nodes and miners — who checks, who orders</li>
-  <li>The blockDAG — blocks in parallel, then ordered</li>
-  <li>Time on Kaspa — DAA score versus timestamps</li>
+  <li>UTXO: a balance is a set of unspent pieces</li>
+  <li>Transaction: inputs, outputs, signatures, fee, all or nothing</li>
+  <li>Fee and mass: why a very small output costs more</li>
+  <li>Addresses and locks: key-locked and script-locked outputs</li>
+  <li>Nodes and miners: who checks, who orders</li>
+  <li>The blockDAG: blocks in parallel, then ordered</li>
+  <li>Time on Kaspa: DAA score versus timestamps</li>
 </ol>
 
-<h2>Part 2 — Script: the rules attached to money</h2>
+<h2>Script: the rules attached to money</h2>
 <ol class="soon">
-  <li>Kaspa script — the program every output carries</li>
+  <li>Kaspa script: the program every output carries</li>
   <li>What Toccata added to script</li>
   <li>Hardforks and activation</li>
 </ol>
 
-<h2>Part 3 — Covenants</h2>
+<h2>Covenants</h2>
 <ol class="soon">
   <li>What a covenant is</li>
   <li>Template and state</li>
@@ -50,7 +88,7 @@
   <li>Everyday covenants, by example</li>
 </ol>
 
-<h2>Part 4 — Composability</h2>
+<h2>Composability</h2>
 <ol class="soon">
   <li>One transaction, several covenants</li>
   <li>Composition</li>
@@ -59,7 +97,7 @@
   <li>Inter-covenant communication</li>
 </ol>
 
-<h2>Part 5 — Tokens</h2>
+<h2>Tokens</h2>
 <ol class="soon">
   <li>No native token type</li>
   <li>Why a standard</li>
@@ -69,7 +107,7 @@
   <li>Minting, supply, sealing</li>
 </ol>
 
-<h2>Part 6 — Languages and tools</h2>
+<h2>Languages and tools</h2>
 <ol class="soon">
   <li>Why a language</li>
   <li>SilverScript</li>
@@ -78,7 +116,7 @@
   <li>Audits</li>
 </ol>
 
-<h2>Part 7 — Using covenants</h2>
+<h2>Using covenants</h2>
 <ol class="soon">
   <li>Why a wallet cannot spend a covenant today</li>
   <li>Instruments and descriptors</li>
@@ -88,12 +126,19 @@
   <li>Risks, plainly</li>
 </ol>
 
-<h2>Part 8 — Beyond L1 script</h2>
+<h2>Beyond L1 script</h2>
 <ol class="soon">
   <li>Zero-knowledge on L1 and vProgs</li>
   <li>DAGKNIGHT and what comes next</li>
 </ol>
 
-<p class="foot">Toccata 101 by FingersLLM · released under CC0 1.0 — copy, translate, reuse, no conditions · cards in grey are coming.<br>Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a> and we'll fix it.</p>
+<p class="foot">Toccata 101 cards by FingersLLM · Free to use · Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></p>
+
+<script>
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+</script>
 </body>
 </html>
