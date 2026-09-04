@@ -114,7 +114,7 @@
 </div>
 <div class="note">
   <b>More than a date</b>
-  A savings lock is one covenant. Others: leave coins to someone if you disappear, trade one asset for another with a stranger, a jar anyone can add to but only you can empty, and more. <span class="soon">Card 3.1</span> says what a covenant is, <span class="soon">card 3.7</span> walks through the everyday ones. The links appear here when those cards are up.
+  A savings lock is one example, there are many different options a covenant lock on a UTXO covers. <span class="soon">Card 3.1</span> says what a covenant is, <span class="soon">card 3.7</span> walks through the everyday ones. In reality there is no simple button that locks and unlocks a UTXO under a covenant, the display here is an example only.
 </div>
 
 <h2>Sources</h2>
@@ -127,7 +127,7 @@
 
 <script>
 var mode='idle', locked=false, picked={};
-var FEE=0.0006, NEED=11+FEE;
+var FEE=0.0006, PAY=3, NEED=PAY+FEE;
 var LOCK='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
 var RULE='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>';
 var BASE=[{id:'u10',a:10},{id:'u2',a:2},{id:'u05',a:0.5}];
@@ -149,7 +149,7 @@ function render(){
     });
     cap=locked?'One UTXO under a covenant. The other two are ordinary and spendable, nothing changed for them.':'Three UTXOs, each with its own lock. Every one was created by an earlier transaction.';
     btns='<button class="btn" type="button" onclick="pay()">Pay 3 KAS to a friend</button>'
-        +'<button class="btn alt" type="button" onclick="startPick()">Pay 11 KAS, pick the UTXOs yourself</button>'
+        +'<button class="btn alt" type="button" onclick="startPick()">Pay 3 KAS, pick the UTXOs yourself</button>'
         +'<button class="btn alt" type="button" onclick="lock()">'+(locked?'Remove the savings lock':'Put the 2 KAS UTXO under a savings lock')+'</button>';
   } else if(mode==='paid'){
     list.push({a:10,who:'consumed by your payment',cls:'gone'});
@@ -168,13 +168,12 @@ function render(){
       else list.push({id:b.id,a:b.a,who:picked[b.id]?'picked':'tap to pick',cls:picked[b.id]?'pick sel':'pick'});
     });
     var sum=pickedSum(), enough=sum>=NEED;
-    pl='Picked '+fmt(sum)+' of '+fmt(NEED)+' needed, 11 plus the fee.';
-    var allPicked=BASE.every(function(b){return (b.id==='u2'&&locked)||picked[b.id];});
+    pl='Picked '+fmt(sum)+' of '+fmt(NEED)+' needed, 3 plus the fee.';
     if(enough) cap='Enough. Send when ready.';
-    else if(locked&&allPicked) cap='Only 10.5 KAS is spendable while the 2 KAS is under the covenant. Not enough for 11.';
-    else cap='Pick UTXOs that cover 11 KAS plus the fee. Your wallet does this for you, automatically.';
-    btns='<button class="btn" type="button" onclick="send()"'+(enough?'':' disabled')+'>Send 11 KAS</button>'
-        +'<button class="btn alt" type="button" onclick="reset()">Cancel</button>';
+    else if(sum>0) cap='Not enough yet.';
+    else cap='Pick UTXOs that cover 3 KAS plus the fee. Your wallet does this for you, automatically.';
+    btns='<button class="btn" type="button" onclick="send()"'+(enough?'':' disabled')+'>Send 3 KAS</button>'
+        +'<button class="btn alt" type="button" onclick="reset()">Back</button>';
   } else if(mode==='sent'){
     var n=0, sum=pickedSum();
     BASE.forEach(function(b){
@@ -182,17 +181,20 @@ function render(){
       else if(b.id==='u2'&&locked) list.push({a:2,who:covWho,cls:'cov'});
       else list.push({a:b.a,who:'untouched'});
     });
-    list.push({a:11,who:'new UTXO, locked to your friend\'s key',cls:'new'});
+    list.push({a:PAY,who:'new UTXO, locked to your friend\'s key',cls:'new'});
     var change=r4(sum-NEED);
     if(change>0) list.push({a:change,who:'new UTXO back to you, your change',cls:'new'});
     list.push({a:FEE,who:'fee sent to the miner',cls:'fee'});
     bal=r4(12.5-NEED);
-    cap=n+' UTXOs consumed whole. One new UTXO for your friend'+(change>0?', one back to you as change.':'.')+' Fee sent to the miner.';
+    cap=(n===1?'One UTXO':n+' UTXOs')+' consumed whole. One new UTXO for your friend'+(change>0?', one back to you as change.':'.')+' Fee sent to the miner.';
     btns='<button class="btn alt" type="button" onclick="reset()">Start over</button>';
   }
   document.getElementById('pieces').innerHTML=list.map(box).join('');
   document.getElementById('bal').innerHTML=bal.toString()+'<small>KAS</small>';
-  document.getElementById('sub').textContent=locked?'2 KAS of it under a covenant':'';
+  var comp='';
+  if(mode==='paid') comp='untouched 2.5 + change 6.9994';
+  if(mode==='sent'){var un=r4(12.5-pickedSum()), ch=r4(pickedSum()-NEED); comp=(un>0?'untouched '+un+' + ':'')+'change '+ch;}
+  document.getElementById('sub').textContent=[comp,locked?'2 KAS of it under a covenant':''].filter(Boolean).join(' · ');
   document.getElementById('pickline').textContent=pl;
   document.getElementById('btns').innerHTML=btns;
   document.getElementById('cap').textContent=cap;
