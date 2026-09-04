@@ -73,6 +73,13 @@
   .btn{font:inherit;font-size:.9rem;font-weight:600;background:var(--accent);color:#0F2926;border:0;border-radius:999px;padding:.45rem 1rem;cursor:pointer}
   .btn.alt{background:transparent;color:var(--link);border:1px solid var(--line)}
   .cap{font-size:.9rem;color:var(--muted);margin:.8rem 0 0}
+  .pickline{font-size:.85rem;color:var(--muted);margin:.6rem 0 0;min-height:1.2em}
+  .pc.pick{cursor:pointer}
+  .pc.pick:hover{border-color:var(--accent)}
+  .pc.sel{border-color:var(--accent);border-width:2px;background:var(--tint)}
+  .pc.sel svg{stroke:var(--accent)}
+  .pc.nopick{opacity:.6;cursor:not-allowed}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
   .note{margin:1rem 0 0;padding:.8rem 1rem;border:1px solid var(--line);border-radius:10px;font-size:.93rem}
   .note b{display:block;color:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;margin-bottom:.25rem}
 </style>
@@ -101,10 +108,8 @@
   <div class="sub" id="sub"></div>
   <div class="lbl" style="margin-top:.9rem">The network stores</div>
   <div class="pieces" id="pieces"></div>
-  <div class="btns">
-    <button class="btn" id="go" type="button" onclick="pay()">Pay 3 KAS to a friend</button>
-    <button class="btn alt" id="lk" type="button" onclick="lock()">Put the 2 KAS UTXO under a savings lock</button>
-  </div>
+  <div class="pickline" id="pickline"></div>
+  <div class="btns" id="btns"></div>
   <p class="cap" id="cap"></p>
 </div>
 <div class="note">
@@ -121,39 +126,82 @@
 <p class="series">Part 1, card 1. Next: Transaction: inputs, outputs, signatures, fee, all or nothing<br>Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></p>
 
 <script>
-var paid=false, locked=false;
+var mode='idle', locked=false, picked={};
+var FEE=0.0006, NEED=11+FEE;
 var LOCK='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
 var RULE='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>';
-function fmt(k){return (Math.round(k*1e4)/1e4).toString()+' KAS';}
+var BASE=[{id:'u10',a:10},{id:'u2',a:2},{id:'u05',a:0.5}];
+function r4(x){return Math.round(x*1e4)/1e4;}
+function fmt(k){return r4(k).toString()+' KAS';}
+function pickedSum(){var t=0;BASE.forEach(function(b){if(picked[b.id])t+=b.a;});return r4(t);}
+function box(p){
+  var cls=p.cls||'', ico=cls.indexOf('fee')>=0?'':(cls.indexOf('cov')>=0?RULE:LOCK);
+  var on=p.id?' onclick="tap(\''+p.id+'\')"':'';
+  return '<div class="pc '+cls+'"'+on+'>'+ico+'<div class="amt">'+fmt(p.a)+'</div><div class="who">'+p.who+'</div></div>';
+}
 function render(){
-  var list=[];
-  list.push(paid?{a:10,who:'consumed by your payment',cls:'gone'}:{a:10,who:'locked to your key'});
-  list.push(locked?{a:2,who:'covenant: cannot be spent before the date you set',cls:'cov'}:{a:2,who:paid?'untouched':'locked to your key'});
-  list.push({a:0.5,who:paid?'untouched':'locked to your key'});
-  if(paid){
+  var list=[], bal=12.5, cap='', pl='', btns='';
+  var covWho='covenant: cannot be spent before the date you set';
+  if(mode==='idle'){
+    BASE.forEach(function(b){
+      if(b.id==='u2'&&locked) list.push({a:2,who:covWho,cls:'cov'});
+      else list.push({a:b.a,who:'locked to your key'});
+    });
+    cap=locked?'One UTXO under a covenant. The other two are ordinary and spendable, nothing changed for them.':'Three UTXOs, each with its own lock. Every one was created by an earlier transaction.';
+    btns='<button class="btn" type="button" onclick="pay()">Pay 3 KAS to a friend</button>'
+        +'<button class="btn alt" type="button" onclick="startPick()">Pay 11 KAS, pick the UTXOs yourself</button>'
+        +'<button class="btn alt" type="button" onclick="lock()">'+(locked?'Remove the savings lock':'Put the 2 KAS UTXO under a savings lock')+'</button>';
+  } else if(mode==='paid'){
+    list.push({a:10,who:'consumed by your payment',cls:'gone'});
+    list.push(locked?{a:2,who:covWho,cls:'cov'}:{a:2,who:'untouched'});
+    list.push({a:0.5,who:'untouched'});
     list.push({a:3,who:'new UTXO, locked to your friend\'s key',cls:'new'});
     list.push({a:6.9994,who:'new UTXO back to you, your change',cls:'new'});
-    list.push({a:0.0006,who:'fee, example number',cls:'fee'});
+    list.push({a:FEE,who:'fee sent to the miner',cls:'fee'});
+    bal=9.4994;
+    cap=locked?'The payment came out of the 10 UTXO. The covenant 2 UTXO sat untouched next to it, and so did the 0.5.':'The 10 UTXO was consumed whole. Two new UTXOs exist now, and the 2 and 0.5 were never touched. Fee sent to the miner.';
+    btns='<button class="btn alt" type="button" onclick="reset()">Start over</button>'
+        +'<button class="btn alt" type="button" onclick="lock()">'+(locked?'Remove the savings lock':'Put the 2 KAS UTXO under a savings lock')+'</button>';
+  } else if(mode==='pick'){
+    BASE.forEach(function(b){
+      if(b.id==='u2'&&locked) list.push({a:2,who:'covenant, cannot be picked',cls:'cov nopick'});
+      else list.push({id:b.id,a:b.a,who:picked[b.id]?'picked':'tap to pick',cls:picked[b.id]?'pick sel':'pick'});
+    });
+    var sum=pickedSum(), enough=sum>=NEED;
+    pl='Picked '+fmt(sum)+' of '+fmt(NEED)+' needed, 11 plus the fee.';
+    var allPicked=BASE.every(function(b){return (b.id==='u2'&&locked)||picked[b.id];});
+    if(enough) cap='Enough. Send when ready.';
+    else if(locked&&allPicked) cap='Only 10.5 KAS is spendable while the 2 KAS is under the covenant. Not enough for 11.';
+    else cap='Pick UTXOs that cover 11 KAS plus the fee. Your wallet does this for you, automatically.';
+    btns='<button class="btn" type="button" onclick="send()"'+(enough?'':' disabled')+'>Send 11 KAS</button>'
+        +'<button class="btn alt" type="button" onclick="reset()">Cancel</button>';
+  } else if(mode==='sent'){
+    var n=0, sum=pickedSum();
+    BASE.forEach(function(b){
+      if(picked[b.id]){n++;list.push({a:b.a,who:'consumed by your payment',cls:'gone'});}
+      else if(b.id==='u2'&&locked) list.push({a:2,who:covWho,cls:'cov'});
+      else list.push({a:b.a,who:'untouched'});
+    });
+    list.push({a:11,who:'new UTXO, locked to your friend\'s key',cls:'new'});
+    var change=r4(sum-NEED);
+    if(change>0) list.push({a:change,who:'new UTXO back to you, your change',cls:'new'});
+    list.push({a:FEE,who:'fee sent to the miner',cls:'fee'});
+    bal=r4(12.5-NEED);
+    cap=n+' UTXOs consumed whole. One new UTXO for your friend'+(change>0?', one back to you as change.':'.')+' Fee sent to the miner.';
+    btns='<button class="btn alt" type="button" onclick="reset()">Start over</button>';
   }
-  var h='';
-  list.forEach(function(p){
-    var ico=p.cls==='fee'?'':(p.cls==='cov'?RULE:LOCK);
-    h+='<div class="pc '+(p.cls||'')+'">'+ico+'<div class="amt">'+fmt(p.a)+'</div><div class="who">'+p.who+'</div></div>';
-  });
-  document.getElementById('pieces').innerHTML=h;
-  var bal=paid?9.4994:12.5;
+  document.getElementById('pieces').innerHTML=list.map(box).join('');
   document.getElementById('bal').innerHTML=bal.toString()+'<small>KAS</small>';
   document.getElementById('sub').textContent=locked?'2 KAS of it under a covenant':'';
-  var g=document.getElementById('go'); g.textContent=paid?'Start over':'Pay 3 KAS to a friend'; g.className=paid?'btn alt':'btn';
-  var l=document.getElementById('lk'); l.textContent=locked?'Remove the savings lock':'Put the 2 KAS UTXO under a savings lock';
-  var cap;
-  if(paid&&locked) cap='The payment came out of the 10 UTXO. The covenant UTXO sat untouched next to it, and so did the 0.5.';
-  else if(paid) cap='The 10 UTXO was consumed whole. Two new UTXOs exist now, and the 2 and 0.5 were never touched. The fee is an example, card 1.3 has the real formula.';
-  else if(locked) cap='One UTXO under a covenant. The other two are ordinary and spendable, nothing changed for them.';
-  else cap='Three UTXOs, each with its own lock. Every one was created by an earlier transaction.';
+  document.getElementById('pickline').textContent=pl;
+  document.getElementById('btns').innerHTML=btns;
   document.getElementById('cap').textContent=cap;
 }
-function pay(){paid=!paid;render();}
+function pay(){mode='paid';render();}
+function startPick(){mode='pick';picked={};render();}
+function tap(id){if(mode!=='pick')return;picked[id]=!picked[id];render();}
+function send(){if(pickedSum()>=NEED){mode='sent';render();}}
+function reset(){mode='idle';picked={};render();}
 function lock(){locked=!locked;render();}
 render();
 function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
