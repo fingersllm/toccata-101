@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>UTXO: your balance is a set of pieces, not a number · Toccata 101</title>
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  :root{
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60;
+    --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+      --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+    --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+  }
+  html{background:var(--bg)}
+  body{max-width:720px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  a{color:var(--link)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem}
+  .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
+  .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+  .theme:hover{color:var(--head);border-color:var(--accent)}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
+  .terms{margin:0 0 1.6rem;padding:.6rem 1.1rem .7rem;border-left:4px solid var(--line);font-size:.93rem;color:var(--muted)}
+  .terms div{margin:.2rem 0}
+  .terms b{color:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;margin-right:.5rem}
+  p{margin:0 0 1rem}
+  strong{color:var(--head)}
+  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem}
+  .series{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
+  .soon{color:var(--soon)}
+  /* widget */
+  .w{background:var(--surface);border-radius:12px;padding:1rem 1.1rem 1.1rem;margin-top:.2rem}
+  .lbl{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .bal{font-size:1.9rem;font-weight:700;color:var(--head);line-height:1.1}
+  .bal small{font-size:.95rem;font-weight:600;color:var(--muted);margin-left:.3rem}
+  .sub{font-size:.85rem;color:var(--muted);min-height:1.3em}
+  .pieces{display:flex;gap:.7rem;flex-wrap:wrap;margin:.5rem 0 0}
+  .pc{position:relative;flex:1 1 150px;min-width:150px;background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:.6rem 2.2rem .7rem .8rem;transition:opacity .5s,transform .5s,border-color .4s,background .4s}
+  .pc .amt{font-weight:700;color:var(--head);font-size:1.05rem}
+  .pc .who{font-size:.8rem;color:var(--muted);margin-top:.15rem;line-height:1.35}
+  .pc svg{position:absolute;top:.6rem;right:.65rem;width:16px;height:16px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .pc.new{border-color:var(--accent);background:var(--tint)}
+  .pc.new svg{stroke:var(--accent)}
+  .pc.cov{border-color:var(--accent);border-width:2px}
+  .pc.cov svg{stroke:var(--accent)}
+  .pc.cov .amt{color:var(--link)}
+  .pc.gone{opacity:.38;transform:scale(.97)}
+  .pc.gone .amt{text-decoration:line-through}
+  .pc.fee{flex:0 0 auto;min-width:0;border-style:dashed;padding-right:.8rem}
+  .btns{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+  .btn{font:inherit;font-size:.9rem;font-weight:600;background:var(--accent);color:#0F2926;border:0;border-radius:999px;padding:.45rem 1rem;cursor:pointer}
+  .btn.alt{background:transparent;color:var(--link);border:1px solid var(--line)}
+  .cap{font-size:.9rem;color:var(--muted);margin:.8rem 0 0}
+  .note{margin:1rem 0 0;padding:.8rem 1rem;border:1px solid var(--line);border-radius:10px;font-size:.93rem}
+  .note b{display:block;color:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;margin-bottom:.25rem}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="kicker"><a href="index.html">Toccata 101</a> · Part 1 · card 1</p>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
+<h1>UTXO: your balance is a set of pieces, not a number</h1>
+
+<p class="one">Kaspa does not keep your balance as a number. It keeps pieces, each with its own amount and its own lock. Your balance is their sum.</p>
+<div class="terms">
+  <div><b>pieces</b>UTXOs.</div>
+  <div><b>lock</b>the output's script public key, a small program attached to the UTXO that determines what a spending transaction must show, for a normal wallet its the signature of a key.</div>
+</div>
+
+<p>A Kaspa transaction creates outputs: pieces of KAS, each with an amount and a lock. A piece that no later transaction has spent is an <strong>unspent transaction output</strong>, a UTXO. This is what the network stores, not balances, UTXOs. The amounts a wallet sums are counted in sompi: 1 KAS is 100,000,000 sompi.</p>
+
+<p>When you pay, the transaction consumes whole pieces and creates new ones: one for the receiver, and one back to you with what is left after the fee, that's your change. Your wallet shows one number because it adds up every piece your keys can unlock. A covenant is a lock on one piece. The other pieces in the same wallet stay ordinary, or live in their own covenants.</p>
+
+<h2>One balance, three UTXOs</h2>
+<div class="w">
+  <div class="lbl">Your wallet shows</div>
+  <div class="bal" id="bal">12.5<small>KAS</small></div>
+  <div class="sub" id="sub"></div>
+  <div class="lbl" style="margin-top:.9rem">The network stores</div>
+  <div class="pieces" id="pieces"></div>
+  <div class="btns">
+    <button class="btn" id="go" type="button" onclick="pay()">Pay 3 KAS to a friend</button>
+    <button class="btn alt" id="lk" type="button" onclick="lock()">Put the 2 KAS UTXO under a savings lock</button>
+  </div>
+  <p class="cap" id="cap"></p>
+</div>
+<div class="note">
+  <b>More than a date</b>
+  A savings lock is one covenant. Others: leave coins to someone if you disappear, trade one asset for another with a stranger, a jar anyone can add to but only you can empty, and more. <span class="soon">Card 3.1</span> says what a covenant is, <span class="soon">card 3.7</span> walks through the everyday ones. The links appear here when those cards are up.
+</div>
+
+<h2>Sources</h2>
+<p class="src">In rusty-kaspa, an unspent output is a <code>UtxoEntry</code>: an amount in sompi, a script public key (the lock), the DAA score of the block that created it, and whether it came from mining (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/utxo/utxo_entry.rs">consensus/core/src/utxo/utxo_entry.rs</a>). A transaction output carries a value and a script public key (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/tx.rs">consensus/core/src/tx.rs</a>). <code>SOMPI_PER_KASPA = 100,000,000</code> (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/constants.rs">consensus/core/src/constants.rs</a>). Read at release v2.0.1.</p>
+
+<h2>Look at it on chain</h2>
+<p>Open an address in the Kaspa explorer and look at its UTXO list: <a href="#">&lt;address, chosen at publication&gt;</a>. You see pieces, each with an amount and the transaction that created it, not one number.</p>
+
+<p class="series">Part 1, card 1. Next: Transaction: inputs, outputs, signatures, fee, all or nothing<br>Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></p>
+
+<script>
+var paid=false, locked=false;
+var LOCK='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+var RULE='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>';
+function fmt(k){return (Math.round(k*1e4)/1e4).toString()+' KAS';}
+function render(){
+  var list=[];
+  list.push(paid?{a:10,who:'consumed by your payment',cls:'gone'}:{a:10,who:'locked to your key'});
+  list.push(locked?{a:2,who:'covenant: cannot be spent before the date you set',cls:'cov'}:{a:2,who:paid?'untouched':'locked to your key'});
+  list.push({a:0.5,who:paid?'untouched':'locked to your key'});
+  if(paid){
+    list.push({a:3,who:'new UTXO, locked to your friend\'s key',cls:'new'});
+    list.push({a:6.9994,who:'new UTXO back to you, your change',cls:'new'});
+    list.push({a:0.0006,who:'fee, example number',cls:'fee'});
+  }
+  var h='';
+  list.forEach(function(p){
+    var ico=p.cls==='fee'?'':(p.cls==='cov'?RULE:LOCK);
+    h+='<div class="pc '+(p.cls||'')+'">'+ico+'<div class="amt">'+fmt(p.a)+'</div><div class="who">'+p.who+'</div></div>';
+  });
+  document.getElementById('pieces').innerHTML=h;
+  var bal=paid?9.4994:12.5;
+  document.getElementById('bal').innerHTML=bal.toString()+'<small>KAS</small>';
+  document.getElementById('sub').textContent=locked?'2 KAS of it under a covenant':'';
+  var g=document.getElementById('go'); g.textContent=paid?'Start over':'Pay 3 KAS to a friend'; g.className=paid?'btn alt':'btn';
+  var l=document.getElementById('lk'); l.textContent=locked?'Remove the savings lock':'Put the 2 KAS UTXO under a savings lock';
+  var cap;
+  if(paid&&locked) cap='The payment came out of the 10 UTXO. The covenant UTXO sat untouched next to it, and so did the 0.5.';
+  else if(paid) cap='The 10 UTXO was consumed whole. Two new UTXOs exist now, and the 2 and 0.5 were never touched. The fee is an example, card 1.3 has the real formula.';
+  else if(locked) cap='One UTXO under a covenant. The other two are ordinary and spendable, nothing changed for them.';
+  else cap='Three UTXOs, each with its own lock. Every one was created by an earlier transaction.';
+  document.getElementById('cap').textContent=cap;
+}
+function pay(){paid=!paid;render();}
+function lock(){locked=!locked;render();}
+render();
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+</script>
+</body>
+</html>
