@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Transaction: inputs, outputs, signatures, fee, all or nothing · Toccata 101</title>
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  :root{
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60;
+    --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+      --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+    --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+  }
+  html{background:var(--bg)}
+  body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  a{color:var(--link)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem}
+  .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
+  .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+  .theme:hover{color:var(--head);border-color:var(--accent)}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h1.c{text-align:center;font-size:2rem;letter-spacing:.02em;margin:1.4rem 0 .2rem}
+  .subt{text-align:center;color:var(--muted);font-size:1rem;margin:0 0 1.4rem;white-space:nowrap}
+  @media (max-width:560px){.subt{white-space:normal;font-size:.95rem}}
+  h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0 0 1.4rem;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
+  .terms{margin:0 0 1.4rem;padding:.6rem 1.1rem .7rem;border-left:4px solid var(--accent);background:var(--surface);border-radius:0 8px 8px 0;font-size:.93rem;color:var(--text)}
+  .terms div{margin:.25rem 0}
+  .terms b{color:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;margin-right:.5rem;white-space:nowrap}
+  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem}
+  .series{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
+  code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  /* the transaction */
+  .tx{background:var(--surface);border-radius:14px;padding:1rem 1.1rem 1.1rem}
+  .txh{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.4rem 1rem;margin-bottom:.9rem}
+  .txh .lbl{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .txh .id{font:.8rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted);word-break:break-all}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+  @media (max-width:560px){.cols{grid-template-columns:1fr}}
+  .col h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 .5rem;font-weight:600}
+  .col h3 span{color:var(--head)}
+  .box{position:relative;background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:.65rem .8rem .7rem 2.2rem;margin:0 0 .6rem;transition:border-color .2s,background .2s}
+  .box .amt{font-weight:700;color:var(--head);font-size:1.05rem;line-height:1.25}
+  .box .amt small{font-weight:600;color:var(--muted);font-size:.8rem;margin-left:.25rem}
+  .box .meta{font-size:.8rem;color:var(--muted);margin-top:.15rem;line-height:1.4}
+  .box .meta code{font-size:.78rem}
+  .sig{display:inline-flex;align-items:center;gap:.3rem;margin-top:.4rem;font-size:.78rem;color:var(--link);border:1px solid var(--line);border-radius:999px;padding:.1rem .55rem .1rem .45rem;background:var(--surface);position:relative;transition:border-color .2s,background .2s}
+  .sig svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .m{position:absolute;left:.55rem;top:.6rem;width:1.15rem;height:1.15rem;border-radius:50%;background:var(--accent);color:#0F2926;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
+  .sig .m{position:static;width:1rem;height:1rem;font-size:.66rem;margin-right:.1rem}
+  .box.out{border-color:var(--line)}
+  .box .tag{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:.35rem}
+  .sums{display:flex;align-items:flex-start;justify-content:center;gap:1.1rem;margin:.6rem 0 0;padding:.9rem 2.2rem .8rem;background:var(--bg);border:1.5px solid var(--line);border-radius:10px;position:relative;transition:border-color .2s,background .2s}
+  .sums .cell{text-align:center}
+  .sums .cell b{display:block;color:var(--head);font-size:1.15rem;font-weight:700;line-height:1.2}
+  .sums .cell span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:.2rem}
+  .sums .op{font-size:1.35rem;font-weight:700;color:var(--head);line-height:1.2;padding-top:.05rem}
+  .sums .fee b{color:var(--link)}
+  @media (max-width:560px){.sums{flex-direction:column;align-items:center;gap:.3rem}.sums .op{padding:0}}
+  .check{position:relative;margin:.6rem 0 0;padding:.7rem .9rem .7rem 2.2rem;border:1.5px solid var(--accent);border-radius:10px;background:var(--tint);font-size:.88rem;line-height:1.5;transition:border-color .2s,background .2s}
+  .check b{color:var(--head)}
+  .check .ok{color:var(--link);font-weight:600}
+  .check .no{color:var(--refused);font-weight:600}
+  .cap{font-size:.85rem;color:var(--muted);margin:.7rem 0 0}
+  /* legend */
+  .legend{list-style:none;padding:0;margin:1.2rem 0 0}
+  .legend li{position:relative;padding:.45rem 0 .45rem 2.2rem;border-radius:8px;transition:background .2s}
+  .legend li .m{top:.6rem;left:.55rem}
+  .legend b{color:var(--head)}
+  /* highlight, both directions */
+  .tx[data-hl="1"] [data-m="1"],.tx[data-hl="2"] [data-m="2"],.tx[data-hl="3"] [data-m="3"],.tx[data-hl="4"] [data-m="4"],.tx[data-hl="5"] [data-m="5"],.tx[data-hl="6"] [data-m="6"]{border-color:var(--accent);background:var(--tint)}
+  .legend[data-hl="1"] li[data-m="1"],.legend[data-hl="2"] li[data-m="2"],.legend[data-hl="3"] li[data-m="3"],.legend[data-hl="4"] li[data-m="4"],.legend[data-hl="5"] li[data-m="5"],.legend[data-hl="6"] li[data-m="6"]{background:var(--surface)}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="kicker"><a href="index.html">Toccata 101</a> · Part 1 · card 2</p>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
+<h1 class="c">Transaction</h1>
+<p class="subt">inputs, outputs, signatures, fee, all or nothing</p>
+
+<div class="tx" id="tx"></div>
+
+<ol class="legend" id="legend">
+  <li data-m="1"><span class="m">1</span><b>Input.</b> An existing UTXO from a past transaction, ready to be used.</li>
+  <li data-m="2"><span class="m">2</span><b>Signature.</b> A proof, made with the spender's private key (seed), that authorizes using this UTXO.</li>
+  <li data-m="3"><span class="m">3</span><b>Output.</b> The brand-new UTXO(s) created from the combined inputs, representing the payment to the receiver, and any change back to the sender.</li>
+  <li data-m="4"><span class="m">4</span><b>Change.</b> An output that comes back to the sender's own address: what's left from the inputs after the payment and the fee.</li>
+  <li data-m="5"><span class="m">5</span><b>Fee.</b> Input minus output, goes to the miner who placed the transaction inside a block in the network.</li>
+  <li data-m="6"><span class="m">6</span><b>Node verification.</b> Every node independently verifies that every input UTXO is authentic and unspent, then updates the global ledger: those inputs are "destroyed" and the new outputs are created.</li>
+</ol>
+
+<h2>Sources</h2>
+<p class="src">In rusty-kaspa a transaction is a version, a list of inputs, a list of outputs, a lock time and a few more fields. An input is a previous outpoint (transaction id and index), a signature script and a sequence. An output is a value and a script public key (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/tx.rs">consensus/core/src/tx.rs</a>). A node checks a transaction on its own (input and output counts, no duplicate inputs, value ranges: <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_isolation.rs">tx_validation_in_isolation.rs</a>) and against the UTXO set (every input must exist and be unspent, total out may not exceed total in, fee = in minus out, the script of every input is run: <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs">tx_validation_in_utxo_context.rs</a>). Read at release v2.0.1. The transaction shown was read from the public Kaspa API on 4 September 2026 and is linked in its header.</p>
+
+<p class="series">Part 1, card 2. Next: Fee and mass: why a very small output costs more<br>Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></p>
+
+<script>
+var TX={id:'84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f',when:'28 August 2026, 06:42 UTC',
+  link:'https://kaspa.stream/transactions/84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f',
+  ins:[{amt:2,from:'c8dc0b2f…f35fea64 : 0'},{amt:2.978014,from:'c8dc0b2f…f35fea64 : 1'},{amt:54.485802,from:'0edc2a2a…00c40aa7 : 1'},{amt:17159.67,from:'0cf350dd…d082d956 : 0'}],
+  outs:[{amt:6678,to:'kaspa:qq9mgv3m…dlqhxps',kind:'payment'},{amt:10541.128426,to:'kaspa:qqr0pymt…99hzdyd, the sender',kind:'change'}]};
+var CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+function kas(x){return x.toLocaleString('en-US',{maximumFractionDigits:8});}
+function show(){
+  var d=TX, tin=0, tout=0;
+  d.ins.forEach(function(i){tin+=i.amt}); d.outs.forEach(function(o){tout+=o.amt});
+  tin=Math.round(tin*1e8)/1e8; tout=Math.round(tout*1e8)/1e8; var fee=Math.round((tin-tout)*1e8)/1e8;
+  var h='<div class="txh"><span class="lbl">Transaction</span><span class="id"><a href="'+d.link+'">'+d.id.slice(0,16)+'…'+d.id.slice(-8)+'</a> · mainnet · '+d.when+'</span></div>';
+  h+='<div class="cols"><div class="col"><h3>Inputs <span>'+d.ins.length+'</span></h3>';
+  d.ins.forEach(function(i){
+    h+='<div class="box" data-m="1"><span class="m">1</span><div class="amt">'+kas(i.amt)+'<small>KAS</small></div><div class="meta">UTXO from <code>'+i.from+'</code></div><span class="sig" data-m="2"><span class="m">2</span>'+CHECK+'signature</span></div>';
+  });
+  h+='</div><div class="col"><h3>Outputs <span>'+d.outs.length+'</span></h3>';
+  d.outs.forEach(function(o){
+    var m=o.kind==='change'?'4':'3';
+    h+='<div class="box out" data-m="'+m+'"><span class="m">'+m+'</span><div class="amt">'+kas(o.amt)+'<small>KAS</small></div><div class="meta">locked to <code>'+o.to+'</code></div><div class="tag">'+(o.kind==='change'?'change':'payment')+'</div></div>';
+  });
+  h+='</div></div>';
+  h+='<div class="sums" data-m="5"><span class="m">5</span><div class="cell"><b>'+kas(tin)+'</b><span>in</span></div><div class="op">&minus;</div><div class="cell"><b>'+kas(tout)+'</b><span>out</span></div><div class="op">=</div><div class="cell fee"><b>'+kas(fee)+' KAS</b><span>fee, to the miner</span></div></div>';
+  h+='<div class="check" data-m="6"><span class="m">6</span><b>Node verifications:</b> inputs exist and are unspent <span class="ok">✓</span> · every script satisfied <span class="ok">✓</span> · no more outs than in <span class="ok">✓</span><br><b>Accepted, whole.</b></div>';
+  document.getElementById('tx').innerHTML=h;
+  wire();
+}
+function wire(){
+  var tx=document.getElementById('tx'), lg=document.getElementById('legend');
+  function set(m){tx.setAttribute('data-hl',m||'');lg.setAttribute('data-hl',m||'');}
+  document.querySelectorAll('[data-m]').forEach(function(el){
+    el.onmouseenter=function(e){e.stopPropagation();set(el.getAttribute('data-m'));};
+    el.onmouseleave=function(){set('');};
+  });
+}
+show();
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+</script>
+</body>
+</html>
