@@ -44,7 +44,14 @@
   li{margin:.4rem 0;padding-left:.2rem}
   li::marker{color:var(--muted);font-size:.9rem}
   li.soon{color:var(--soon)}
-  .foot{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
+  .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
+  .foot .nav,.foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+  .foot .meta{margin-top:.55rem}
+  .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
+  .foot .prev::before{content:"\2190\00a0"}
+  .foot .by{font-weight:600;letter-spacing:.03em;font-size:.85rem;color:var(--head)}
+  .foot .soon{color:var(--soon)}
 </style>
 </head>
 <body>
@@ -132,7 +139,7 @@
   <li class="soon">DAGKNIGHT and what comes next</li>
 </ol>
 
-<p class="foot">Toccata 101 cards by FingersLLM · Free to use · Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></p>
+<footer class="foot"><div class="meta"><span>Free to use · Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">by FingersLLM</span></div></footer>
 
 <script>
 function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}

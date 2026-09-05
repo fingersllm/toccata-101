@@ -48,7 +48,18 @@
   p{margin:0 0 1rem}
   strong{color:var(--head)}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem}
-  .series{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
+  .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
+  .foot .nav,.foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+  .foot .meta{margin-top:.55rem}
+  .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
+  .foot .prev::before{content:"\2190\00a0"}
+  .foot .by{font-weight:600;letter-spacing:.03em;font-size:.85rem;color:var(--head)}
+  .foot .soon{color:var(--soon)}
+  .sources{margin-top:1.6rem;padding-top:.9rem;border-top:1px dashed var(--line)}
+  .sources h2{margin:0 0 .5rem}
+  .sources .src{font-size:.84rem;line-height:1.55;color:var(--muted);background:transparent;border-left:3px solid var(--line);border-radius:0;padding:.15rem 0 .15rem .9rem}
+  .sources .src a{color:var(--link)}
   .soon{color:var(--soon)}
   /* widget */
   .w{background:var(--surface);border-radius:12px;padding:1rem 1.1rem 1.1rem;margin-top:.2rem}
@@ -117,13 +128,17 @@
   A savings lock is one example, there are many different options a covenant lock on a UTXO covers. <span class="soon">Card 3.1</span> says what a covenant is, <span class="soon">card 3.7</span> walks through the everyday ones. In reality there is no simple button that locks and unlocks a UTXO under a covenant, the display here is an example only.
 </div>
 
-<h2>Sources</h2>
-<p class="src">In rusty-kaspa, an unspent output is a <code>UtxoEntry</code>: an amount in sompi, a script public key (the lock), the DAA score of the block that created it, and whether it came from mining (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/utxo/utxo_entry.rs">consensus/core/src/utxo/utxo_entry.rs</a>). A transaction output carries a value and a script public key (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/tx.rs">consensus/core/src/tx.rs</a>). <code>SOMPI_PER_KASPA = 100,000,000</code> (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/constants.rs">consensus/core/src/constants.rs</a>). Read at release v2.0.1.</p>
-
 <h2>Look at it on chain</h2>
 <p>Open an address in the Kaspa explorer and look at its UTXO list: <a href="#">&lt;address, chosen at publication&gt;</a>. You see pieces, each with an amount and the transaction that created it, not one number.</p>
 
-<p class="series">Part 1, card 1. Next: <a href="card-1.2.html">Transaction: inputs, outputs, signatures, fee, all or nothing</a><br>Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></p>
+<footer class="foot">
+  <div class="nav"><a class="prev" href="card-0.1.html">Last card</a><span>Next: <a href="card-1.2.html">Transaction: inputs, outputs, signatures, fee, all or nothing</a></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">By FingersLLM</span></div>
+</footer>
+<section class="sources">
+<h2>Sources</h2>
+<p class="src">In rusty-kaspa, an unspent output is a <code>UtxoEntry</code>: an amount in sompi, a script public key (the lock), the DAA score of the block that created it, and whether it came from mining (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/utxo/utxo_entry.rs">consensus/core/src/utxo/utxo_entry.rs</a>). A transaction output carries a value and a script public key (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/tx.rs">consensus/core/src/tx.rs</a>). <code>SOMPI_PER_KASPA = 100,000,000</code> (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/constants.rs">consensus/core/src/constants.rs</a>). Read at release v2.0.1.</p>
+</section>
 
 <script>
 var mode='idle', locked=false, picked={};
