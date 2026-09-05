@@ -53,17 +53,13 @@
   th{color:var(--muted);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;background:var(--surface)}
   td:first-child{width:38%;color:var(--head);font-weight:600}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
-  .foot .nav,.foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+  .foot .nav{display:block}
+  .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
   .foot .meta{margin-top:.55rem}
   .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
-  .foot .prev::before{content:"\2190\00a0"}
-  .foot .by{font-weight:600;letter-spacing:.03em;font-size:.85rem;color:var(--head)}
+  .foot .by{color:var(--muted)}
   .foot .soon{color:var(--soon)}
-  .sources{margin-top:1.6rem;padding-top:.9rem;border-top:1px dashed var(--line)}
-  .sources h2{margin:0 0 .5rem}
-  .sources .src{font-size:.84rem;line-height:1.55;color:var(--muted);background:transparent;border-left:3px solid var(--line);border-radius:0;padding:.15rem 0 .15rem .9rem}
-  .sources .src a{color:var(--link)}
   svg text{font:13px system-ui,"Segoe UI",Roboto,sans-serif;fill:var(--text)}
   svg .label{font-weight:600;fill:var(--head)}
   svg .box{fill:var(--bg);stroke:var(--line);stroke-width:1.5}
@@ -140,14 +136,13 @@
 <h2>Look at it on chain</h2>
 <p>Open this transaction in an explorer: <a href="#">&lt;txid, chosen at publication&gt;</a>. The input is not an ordinary address, and the explorer shows the program that ran.</p>
 
-<footer class="foot">
-  <div class="nav"><span></span><span>Next: <a href="card-1.1.html">UTXO - not a number: your balance is a set of pieces</a></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">By FingersLLM</span></div>
-</footer>
-<section class="sources">
 <h2>Sources</h2>
 <p class="src">Toccata is the hardfork that activated general covenants on Kaspa mainnet: KIP-17 (full transaction introspection, byte-string operations, signature checks over arbitrary data, the ZK opcode), KIP-20 (covenant identifiers), KIP-21 (partitioned sequencing commitments) and KIP-16 (zero-knowledge proof verification). The first, narrow introspection opcodes, KIP-10, were already live since Crescendo (May 2025). Toccata activated at a fixed DAA score on 30 June 2026. Node release v2.0.0 (5 June 2026) was the activation release. The KIP texts are at <a href="https://github.com/kaspanet/kips">github.com/kaspanet/kips</a>.</p>
-</section>
+
+<footer class="foot">
+  <div class="nav"><span>Next: <a href="card-1.1.html">UTXO - not a number: your balance is a set of pieces</a></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">By FingersLLM</span></div>
+</footer>
 
 <script>
 function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}

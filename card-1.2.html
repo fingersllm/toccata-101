@@ -50,17 +50,13 @@
   .terms b{color:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;margin-right:.5rem;white-space:nowrap}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
-  .foot .nav,.foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+  .foot .nav{display:block}
+  .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
   .foot .meta{margin-top:.55rem}
   .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
-  .foot .prev::before{content:"\2190\00a0"}
-  .foot .by{font-weight:600;letter-spacing:.03em;font-size:.85rem;color:var(--head)}
+  .foot .by{color:var(--muted)}
   .foot .soon{color:var(--soon)}
-  .sources{margin-top:1.6rem;padding-top:.9rem;border-top:1px dashed var(--line)}
-  .sources h2{margin:0 0 .5rem}
-  .sources .src{font-size:.84rem;line-height:1.55;color:var(--muted);background:transparent;border-left:3px solid var(--line);border-radius:0;padding:.15rem 0 .15rem .9rem}
-  .sources .src a{color:var(--link)}
   code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   /* the transaction */
   .tx{background:var(--surface);border-radius:14px;padding:1rem 1.1rem 1.1rem}
@@ -123,14 +119,13 @@
   <li data-m="6"><span class="m">6</span><b>Node verification.</b> Every node independently verifies that every input UTXO is authentic and unspent, then updates the global ledger: those inputs are "destroyed" and the new outputs are created.</li>
 </ol>
 
-<footer class="foot">
-  <div class="nav"><a class="prev" href="card-1.1.html">Last card</a><span>Next: <span class="soon">Fee and mass: why a very small output costs more</span></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">By FingersLLM</span></div>
-</footer>
-<section class="sources">
 <h2>Sources</h2>
 <p class="src">In rusty-kaspa a transaction is a version, a list of inputs, a list of outputs, a lock time and a few more fields. An input is a previous outpoint (transaction id and index), a signature script and a sequence. An output is a value and a script public key (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/tx.rs">consensus/core/src/tx.rs</a>). A node checks a transaction on its own (input and output counts, no duplicate inputs, value ranges: <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_isolation.rs">tx_validation_in_isolation.rs</a>) and against the UTXO set (every input must exist and be unspent, total out may not exceed total in, fee = in minus out, the script of every input is run: <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs">tx_validation_in_utxo_context.rs</a>). Read at release v2.0.1. The transaction shown was read from the public Kaspa API on 4 September 2026 and is linked in its header.</p>
-</section>
+
+<footer class="foot">
+  <div class="nav"><a class="prev" href="card-1.1.html">Last card</a> · <span>Next: <span class="soon">Fee and mass: why a very small output costs more</span></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">By FingersLLM</span></div>
+</footer>
 
 <script>
 var TX={id:'84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f',when:'28 August 2026, 06:42 UTC',
