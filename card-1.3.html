@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Fee and mass: why a very small output costs more · Toccata 101</title>
+<meta name="description" content="Toccata 101, card 1.3. A Kaspa transaction is weighed in grams and the fee is a price per gram. A very small new piece of KAS weighs a lot, and below 0.02 KAS the nodes refuse it.">
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  :root{
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60;
+    --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+      --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+    --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+  }
+  html{background:var(--bg)}
+  body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  a{color:var(--link)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem}
+  .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
+  .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+  .theme:hover{color:var(--head);border-color:var(--accent)}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0 0 1.4rem;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
+  p{margin:0 0 1rem}
+  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem}
+  .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
+  .foot .nav{display:block}
+  .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
+  .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
+  .foot .by{color:var(--muted)}
+  .foot .soon{color:var(--soon)}
+  code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  /* the slider */
+  .w{background:var(--surface);border-radius:12px;padding:1rem 1.1rem 1.1rem;margin-top:.2rem}
+  .lbl{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .wh{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:.4rem}
+  .wv{font-size:1.9rem;font-weight:700;color:var(--head);line-height:1.1}
+  .wv small{font-size:.95rem;font-weight:600;color:var(--muted);margin-left:.3rem}
+  input[type=range]{width:100%;margin:.4rem 0 .1rem;accent-color:var(--accent);cursor:pointer}
+  .ticks{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin:0 .1rem .9rem}
+  .nums{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin:.2rem 0 .9rem}
+  @media (max-width:560px){.nums{grid-template-columns:1fr}}
+  .num{background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:.55rem .75rem .6rem;transition:border-color .2s,background .2s}
+  .num .k{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+  .num .v{display:block;font-weight:700;color:var(--head);font-size:1.08rem;line-height:1.3;margin-top:.1rem}
+  .num .v small{font-weight:600;color:var(--muted);font-size:.78rem;margin-left:.3rem}
+  .num.win{border-color:var(--accent);background:var(--tint)}
+  .num.no .v{color:var(--refused)}
+  .bar{position:relative;height:14px;background:var(--bg);border:1.5px solid var(--line);border-radius:999px;overflow:hidden}
+  .bar .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);transition:width .15s,background .15s}
+  .bar .fill.no{background:var(--refused)}
+  .bar .cap{position:absolute;top:0;bottom:0;left:90%;width:1.5px;background:var(--refused)}
+  .scale{display:flex;font-size:.72rem;color:var(--muted);margin:.25rem 0 0;position:relative;height:1.2em}
+  .scale > span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+  .scale > span:first-child{transform:none}
+  .scale > span:last-child{transform:translateX(-100%)}
+  .scale .sm{display:none}
+  @media (max-width:560px){.scale .lg,.scale .mid{display:none}.scale .sm{display:inline}}
+  .msg{margin:.8rem 0 0;font-size:.93rem;color:var(--text);min-height:2.6em}
+  .msg.no{color:var(--refused);font-weight:600}
+  .cap-txt{font-size:.85rem;color:var(--muted);margin:.9rem 0 0}
+  .chain{padding-left:1.2rem;margin:0}
+  .chain li{margin:0 0 .6rem}
+  .chain b{color:var(--head)}
+  .chain code{font-size:.82rem}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="kicker"><a href="index.html">Toccata 101</a> · Part 1 · card 3</p>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
+<h1>Fee and mass: why a very small output costs more</h1>
+<p class="one">The fee is a price per gram of weight, and a very small new piece of KAS weighs a lot.</p>
+
+<p>A Kaspa transaction is weighed in grams, and the fee is a price per gram: 100 sompi a gram today, a hundred-millionth of a KAS each. A plain payment (one UTXO in, two UTXOs out) weighs about two thousand grams and costs a fraction of a cent.</p>
+<p>Two things go on the scale. The first is size: the bytes and the checking work, the same for 10 KAS and for 10,000. The second is storage. Every piece of KAS you create is a UTXO that every node keeps for as long as it exists, so the network prices it. A big piece is light. A small piece is heavy, and the weight climbs fast as the piece shrinks. Carving 1 KAS out of a large piece adds ten thousand grams. 0.1 KAS adds a hundred thousand, and the fee equals the amount. At 0.02 KAS you reach the most a block can hold. Below that, the nodes refuse the transaction, whatever fee you offer.</p>
+<p>The heavier of the two weights sets the fee. Spending small pieces you already hold, or merging them, takes weight off the scale. Your wallet does the weighing and picks the pieces. You only feel it when you ask for a very small piece.</p>
+
+<h2>The piece you create</h2>
+<figure class="w" style="margin:0">
+  <div class="wh"><span class="lbl">Carve this out of a large piece</span><span class="wv" id="wv">1<small>KAS</small></span></div>
+  <input type="range" id="ws" min="0" max="1000" value="667" aria-label="the size of the piece you create">
+  <div class="ticks"><span>0.01 KAS</span><span>0.1</span><span>1</span><span>10 KAS</span></div>
+  <div class="nums">
+    <div class="num" id="n-st"><span class="k">storage weight</span><span class="v" id="wst">10,001 g</span></div>
+    <div class="num" id="n-sz"><span class="k">size weight</span><span class="v">2,047 g</span></div>
+    <div class="num" id="n-fee"><span class="k">fee</span><span class="v" id="wfee">0.01 KAS<small>1% of the piece</small></span></div>
+  </div>
+  <div class="bar"><div class="fill" id="wf"></div><div class="cap"></div></div>
+  <div class="scale"><span style="left:0">1,000 g</span><span style="left:33.3%">10,000</span><span class="mid" style="left:66.7%">100,000</span><span style="left:100%"><span class="lg">500,000, the most a block can hold</span><span class="sm">500,000</span></span></div>
+  <p class="msg" id="wmsg"></p>
+  <p class="cap-txt">One piece carved out of a 313 KAS piece, the shape of a real send from 6 September 2026: one input, two outputs, size weight 2,047 grams. The storage weight is the node's formula. Fee at 100 sompi a gram.</p>
+</figure>
+
+<h2>Look at it on chain</h2>
+<p>Three transactions from 6 September 2026, all at 100 sompi a gram. The explorer's "mass" is the size weight. The storage weight is not shown there, it shows up in the fee.</p>
+<ol class="chain">
+  <li><b>Carving 0.3 KAS out of a 313 KAS piece.</b> Size 2,047 grams, storage 33,333 grams, fee 0.03333 KAS. <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…3f145914</code></a></li>
+  <li><b>Moving a 0.3 KAS piece whole, one in and one out.</b> Storage 203 grams, size 1,813 grams, fee 0.00181 KAS. Same piece size, eighteen times less. <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…f7501f3d</code></a></li>
+  <li><b>Merging five small pieces into 3 KAS and change.</b> Storage 0, size 6,519 grams, fee 0.00652 KAS. <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/b8c988654950a44b5fd3a4eb31a448a5a721753f1d8e3391717820921098b842"><code>b8c98865…21098b842</code></a></li>
+</ol>
+
+<h2>Sources</h2>
+<p class="src">The storage weight is KIP-9 (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/kips/blob/master/kip-0009.md">kaspanet/kips, kip-0009</a>): for each output about 10<sup>12</sup> divided by its value in sompi, minus a relief for the pieces spent, in rusty-kaspa v2.0.1 <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/mass/mod.rs">consensus/core/src/mass/mod.rs</a> (<code>calc_storage_mass</code>) with <code>STORAGE_MASS_PARAMETER = SOMPI_PER_KASPA × 10,000</code> in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/constants.rs">constants.rs</a>. A block holds at most 500,000 grams of storage weight (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/params.rs">config/params.rs</a>) and the mempool refuses a transaction above it (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/check_transaction_limits.rs">mining/src/mempool/check_transaction_limits.rs</a>). The relay floor is 100 sompi per gram of size weight (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/check_transaction_standard.rs">check_transaction_standard.rs</a>), and the network's fee estimate returned 100 sompi per gram in every bucket on 6 September 2026 (<a target="_blank" rel="noopener" href="https://api.kaspa.org/info/fee-estimate">api.kaspa.org/info/fee-estimate</a>). The reference wallet pays the rate times the heavier of the two weights (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/wallet/core/src/tx/generator/generator.rs">wallet/core/src/tx/generator/generator.rs</a>, <code>calc_transaction_fees</code>). The three transactions above were read from api.kaspa.org on 6 September 2026, their storage weight recomputed with the formula and matched to their fees to the sompi.</p>
+
+<footer class="foot">
+  <div class="nav"><a class="prev" href="card-1.2.html">Last card</a> · <span>Next: <span class="soon">Addresses and locks: key-locked and script-locked outputs</span></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">By FingersLLM</span></div>
+</footer>
+
+<script>
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+
+/* the slider: one piece carved out of a 313.250522 KAS piece, one input, two outputs (the piece and the change).
+   storage weight, as the node computes it (KIP-9, relaxed form for one input):
+   C/piece + C/change - C/input, integer division, C = 10^12. size weight: 2,047 g, the real send's. */
+(function(){
+  var C=1e12, INPUT=31325052200, SIZE=2047, CAP=500000, RATE=100;
+  var s=document.getElementById('ws'), wv=document.getElementById('wv'), wst=document.getElementById('wst'),
+      wfee=document.getElementById('wfee'), wf=document.getElementById('wf'), msg=document.getElementById('wmsg'),
+      nst=document.getElementById('n-st'), nsz=document.getElementById('n-sz'), nfee=document.getElementById('n-fee');
+  function fmtG(g){return g.toLocaleString('en-US')+' g';}
+  function fmtKas(sompi){var k=sompi/1e8; var str=k>=1?k.toLocaleString('en-US',{maximumFractionDigits:3}):k.toFixed(5).replace(/0+$/,'').replace(/\.$/,''); return str;}
+  function fmtPct(p){ if(p>=10) return Math.round(p)+'%'; if(p>=1) return p.toFixed(1).replace(/\.0$/,'')+'%'; return p.toPrecision(2).replace(/\.?0+$/,'')+'%'; }
+  function pieceFromSlider(v){ var lg=-2+3*(v/1000); var kas=Math.pow(10,lg); /* round to 3 significant digits */ var m=Math.pow(10,Math.floor(Math.log10(kas))-1); kas=Math.round(kas/m)*m; return Math.max(1000000,Math.round(kas*1e8)); }
+  function update(){
+    var piece=pieceFromSlider(+s.value); var change=INPUT-piece;
+    var storage=Math.floor(C/piece)+Math.floor(C/change)-Math.floor(C/INPUT); if(storage<0)storage=0;
+    var heavier=Math.max(storage,SIZE); var refused=storage>CAP; var fee=RATE*heavier;
+    wv.innerHTML=fmtKas(piece)+'<small>KAS</small>';
+    wst.textContent=fmtG(storage);
+    var pos=(Math.log10(Math.max(storage,1000))-3)/3*100; if(pos<0)pos=0; if(pos>100)pos=100;
+    wf.style.width=pos+'%'; wf.className='fill'+(refused?' no':'');
+    nst.className='num'+(refused?' no':(storage>=SIZE?' win':'')); nsz.className='num'+(!refused&&storage<SIZE?' win':''); nfee.className='num'+(refused?' no':'');
+    if(refused){
+      wfee.textContent='refused';
+      msg.className='msg no'; msg.textContent='No block can hold this piece. The nodes refuse the transaction, whatever fee you offer.';
+    } else {
+      var pct=fee/piece*100;
+      wfee.innerHTML=fmtKas(fee)+' KAS<small>'+fmtPct(pct)+' of the piece</small>';
+      msg.className='msg';
+      msg.textContent=(storage>=SIZE?'The storage weight is the heavier. ':'The size weight is the heavier. ')+'The fee is '+heavier.toLocaleString('en-US')+' grams at 100 sompi each: '+fmtKas(fee)+' KAS.';
+    }
+  }
+  s.addEventListener('input',update); update();
+})();
+</script>
+</body>
+</html>

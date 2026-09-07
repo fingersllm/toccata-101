@@ -120,11 +120,11 @@
 </ol>
 
 <h2>Sources</h2>
-<p class="src">In rusty-kaspa a transaction is a version, a list of inputs, a list of outputs, a lock time and a few more fields. An input is a previous outpoint (transaction id and index), a signature script and a sequence. An output is a value and a script public key (<a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/tx.rs">consensus/core/src/tx.rs</a>). A node checks a transaction on its own (input and output counts, no duplicate inputs, value ranges: <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_isolation.rs">tx_validation_in_isolation.rs</a>) and against the UTXO set (every input must exist and be unspent, total out may not exceed total in, fee = in minus out, the script of every input is run: <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs">tx_validation_in_utxo_context.rs</a>). Read at release v2.0.1. The transaction shown was read from the public Kaspa API on 4 September 2026 and is linked in its header.</p>
+<p class="src">In rusty-kaspa a transaction is a version, a list of inputs, a list of outputs, a lock time and a few more fields. An input is a previous outpoint (transaction id and index), a signature script and a sequence. An output is a value and a script public key (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/tx.rs">consensus/core/src/tx.rs</a>). A node checks a transaction on its own (input and output counts, no duplicate inputs, value ranges: <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_isolation.rs">tx_validation_in_isolation.rs</a>) and against the UTXO set (every input must exist and be unspent, total out may not exceed total in, fee = in minus out, the script of every input is run: <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs">tx_validation_in_utxo_context.rs</a>). Read at release v2.0.1. The transaction shown was read from the public Kaspa API on 4 September 2026 and is linked in its header.</p>
 
 <footer class="foot">
-  <div class="nav"><a class="prev" href="card-1.1.html">Last card</a> · <span>Next: <span class="soon">Fee and mass: why a very small output costs more</span></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">By FingersLLM</span></div>
+  <div class="nav"><a class="prev" href="card-1.1.html">Last card</a> · <span>Next: <a href="card-1.3.html">Fee and mass: why a very small output costs more</a></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">By FingersLLM</span></div>
 </footer>
 
 <script>
@@ -138,7 +138,7 @@ function show(){
   var d=TX, tin=0, tout=0;
   d.ins.forEach(function(i){tin+=i.amt}); d.outs.forEach(function(o){tout+=o.amt});
   tin=Math.round(tin*1e8)/1e8; tout=Math.round(tout*1e8)/1e8; var fee=Math.round((tin-tout)*1e8)/1e8;
-  var h='<div class="txh"><span class="lbl">Transaction</span><span class="id"><a href="'+d.link+'">'+d.id.slice(0,16)+'…'+d.id.slice(-8)+'</a> · mainnet · '+d.when+'</span></div>';
+  var h='<div class="txh"><span class="lbl">Transaction</span><span class="id"><a target="_blank" rel="noopener" href="'+d.link+'">'+d.id.slice(0,16)+'…'+d.id.slice(-8)+'</a> · mainnet · '+d.when+'</span></div>';
   h+='<div class="cols"><div class="col"><h3>Inputs <span>'+d.ins.length+'</span></h3>';
   d.ins.forEach(function(i){
     h+='<div class="box" data-m="1"><span class="m">1</span><div class="amt">'+kas(i.amt)+'<small>KAS</small></div><div class="meta">UTXO from <code>'+i.from+'</code></div><span class="sig" data-m="2"><span class="m">2</span>'+CHECK+'signature</span></div>';
