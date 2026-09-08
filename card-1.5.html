@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Nodes &amp; Miners: Honour among incentives · Toccata 101</title>
+<meta name="description" content="Toccata 101, card 1.5. One real covenant transaction followed through the nodes and the miners, check by check, from the moment it arrives to the blocks piling on top of it. Paste any transaction id.">
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  :root{
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60; --ext:#0B5BD3;
+    --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+      --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+    --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+  }
+  html{background:var(--bg)}
+  body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  /* links: green stays inside the series, blue leaves it */
+  a{color:var(--link)}
+  a[target="_blank"]{color:var(--ext)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem}
+  .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
+  .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--bg);background:var(--head);border:1px solid var(--head);border-radius:999px;padding:.25rem .75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+  .theme:hover{color:#0F2926;background:var(--accent);border-color:var(--accent)}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .top{flex-wrap:wrap}
+  .theme{white-space:nowrap;flex:none;margin-left:auto}
+  .kicker{white-space:nowrap;margin-right:auto}
+  @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  p{margin:0 0 1rem}
+  strong{color:var(--head)}
+  code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
+  .foot .nav{display:block}
+  .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
+  .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a[target="_blank"]{color:var(--ext)}
+  .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
+  .foot .by{color:var(--muted)}
+  .foot .soon{color:var(--soon)}
+  /* the input */
+  .w{background:var(--surface);border-radius:12px;padding:1rem 1.1rem 1.1rem;margin:0 0 .4rem}
+  .lbl{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .lbl b{text-transform:none;font-weight:inherit}
+  .in{display:flex;gap:.6rem;flex-wrap:wrap;margin:.5rem 0 .6rem}
+  .in input{flex:1 1 320px;font:.95em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:.55rem .7rem;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--head);min-width:0}
+  .in input:focus{outline:none;border-color:var(--accent)}
+  .chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:0 0 .5rem}
+  .chip{font:inherit;font-size:.8rem;color:var(--link);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer}
+  .chip:hover{border-color:var(--accent);color:var(--head)}
+  .msg{min-height:1.5rem;font-size:.9rem;color:var(--muted)}
+  .msg.err{color:var(--refused);font-weight:600}
+  .legend{font-size:.82rem;color:var(--muted);margin:.2rem 0 0;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+  .legend .tick{top:.2rem}
+  /* the stations: one rail, eight stops */
+  .sim{position:relative;margin-top:1.4rem}
+  .st{position:relative;padding-left:2.6rem;margin:0 0 2.4rem}
+  .st::before{content:"";position:absolute;left:.75rem;top:1.9rem;bottom:-2.4rem;width:2px;background:var(--line)}
+  .st:last-child::before{display:none}
+  .st .n{position:absolute;left:0;top:-.05rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:#0F2926;font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1}
+  .st h2{margin:0 0 .75rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;line-height:1.5}
+  .st h2::after{display:none}
+  .pill{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:.05rem .6rem;background:var(--tint);color:var(--head);border:1px solid var(--line);font-weight:600;transition:background .3s,color .3s}
+  .pill.ok{background:var(--accent);color:#0F2926;border-color:var(--accent)}
+  .pill.bad{background:var(--refused);color:#fff;border-color:var(--refused)}
+  .v{margin:0;background:var(--surface);border-radius:12px;padding:1rem 1.1rem;font-size:.95rem}
+  .v .h{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:0 0 .4rem}
+  .v .h.mt{margin-top:1rem}
+  .note{margin:.8rem 0 0;padding:.7rem 1rem;border-left:4px solid var(--accent);background:var(--tint);border-radius:0 8px 8px 0;font-size:.98rem;color:var(--head)}
+  .mono{font:.86em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .hex{font:.84em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere;color:var(--head)}
+  .k{display:inline-flex;align-items:center;justify-content:center;width:1.35rem;height:1.35rem;border-radius:50%;font-weight:700;font-size:.8rem;color:#0F2926;background:var(--accent);flex:none}
+  .k.q{background:var(--line);color:var(--head)}
+  .st.dim .v,.st.dim .note{opacity:.3;pointer-events:none}
+  .st.dim h2 .pill{background:var(--surface);color:var(--soon);border-color:var(--line)}
+  @media (max-width:480px){.st{padding-left:2.2rem}.v{padding:.8rem .8rem}.u .ref{font-size:.8em}.cb .r{grid-template-columns:1.6rem 1fr}.cb .r .am{grid-column:2}.hash .row .val{font-size:.8em}}
+  /* station 1: the transaction */
+  .path{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:0 0 .8rem}
+  .path .box{border:1.5px solid var(--line);border-radius:8px;padding:.15rem .7rem;background:var(--bg);color:var(--head);font-weight:600;font-size:.9rem}
+  .path .box.hi{border-color:var(--accent);background:var(--tint)}
+  .path .arr{color:var(--muted)}
+  .path .dot{width:.6rem;height:.6rem;border-radius:50%;background:var(--accent);animation:t101-travel 1.6s ease-in-out infinite}
+  @keyframes t101-travel{0%{transform:translateX(-.4rem);opacity:0}30%{opacity:1}70%{opacity:1}100%{transform:translateX(.9rem);opacity:0}}
+  .txc{border:1.5px solid var(--line);border-radius:10px;background:var(--bg);padding:.7rem .9rem}
+  .txh{display:flex;justify-content:space-between;gap:.6rem 1rem;flex-wrap:wrap;align-items:baseline;margin-bottom:.6rem}
+  .txh .meta{font-size:.82rem;color:var(--muted)}
+  .io{display:grid;grid-template-columns:1fr auto 1fr;gap:.6rem;align-items:start}
+  .io .mid{align-self:center;color:var(--muted);font-size:1.3rem;text-align:center}
+  @media (max-width:560px){.io{grid-template-columns:1fr}.io .mid{transform:rotate(90deg);line-height:1}}
+  .u{display:flex;align-items:center;gap:.5rem;padding:.35rem 0;border-top:1px solid var(--line);font-size:.9rem}
+  .u:first-of-type{border-top:0}
+  .u .ref{font:.86em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--head);overflow-wrap:anywhere;min-width:0;flex:1}
+  .u .amt{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--head);white-space:nowrap}
+  .u .ref a{color:var(--ext)}
+  .feeline{display:flex;gap:.4rem 1.2rem;flex-wrap:wrap;margin-top:.6rem;padding-top:.5rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--head);font-variant-numeric:tabular-nums}
+  .feeline b{color:var(--head)}
+  .feeline .fee{color:var(--head);background:var(--tint);border-radius:4px;padding:0 .3rem}
+  /* checklists */
+  .cks{list-style:none;margin:0;padding:0}
+  .cks li{display:grid;grid-template-columns:1.3rem minmax(0,1fr) auto;gap:.15rem .6rem;align-items:baseline;padding:.42rem 0;border-top:1px solid var(--line);font-size:.93rem;transition:opacity .3s}
+  .cks li:first-child{border-top:0}
+  .cks .val{font:.86em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--head);text-align:right;overflow-wrap:anywhere}
+  @media (max-width:560px){.cks li{grid-template-columns:1.3rem 1fr}.cks .val{grid-column:2;text-align:left;font-size:.8em}}
+  .cks li.wait{opacity:.45}
+  .tick{width:1rem;height:1rem;border-radius:50%;border:2px solid var(--line);display:inline-block;position:relative;top:.2rem;box-sizing:border-box;transform:scale(.7);transition:transform .25s,background .25s,border-color .25s}
+  li.on .tick{transform:scale(1);border-color:var(--accent);background:var(--accent)}
+  li.on .tick::after{content:"";position:absolute;left:.25rem;top:.02rem;width:.22rem;height:.48rem;border:solid #0F2926;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  li.on.node .tick{background:transparent}
+  li.on.node .tick::after{border-color:var(--accent)}
+  li.bad .tick,li.on.bad .tick{border-color:var(--refused);background:var(--refused);transform:scale(1)}
+  li.bad .tick::after{content:"";position:absolute;left:.19rem;top:.29rem;width:.5rem;height:2px;background:#fff;border:0;transform:rotate(45deg);box-shadow:none}
+  li.bad .tick::before{content:"";position:absolute;left:.19rem;top:.29rem;width:.5rem;height:2px;background:#fff;transform:rotate(-45deg)}
+  li.bad .val{color:var(--refused)}
+  .cks.press li{cursor:pointer}
+  .cks.press li:hover .what{color:var(--head)}
+  .hint{font-size:.82rem;color:var(--muted);margin:.5rem 0 0}
+  /* station 3: the utxo set */
+  .set{display:grid;grid-template-columns:repeat(auto-fill,minmax(1.1rem,1fr));gap:.25rem;margin:0 0 .6rem}
+  .set i{display:block;aspect-ratio:1;border-radius:3px;background:var(--line);opacity:.55}
+  .set i.f{background:var(--accent);opacity:1;animation:t101-found .8s ease-out}
+  .set i.x{background:var(--refused);opacity:.9}
+  .set i.b{background:var(--accent);opacity:1;outline:2px solid var(--head);outline-offset:-2px}
+  @keyframes t101-found{0%{transform:scale(1);box-shadow:0 0 0 0 var(--accent)}50%{transform:scale(1.5);box-shadow:0 0 0 .3rem transparent}100%{transform:scale(1)}}
+  .sum{display:grid;grid-template-columns:auto 1fr;gap:.2rem .8rem;font-variant-numeric:tabular-nums;font-size:.93rem;margin:.4rem 0 .8rem;align-items:baseline}
+  .sum .lab{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+  .sum .num{color:var(--head)}
+  .sum .num.fee{background:var(--tint);border-radius:4px;padding:0 .3rem;display:inline-block}
+  /* station 4: the locks */
+  .lanes{display:grid;grid-template-columns:1fr;gap:.8rem}
+  .lane{border:1.5px solid var(--line);border-radius:10px;background:var(--bg);padding:.7rem .9rem}
+  .lane .lh{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;font-weight:600;color:var(--head)}
+  .steps{list-style:none;margin:0;padding:0}
+  .steps li{display:grid;grid-template-columns:1.3rem 1fr;gap:.5rem;align-items:baseline;padding:.3rem 0;border-top:1px dashed var(--line);font-size:.92rem;transition:opacity .3s}
+  .steps li:first-child{border-top:0}
+  .steps li.wait{opacity:.4}
+  .op{display:inline-block;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:0 .35rem;margin:.1rem .2rem .1rem 0;font:.82em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text)}
+  .op b{color:var(--link);font-weight:600}
+  .op.hi{border-color:var(--accent);background:var(--tint);color:var(--head)}
+  .cmp{display:grid;grid-template-columns:auto 1fr;gap:.15rem .6rem;font:.82em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:.3rem 0;align-items:baseline}
+  .cmp .lab{font:.78rem system-ui,sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .cmp .hx{overflow-wrap:anywhere;color:var(--head)}
+  .cmp .hx.match{background:var(--tint);border-radius:4px;padding:0 .2rem}
+  .tape{display:block;width:100%;height:2.6rem;margin:.4rem 0 .2rem}
+  .tape .o{fill:var(--line)} .tape .p{fill:var(--muted);opacity:.6} .tape .i{fill:var(--accent)}
+  .tape .veil{fill:var(--bg);opacity:.85}
+  .tape .veil.run{animation:t101-veil 2.4s linear forwards}
+  @keyframes t101-veil{from{transform:translateX(0)}to{transform:translateX(100%)}}
+  .tl{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:.2rem 0 0}
+  .tl i{display:inline-block;width:.7rem;height:.7rem;border-radius:2px;vertical-align:-.05rem;margin-right:.3rem}
+  .yes{display:inline-block;font-weight:700;color:#0F2926;background:var(--accent);border-radius:999px;padding:0 .6rem;font-size:.85rem}
+  /* station 5: the network */
+  .net{display:block;width:100%;max-width:560px;height:auto;margin:0 auto}
+  .net .e{stroke:var(--line);stroke-width:2}
+  .net .e.far{stroke-dasharray:4 4;opacity:.7}
+  .net .nd{fill:var(--bg);stroke:var(--line);stroke-width:2}
+  .net .nd.me{fill:var(--tint);stroke:var(--accent);stroke-width:2.5}
+  .net .nd.far{fill:var(--surface)}
+  .net text{fill:var(--head);font-size:11px;font-family:system-ui,sans-serif;text-anchor:middle}
+  .net text.sm{font-size:9.5px;fill:var(--muted)}
+  .net .tx{fill:var(--accent)}
+  .net .ck{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+  .net .ck.on{animation:t101-ck .35s ease-out forwards}
+  @keyframes t101-ck{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+  .net .ck{transform-box:fill-box;transform-origin:center}
+  .pool{display:inline-flex;align-items:center;gap:.35rem;font-size:.82rem;color:var(--head);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:.15rem .55rem;font-variant-numeric:tabular-nums}
+  .pool.acc{border-color:var(--accent);background:var(--tint);font-weight:600}
+  .pool.mg{border-color:var(--accent)}
+  .pool.late{border-style:dashed;color:var(--muted)}
+  .pool .ms{color:var(--muted);font-size:.76rem}
+  .blocks{display:flex;flex-wrap:wrap;gap:.4rem;margin:.3rem 0 .2rem}
+  /* station 6: the miner */
+  .pick{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 .6rem}
+  .cand{font:.8em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted);border:1px dashed var(--line);border-radius:6px;padding:.05rem .4rem;background:var(--bg)}
+  .cand.ours{color:var(--head);border:1.5px solid var(--accent);background:var(--tint)}
+  .hash{border:1.5px solid var(--line);border-radius:10px;background:var(--bg);padding:.6rem .9rem;margin:.2rem 0 .6rem;font-variant-numeric:tabular-nums}
+  .hash .row{display:grid;grid-template-columns:7.2rem 1fr;gap:.2rem .6rem;align-items:baseline;font-size:.9rem;padding:.15rem 0}
+  .hash .row .lab{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em}
+  .hash .row .val{font:.86em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--head);overflow-wrap:anywhere}
+  .hash .row .val.spin{color:var(--muted)}
+  .hash.found{border-color:var(--accent)}
+  @media (max-width:480px){.hash .row{grid-template-columns:1fr}}
+  .big{font-size:1.05rem;color:var(--head);font-weight:600}
+  /* station 7: the block spreads */
+  .merge{display:flex;flex-wrap:wrap;gap:.4rem;margin:.2rem 0 .6rem}
+  .mb{font-size:.8rem;border:1.5px solid var(--line);border-radius:8px;padding:.15rem .5rem;background:var(--bg);color:var(--muted);font-variant-numeric:tabular-nums}
+  .mb.c{color:var(--head);border-color:var(--accent)}
+  .mb.a{color:#0F2926;background:var(--accent);border-color:var(--accent);font-weight:600}
+  .mb .tag{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}
+  .cb{border:1.5px solid var(--line);border-radius:10px;background:var(--bg);padding:.6rem .9rem;margin:.2rem 0 .3rem}
+  .cb .r{display:grid;grid-template-columns:1.6rem 1fr auto;gap:.2rem .6rem;align-items:baseline;padding:.2rem 0;border-top:1px solid var(--line);font-size:.88rem;font-variant-numeric:tabular-nums}
+  .cb .r:first-child{border-top:0}
+  .cb .r .i{color:var(--muted);font-size:.76rem}
+  .cb .r .to{font:.86em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);overflow-wrap:anywhere}
+  .cb .r .am{color:var(--head);white-space:nowrap}
+  .cb .r.ours{background:var(--tint);margin:0 -.5rem;padding:.3rem .5rem;border-radius:6px;border-top:0}
+  .cb .r.ours .to,.cb .r.ours .am{color:var(--head);font-weight:600}
+  .split{font-size:.86rem;color:var(--head);margin:.4rem 0 0;font-variant-numeric:tabular-nums}
+  .split b{background:var(--tint);border-radius:4px;padding:0 .3rem}
+  .cheat{margin:.8rem 0 0}
+  .cheat button{font:inherit;font-size:.82rem;color:var(--link);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer;margin:.2rem .2rem .2rem 0}
+  .cheat button:hover{border-color:var(--accent);color:var(--head)}
+  .cheat button[aria-pressed="true"]{background:var(--refused);color:#fff;border-color:var(--refused)}
+  .whatif{display:none;margin-top:.6rem;border:1.5px solid var(--refused);border-radius:10px;padding:.6rem .9rem;background:var(--bg)}
+  .whatif.show{display:block}
+  .whatif .r{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding:.2rem 0;border-top:1px solid var(--line);font-size:.9rem}
+  .whatif .r:first-child{border-top:0}
+  .whatif .no{color:var(--refused);font-weight:700}
+  /* station 8: the pile */
+  .pile{display:grid;grid-template-columns:auto 1fr;gap:.6rem 1.2rem;align-items:center;margin:.2rem 0 .6rem}
+  @media (max-width:560px){.pile{grid-template-columns:1fr}}
+  .count{font-size:2.2rem;line-height:1;font-weight:700;color:var(--head);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .count small{display:block;font-size:.74rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-top:.35rem}
+  .scale{position:relative;height:3.6rem}
+  .scale .bar{position:absolute;left:0;right:0;top:1.35rem;height:.5rem;border-radius:999px;background:var(--line);overflow:hidden}
+  .scale .fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);width:0;transition:width 1s ease-out;border-radius:999px}
+  .scale .mk{position:absolute;top:0;transform:translateX(-50%);font-size:.7rem;color:var(--muted);white-space:nowrap;text-align:center;line-height:1.1;font-variant-numeric:tabular-nums}
+  .scale .mk::after{content:"";display:block;width:2px;height:.6rem;background:var(--line);margin:.2rem auto 0}
+  .scale .mk.done{color:var(--head)}
+  .scale .mk.done::after{background:var(--accent)}
+  .scale .you{position:absolute;top:2.15rem;transform:translateX(-50%);font-size:.72rem;color:var(--head);white-space:nowrap;transition:left 1s ease-out;font-weight:600}
+  .scale .you::before{content:"";display:block;width:0;height:0;border:.35rem solid transparent;border-bottom-color:var(--head);margin:0 auto -.05rem}
+  .since{font-size:.86rem;color:var(--muted)}
+  .stack{display:flex;gap:2px;align-items:flex-end;height:1.4rem;margin:.3rem 0 .2rem;overflow:hidden}
+  .stack i{display:block;flex:none;width:6px;height:100%;background:var(--accent);opacity:.9;border-radius:1px 1px 0 0;animation:t101-rise .5s ease-out}
+  @keyframes t101-rise{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .stack i.you{background:var(--head)}
+  /* term links: a regular green link that opens the glossary in a new tab */
+  a.t{color:var(--link)}
+  a.t:hover{color:var(--head)}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="kicker"><a href="index.html">Toccata 101</a> · Part 1 · card 5</p>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
+<h1>Nodes &amp; Miners: Honour among incentives</h1>
+
+<figure class="w">
+  <span class="lbl" id="tlab">Paste any transaction id, or take the example</span>
+  <div class="in"><input id="tin" type="text" spellcheck="false" autocomplete="off" placeholder="64 hex characters" aria-label="a Kaspa transaction id"></div>
+  <div class="chips">
+    <button class="chip" type="button" id="chip-ex">the example, a covenant transaction</button>
+  </div>
+  <div class="msg" id="tmsg"></div>
+  <p class="legend"><span><span class="tick on" style="border-color:var(--accent);background:var(--accent)"></span> recomputed on this page</span><span><span class="tick" style="border-color:var(--accent)"></span> the node's check, passed: the transaction is on chain</span></p>
+</figure>
+
+<div class="sim" id="sim">
+
+<section class="st" id="s1">
+  <span class="n">1</span>
+  <h2>The transaction arrives at a node <span class="pill" id="p1">received</span></h2>
+  <figure class="v">
+    <div class="path"><span class="box">a wallet</span><span class="dot"></span><span class="arr">→</span><span class="box hi">a node</span></div>
+    <div class="txc">
+      <div class="txh"><a id="txlink" class="mono" target="_blank" rel="noopener" href="#"></a><span class="meta" id="txmeta"></span></div>
+      <div class="io">
+        <div><div class="h" id="hin">inputs</div><div id="ins"></div></div>
+        <div class="mid">→</div>
+        <div><div class="h" id="hout">outputs</div><div id="outs"></div></div>
+      </div>
+      <div class="feeline" id="feeline"></div>
+    </div>
+  </figure>
+</section>
+
+<section class="st" id="s2">
+  <span class="n">2</span>
+  <h2>The node runs its list <span class="pill" id="p2">checking</span></h2>
+  <figure class="v">
+    <ol class="cks press" id="cks2"></ol>
+    <p class="hint">Press any line to break it, press it again to mend it.</p>
+  </figure>
+  <p class="note">Every <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> runs the same list. One thing fails and the whole <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> drops out.</p>
+</section>
+
+<section class="st" id="s3">
+  <span class="n">3</span>
+  <h2>Against the UTXO set <span class="pill" id="p3">looking up</span></h2>
+  <figure class="v">
+    <div class="h">the node's UTXO set, every unspent piece on the network</div>
+    <div class="set" id="set"></div>
+    <div id="found"></div>
+    <div class="sum" id="sum"></div>
+    <ol class="cks" id="cks3"></ol>
+  </figure>
+</section>
+
+<section class="st" id="s4">
+  <span class="n">4</span>
+  <h2>The locks are opened <span class="pill" id="p4">running scripts</span></h2>
+  <figure class="v"><div class="lanes" id="lanes"></div></figure>
+  <p class="note">The node doesn't know what the <a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a> is for. It confirms this script is the one the <a class="t" target="_blank" rel="noopener" href="glossary.html#address">address</a> was made from, then runs it and asks one thing: yes or no.</p>
+</section>
+
+<section class="st" id="s5">
+  <span class="n">5</span>
+  <h2>Into the mempool, out to the peers <span class="pill" id="p5">relaying</span></h2>
+  <figure class="v">
+    <svg class="net" id="net" viewBox="0 0 420 260" aria-label="the transaction spreading from one node to its peers, each peer checking it"></svg>
+  </figure>
+  <p class="note">The transaction goes into the <a class="t" target="_blank" rel="noopener" href="glossary.html#mempool">mempool</a>, then to the <a class="t" target="_blank" rel="noopener" href="glossary.html#peer">peers</a>. Every node validates for itself and repeats steps 2 to 4.</p>
+</section>
+
+<section class="st" id="s6">
+  <span class="n">6</span>
+  <h2>A miner seals it in a block <span class="pill" id="p6">mining</span></h2>
+  <figure class="v">
+    <div class="h" id="hpick">picked from the mempool by fee rate</div>
+    <div class="pick" id="pick"></div>
+    <div class="h">proof of work: try a nonce, hash the block header, is the hash under the target?</div>
+    <div class="hash" id="hash"></div>
+    <div class="h" id="hcarry">blocks that carried this transaction</div>
+    <div class="blocks" id="carriers"></div>
+    <p class="tl" id="carrylegend"></p>
+  </figure>
+  <p class="note"><a class="t" target="_blank" rel="noopener" href="glossary.html#miner">Miners</a> get rewards only for <a class="t" target="_blank" rel="noopener" href="glossary.html#block">blocks</a> and transactions accepted by every node in the network, and a block that breaks the rules costs them the resources they wasted on it. It is an incentive game, and bad actors cannot sustainably play it.</p>
+</section>
+
+<section class="st" id="s7">
+  <span class="n">7</span>
+  <h2>The block spreads <span class="pill" id="p7">re-checking</span></h2>
+  <figure class="v">
+    <div class="h">every node checks the block itself</div>
+    <ol class="cks" id="cks7"></ol>
+    <div class="h mt" id="hmerge"></div>
+    <div class="merge" id="merge"></div>
+    <div class="h mt">the UTXO set after this block</div>
+    <div class="set" id="set2"></div>
+    <div id="delta"></div>
+    <div class="h mt" id="hcb"></div>
+    <div class="cb" id="cb"></div>
+    <p class="split" id="split"></p>
+    <div class="cheat"><span class="h" style="display:block">what if the miner had cheated</span><button type="button" id="cheatA" aria-pressed="false">put in a transaction that pays out more than it takes in</button> <button type="button" id="cheatB" aria-pressed="false">written itself a bigger subsidy</button>
+      <div class="whatif" id="whatifA"></div>
+      <div class="whatif" id="whatifB"></div>
+    </div>
+  </figure>
+  <p class="note">The block spreads, each node re-checks each transaction, the <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo-set">UTXO set</a> changes: <a class="t" target="_blank" rel="noopener" href="glossary.html#input">inputs</a> gone, <a class="t" target="_blank" rel="noopener" href="glossary.html#output">outputs</a> born. If one transaction inside a block fails the re-check, the nodes skip that transaction and keep the block. There is no limit, every transaction in a block may fail this re-check and the block stays. Kaspa's blocks are built to tolerate that, which is what lets ten of them a second run in parallel.</p>
+</section>
+
+<section class="st" id="s8">
+  <span class="n">8</span>
+  <h2>Blocks pile on top <span class="pill" id="p8">live</span></h2>
+  <figure class="v">
+    <div class="pile">
+      <div class="count" id="count">…<small>blocks on top</small></div>
+      <div>
+        <div class="scale" id="scale"><div class="bar"><div class="fill" id="fill"></div></div></div>
+        <div class="since" id="since"></div>
+      </div>
+    </div>
+    <ol class="cks" id="cks8"></ol>
+    <div class="h mt" id="hstack">blocks added while this page was open</div>
+    <div class="stack" id="stack"></div>
+  </figure>
+  <p class="note">Blocks keep piling on top of the one our transaction lives in, ten a second. Undoing this transaction means redoing all of them. It gets harder every second, and after 100 blocks, about ten seconds, the reference <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> counts it as final and lets you <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spend</a> what it brought. This is what we call <a class="t" target="_blank" rel="noopener" href="glossary.html#confirmation">confirmation</a>.</p>
+</section>
+
+</div>
+
+<h2>Sources</h2>
+<p class="src">Every check on this page is a function in rusty-kaspa v2.0.1, read at that tag. Step 2: <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_isolation.rs">tx_validation_in_isolation.rs</a> (<code>validate_tx_in_isolation</code>, in that order). Steps 3 and 4: <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs">tx_validation_in_utxo_context.rs</a> (<code>validate_populated_transaction_and_get_fee</code>: coinbase maturity, input amounts, output values, mass commitment, sequence lock, fee rate, covenant info, then <code>check_scripts</code>), the script engine in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a> (<code>execute_inner</code>: the signature script, the lock, then for a p lock the revealed script on the saved stack), opcodes in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">opcodes/mod.rs</a>, mass in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/mass/mod.rs">consensus/core/src/mass/mod.rs</a>. Step 5: <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/validate_and_insert_transaction.rs">mining/src/mempool/validate_and_insert_transaction.rs</a> and the relay flow <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/protocol/flows/src/v7/txrelay/flow.rs">protocol/flows/src/v7/txrelay/flow.rs</a> (peers announce ids, request what they lack, validate, then announce onward). Step 6: block templates in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/model/frontier/selectors.rs">mining/src/mempool/model/frontier/selectors.rs</a>, proof of work in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/pow/src/lib.rs">consensus/pow/src/lib.rs</a>. Step 7: header checks in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/pipeline/header_processor/pre_ghostdag_validation.rs">header_processor/pre_ghostdag_validation.rs</a>, block body checks in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/pipeline/body_processor/body_validation_in_isolation.rs">body_processor/body_validation_in_isolation.rs</a>, the re-check of each transaction, the skipping of the ones that fail and the coinbase in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/pipeline/virtual_processor/utxo_validation.rs">virtual_processor/utxo_validation.rs</a> (<code>validate_transactions_in_parallel</code>, <code>verify_expected_utxo_state</code>) and <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/coinbase.rs">processes/coinbase.rs</a> (one output per blue block in the merge set, subsidy plus the fees of the transactions accepted from it). Step 8: the reference wallet's 100-block maturity for received transactions in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/wallet/core/src/utxo/settings.rs">wallet/core/src/utxo/settings.rs</a>, finality at 432,000 blocks (twelve hours) in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/constants.rs">consensus/core/src/config/constants.rs</a> and <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/bps.rs">bps.rs</a>. The chain data comes from <a target="_blank" rel="noopener" href="https://api.kaspa.org/">api.kaspa.org</a>, read live for a pasted id and on 8 September 2026 for the example. The fingerprint check and the sums are recomputed in your browser, nothing else leaves the page.</p>
+
+<footer class="foot">
+  <div class="nav"><a class="prev" href="card-1.4.html">Last card</a> · <span>Next: <span class="soon">The blockDAG: blocks in parallel, then ordered</span></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio · By FingersLLM</span></div>
+</footer>
+
+<script>
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+</script>
+<script>
+/* BLAKE2b-256, unkeyed: RFC 7693 ported with BigInt words. It fingerprints the revealed script of a p input, in your browser. */
+function blake2b256(msg){
+  const IV=[0x6a09e667f3bcc908n,0xbb67ae8584caa73bn,0x3c6ef372fe94f82bn,0xa54ff53a5f1d36f1n,0x510e527fade682d1n,0x9b05688c2b3e6c1fn,0x1f83d9abfb41bd6bn,0x5be0cd19137e2179n];
+  const SIG=[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],[14,10,4,8,9,15,13,6,1,12,0,2,11,7,5,3],[11,8,12,0,5,2,15,13,10,14,3,6,7,1,9,4],[7,9,3,1,13,12,11,14,2,6,5,10,4,0,15,8],[9,0,5,7,2,4,10,15,14,1,11,12,6,8,3,13],[2,12,6,10,0,11,8,3,4,13,7,5,15,14,1,9],[12,5,1,15,14,13,4,10,0,7,6,3,9,2,8,11],[13,11,7,14,12,1,3,9,5,0,15,4,8,6,2,10],[6,15,14,9,11,3,0,8,12,2,13,7,1,4,10,5],[10,2,8,4,7,6,1,5,15,11,9,14,3,12,13,0],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],[14,10,4,8,9,15,13,6,1,12,0,2,11,7,5,3]];
+  const M64=(1n<<64n)-1n; const rotr=(x,n)=>((x>>BigInt(n))|(x<<BigInt(64-n)))&M64;
+  const h=IV.slice(); h[0]^=0x01010020n; const buf=new Uint8Array(128); const m=new Array(16);
+  function compress(block,t,last){
+    for(let i=0;i<16;i++){let w=0n;for(let j=7;j>=0;j--)w=(w<<8n)|BigInt(block[i*8+j]);m[i]=w;}
+    const v=h.concat(IV); v[12]^=BigInt(t)&M64; v[13]^=BigInt(t)>>64n; if(last)v[14]^=M64;
+    const G=(a,b,c,d,x,y)=>{v[a]=(v[a]+v[b]+x)&M64;v[d]=rotr(v[d]^v[a],32);v[c]=(v[c]+v[d])&M64;v[b]=rotr(v[b]^v[c],24);v[a]=(v[a]+v[b]+y)&M64;v[d]=rotr(v[d]^v[a],16);v[c]=(v[c]+v[d])&M64;v[b]=rotr(v[b]^v[c],63);};
+    for(let r=0;r<12;r++){const s=SIG[r];G(0,4,8,12,m[s[0]],m[s[1]]);G(1,5,9,13,m[s[2]],m[s[3]]);G(2,6,10,14,m[s[4]],m[s[5]]);G(3,7,11,15,m[s[6]],m[s[7]]);G(0,5,10,15,m[s[8]],m[s[9]]);G(1,6,11,12,m[s[10]],m[s[11]]);G(2,7,8,13,m[s[12]],m[s[13]]);G(3,4,9,14,m[s[14]],m[s[15]]);}
+    for(let i=0;i<8;i++)h[i]^=v[i]^v[i+8];
+  }
+  const n=msg.length; let off=0;
+  if(n===0){compress(buf,0,true);}else{while(n-off>128){buf.set(msg.subarray(off,off+128));off+=128;compress(buf,off,false);}buf.fill(0);buf.set(msg.subarray(off));compress(buf,n,true);}
+  let out='';for(let i=0;i<4;i++){let w=h[i];for(let j=0;j<8;j++){out+=Number(w&0xffn).toString(16).padStart(2,'0');w>>=8n;}}
+  return out;
+}
+</script>
+<script>
+/* the example, read from api.kaspa.org on 8 September 2026 and checked against the node's source */
+const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063fa","version":1,"mass":"14919","subnetwork":"0000000000000000000000000000000000000000","lock_time":0,"block_time":1788849010096,"inputs":[{"prev_txid":"aa5b1e1fa71d518c9d8ba270edf56b98bf9af76bcc3777d7ed0f7ee765042705","prev_index":"1","amount":51000000,"prev_spk":"aa20036e4be83fe18a85f73859e284a0bb12c548380ee86faaaddb9efbff42dc109487","prev_address":"kaspa:pqpkujlg8lsc4p0h8pv79p9qhvfv2jpcpm5xl24dmw00hl6zmsgfgqwzqjt5l","sig_script":"20936c2aaa507df08b75ddb7315c7d331e88616eb03322b7a5220188c1745452b151080100000000000000010000514dac0a20d6995dcb256417868a7c7fc83af0c7f515d7eb7f42b40a8dc89d2b72cab2f243010308010000000000000001005979827c7501209651a25a79827c7501209655a19a69b9cf76d07651a27854a19a6978d25c79827c750120969c6900005279009454a1697653799f6376547978d155795279d1c902ac0a94519356795379d1c902ac0a945193012093bc55795279d156795379d1c902ac0a9401229357795479d1c902ac0a940122935193bc56795379d157795479d1c902ac0a9401249358795579d1c902ac0a940124935893bc57795479d158795579d1c902ac0a94012d9359795679d1c902ac0a94012d935193bc5d79557951957651937f7600a278b39f9a695379010087635f795679014195760141937f5579ac696753790101876376bf557902000001aa7e01207e7c7e01877e876967537901028763547920000000000000000000000000000000000000000000000000000000000000000087916976cf557987696753790103876376bf5579030000207c7e01ac7e876967006968686868527900a253790400ca9a3ba19a695779537993587a7556795193587a757b757b757b757b757b757b75687653799f6376547978d155795279d1c902ac0a94519356795379d1c902ac0a945193012093bc55795279d156795379d1c902ac0a9401229357795479d1c902ac0a940122935193bc56795379d157795479d1c902ac0a9401249358795579d1c902ac0a940124935893bc57795479d158795579d1c902ac0a94012d9359795679d1c902ac0a94012d935193bc5d79557951957651937f7600a278b39f9a695379010087635f795679014195760141937f5579ac696753790101876376bf557902000001aa7e01207e7c7e01877e876967537901028763547920000000000000000000000000000000000000000000000000000000000000000087916976cf557987696753790103876376bf5579030000207c7e01ac7e876967006968686868527900a253790400ca9a3ba19a695779537993587a7556795193587a757b757b757b757b757b757b75687653799f6376547978d155795279d1c902ac0a94519356795379d1c902ac0a945193012093bc55795279d156795379d1c902ac0a9401229357795479d1c902ac0a940122935193bc56795379d157795479d1c902ac0a9401249358795579d1c902ac0a940124935893bc57795479d158795579d1c902ac0a94012d9359795679d1c902ac0a94012d935193bc5d79557951957651937f7600a278b39f9a695379010087635f795679014195760141937f5579ac696753790101876376bf557902000001aa7e01207e7c7e01877e876967537901028763547920000000000000000000000000000000000000000000000000000000000000000087916976cf557987696753790103876376bf5579030000207c7e01ac7e876967006968686868527900a253790400ca9a3ba19a695779537993587a7556795193587a757b757b757b757b757b757b75687653799f6376547978d155795279d1c902ac0a94519356795379d1c902ac0a945193012093bc55795279d156795379d1c902ac0a9401229357795479d1c902ac0a940122935193bc56795379d157795479d1c902ac0a9401249358795579d1c902ac0a940124935893bc57795479d158795579d1c902ac0a94012d9359795679d1c902ac0a94012d935193bc5d79557951957651937f7600a278b39f9a695379010087635f795679014195760141937f5579ac696753790101876376bf557902000001aa7e01207e7c7e01877e876967537901028763547920000000000000000000000000000000000000000000000000000000000000000087916976cf557987696753790103876376bf5579030000207c7e01ac7e876967006968686868527900a253790400ca9a3ba19a695779537993587a7556795193587a757b757b757b757b757b757b756800005f79827c75012096009455a169766079827c750120969f63765e797858957658937f51a25e79527951957651937f6079537958957658937f009c9a9b695e797858957658937f0400ca9a3ba1695f797851957651937f0100a26079527951957651937f0103a19a6952795f79527958957658937f93537a7560795279012095760120937f01207c7e6079537951957651937f01017c7e6079547958957658937f58cd01087c7e6079557951957651937f51cd01017c7e7e7e7eb976c97602ac0a94012e937cbc7eaa02000001aa7e01207e7c7e01877e57795379d3c38769785193537a757b7568766079827c750120969f63765e797858957658937f51a25e79527951957651937f6079537958957658937f009c9a9b695e797858957658937f0400ca9a3ba1695f797851957651937f0100a26079527951957651937f0103a19a6952795f79527958957658937f93537a7560795279012095760120937f01207c7e6079537951957651937f01017c7e6079547958957658937f58cd01087c7e6079557951957651937f51cd01017c7e7e7e7eb976c97602ac0a94012e937cbc7eaa02000001aa7e01207e7c7e01877e57795379d3c38769785193537a757b7568766079827c750120969f63765e797858957658937f51a25e79527951957651937f6079537958957658937f009c9a9b695e797858957658937f0400ca9a3ba1695f797851957651937f0100a26079527951957651937f0103a19a6952795f79527958957658937f93537a7560795279012095760120937f01207c7e6079537951957651937f01017c7e6079547958957658937f58cd01087c7e6079557951957651937f51cd01017c7e7e7e7eb976c97602ac0a94012e937cbc7eaa02000001aa7e01207e7c7e01877e57795379d3c38769785193537a757b7568766079827c750120969f63765e797858957658937f51a25e79527951957651937f6079537958957658937f009c9a9b695e797858957658937f0400ca9a3ba1695f797851957651937f0100a26079527951957651937f0103a19a6952795f79527958957658937f93537a7560795279012095760120937f01207c7e6079537951957651937f01017c7e6079547958957658937f58cd01087c7e6079557951957651937f51cd01017c7e7e7e7eb976c97602ac0a94012e937cbc7eaa02000001aa7e01207e7c7e01877e57795379d3c38769785193537a757b7568766079827c750120969f63765e797858957658937f51a25e79527951957651937f6079537958957658937f009c9a9b695e797858957658937f0400ca9a3ba1695f797851957651937f0100a26079527951957651937f0103a19a6952795f79527958957658937f93537a7560795279012095760120937f01207c7e6079537951957651937f01017c7e6079547958957658937f58cd01087c7e6079557951957651937f51cd01017c7e7e7e7eb976c97602ac0a94012e937cbc7eaa02000001aa7e01207e7c7e01877e57795379d3c38769785193537a757b756856799163537952799c69006079827c75012096009455a16976011179827c750120969f63765e797851957651937f91697651937b75776876011179827c750120969f63765e797851957651937f91697651937b75776876011179827c750120969f63765e797851957651937f91697651937b75776876011179827c750120969f63765e797851957651937f91697651937b75776876011179827c750120969f63765e797851957651937f91697651937b7577687568007a75007a75007a75007a75007a75007a757575757575757575757551","compute_budget":100,"sequence":0},{"prev_txid":"c6992bed5042ef8861721fd81354ddbf17bc70e3a6c6935807919baaaadefd31","prev_index":"1","amount":3379251240,"prev_spk":"20d6995dcb256417868a7c7fc83af0c7f515d7eb7f42b40a8dc89d2b72cab2f243ac","prev_address":"kaspa:qrtfjhwty4jp0p5203luswhscl63t4lt0aptgz5dezwjkuk2kteyxu7q4sax6","sig_script":"41a403bba5d7ad761309b505342bb5a11d3933a7e51bf6c2f98666aac6a66021fba15bb1b9bd68324f5c47e64447488fbcb1dc3401f945f3fdf24fb55a1bf7d2f101","compute_budget":10,"sequence":0}],"outputs":[{"index":0,"amount":51000000,"spk":"aa20ad03fab3b978b8ec3a92d48df0a912b57de9c7913081203db60fbb2487564e7387","address":"kaspa:pzks874nh9ut3mp6jt2gmu9fz26hm6w8jycgzgpakc8mkfy82e88xjcfrqxcx","type":"scripthash","covenant_authorizing_input":0,"covenant_id":"bed3c81787e07988c6d5792fb02324bfd11b980a123f87a28eb177eeec6084a0"},{"index":1,"amount":3377709340,"spk":"20d6995dcb256417868a7c7fc83af0c7f515d7eb7f42b40a8dc89d2b72cab2f243ac","address":"kaspa:qrtfjhwty4jp0p5203luswhscl63t4lt0aptgz5dezwjkuk2kteyxu7q4sax6","type":"pubkey","covenant_authorizing_input":null,"covenant_id":null}],"redeem_ops":2274,"redeem_bytes":2732,"redeem_intro_ops":151,"carriers":[{"time":1788849009812,"hash":"53e9e01fb9a6be5feb7ed40e454115805f0211ebf1f92b36120894e9fb913300","blue_score":532352329,"chain":false,"miner":"kaspa:qqzffjn32q670kat0huq5j0pcvk95r8j0am62c8fyzd6yr24tefaq758ug3tw","txs":4,"mergeset_pos":4,"pool":"ZKMM","daa_score":534287411},{"time":1788849009815,"hash":"db9880588cd4a6ed52de673e3287f3318a50b938aa831cc86fd2d5f3410e401c","blue_score":532352329,"chain":false,"miner":"kaspa:qqje6ps46n6pvjstupfxgrg6v3pegd22q84jachnfrnz2vh5vznqw8redgln6","txs":4,"mergeset_pos":5,"pool":"ZKMM","daa_score":534287411},{"time":1788849009958,"hash":"8ec872db29c681bc7770344c43b851574ec73e92b073bd03462dbce3c38a6e56","blue_score":532352331,"chain":false,"miner":"kaspa:qrvqn64vxkcevdev6k2y49slxw4ls57cjzdqmqkcgh9wu7xmghk57v4ehla0t","txs":3,"mergeset_pos":-1,"pool":"K1Pool","daa_score":534287413},{"time":1788849009988,"hash":"59f1dd4f314b8e213bb329bf8e2f63199b5d4b0aa903cb19e78810b0dcfffc6c","blue_score":532352331,"chain":false,"miner":"kaspa:qpamkvhgh0kzx50gwvvp5xs8ktmqutcy3dfs9dc3w7lm9rq0zs76vf959mmrp","txs":3,"mergeset_pos":7,"pool":"F2Pool","daa_score":534287413},{"time":1788849009988,"hash":"9edd803e534bde7ec7b4d079d980b7b57dc1c7bfd244a41bc64ace6a4f9007d2","blue_score":532352331,"chain":false,"miner":"kaspa:qpamkvhgh0kzx50gwvvp5xs8ktmqutcy3dfs9dc3w7lm9rq0zs76vf959mmrp","txs":3,"mergeset_pos":8,"pool":"F2Pool","daa_score":534287413},{"time":1788849010039,"hash":"bbe1f865094cc6c3f738357fead0bf9d244d4ef47571ee1c9c6e1f7352ef1237","blue_score":532352332,"chain":false,"miner":"kaspa:qrcz0ha5krc2y3snq6vm6quyqdh7fcs8gkx0f5z5v4ld0s32l4p850cvk8udv","txs":3,"mergeset_pos":9,"pool":"viabtc","daa_score":534287414},{"time":1788849010096,"hash":"0fb17fed64c6e606247bedfc542f50f8dec0b14e855e67f07723a788451d7c11","blue_score":532352331,"chain":false,"miner":"kaspa:qzyzhlkd8thwywu2ajylmzlz9hxdqw9s5xznf0kzed8s9y4h6mtfj222rtgcn","txs":3,"mergeset_pos":6,"pool":"wpool","daa_score":534287413},{"time":1788849010130,"hash":"5b4c14f63e820052bb03ae6fba9cc8b0c74a597981fa239da544fa6b54d534f6","blue_score":532352331,"chain":false,"miner":"kaspa:qpamkvhgh0kzx50gwvvp5xs8ktmqutcy3dfs9dc3w7lm9rq0zs76vf959mmrp","txs":3,"mergeset_pos":-1,"pool":"F2Pool","daa_score":534287413},{"time":1788849010484,"hash":"6574da613f302b3239a4f8f03f79c6da3638b8a76009f4ae0be1bffbe7be6f08","blue_score":532352333,"chain":true,"miner":"kaspa:qrcz0ha5krc2y3snq6vm6quyqdh7fcs8gkx0f5z5v4ld0s32l4p850cvk8udv","txs":3,"mergeset_pos":0,"pool":"viabtc","daa_score":534287415},{"time":1788849010617,"hash":"dcc688143a4dac76f6e035049e7825d7f3049bf7c061285efcf92dedc207fd8c","blue_score":532352334,"chain":false,"miner":"kaspa:qrk9decfnl4rayeegp6gd3tc6605zavclkpud5jp78axat5namppwt050d57j","txs":3,"mergeset_pos":-1,"pool":"humpool","daa_score":534287416},{"time":1788849010692,"hash":"57aaa3e17059797757212a20108738af220dc274d5e0df29af22c7f75d56d9e8","blue_score":532352334,"chain":false,"miner":"kaspa:qrk9decfnl4rayeegp6gd3tc6605zavclkpud5jp78axat5namppwt050d57j","txs":3,"mergeset_pos":-1,"pool":"humpool","daa_score":534287416},{"time":1788849010692,"hash":"aaa1761b829ff0be9f2d18117980d6de1517f9ff7f6c60188f5b21fbba8db753","blue_score":532352334,"chain":false,"miner":"kaspa:qrk9decfnl4rayeegp6gd3tc6605zavclkpud5jp78axat5namppwt050d57j","txs":3,"mergeset_pos":-1,"pool":"humpool","daa_score":534287416}],"accepted_in":{"hash":"6574da613f302b3239a4f8f03f79c6da3638b8a76009f4ae0be1bffbe7be6f08","time":1788849010484,"blue_score":532352333,"daa_score":534287415,"bits":436348570,"nonce":"3220418122315287182","miner":"kaspa:qrcz0ha5krc2y3snq6vm6quyqdh7fcs8gkx0f5z5v4ld0s32l4p850cvk8udv","txs":3,"fees_accepted":1859500,"other_fees":317600,"pool":"viabtc","difficulty":1.6751445446279088e+16,"subsidy":218267645,"others":[{"fee":317600,"mass":3154}]},"accepting_block":{"hash":"b8a4a225c463c030970efb4b501e9e823b68da7bfe28be1946d55747477d87a8","time":1788849011187,"blue_score":532352343,"daa_score":534287425,"miner":"kaspa:qrcz0ha5krc2y3snq6vm6quyqdh7fcs8gkx0f5z5v4ld0s32l4p850cvk8udv","mergeset_blues":["6574da613f302b3239a4f8f03f79c6da3638b8a76009f4ae0be1bffbe7be6f08","6d68f17380863ee993b06deae2c7482db948dc28acaff4f0afe6ceb9e5bcbb78","905a310ce531cd6253fe459804a06fa5a3aca47b0d6b93c0b7cb5d646b240c49","3126d17ba828442e8f2a52f8f9e09121d87d8d51397b23e47fb4cc81d8ef2b18","53e9e01fb9a6be5feb7ed40e454115805f0211ebf1f92b36120894e9fb913300","db9880588cd4a6ed52de673e3287f3318a50b938aa831cc86fd2d5f3410e401c","0fb17fed64c6e606247bedfc542f50f8dec0b14e855e67f07723a788451d7c11","59f1dd4f314b8e213bb329bf8e2f63199b5d4b0aa903cb19e78810b0dcfffc6c","9edd803e534bde7ec7b4d079d980b7b57dc1c7bfd244a41bc64ace6a4f9007d2","bbe1f865094cc6c3f738357fead0bf9d244d4ef47571ee1c9c6e1f7352ef1237"],"mergeset_reds":[],"coinbase_txid":"e6c50c97c88e057dc31a81d39694e7ea7c629ac9289c6a5f0aabeb879856a9fc","coinbase_outputs":[{"amount":220127145,"address":"kaspa:qrcz0ha5krc2y3snq6vm6quyqdh7fcs8gkx0f5z5v4ld0s32l4p850cvk8udv"},{"amount":218267645,"address":"kaspa:qrk9decfnl4rayeegp6gd3tc6605zavclkpud5jp78axat5namppwt050d57j"},{"amount":218267645,"address":"kaspa:qrk9decfnl4rayeegp6gd3tc6605zavclkpud5jp78axat5namppwt050d57j"},{"amount":218267645,"address":"kaspa:qpamkvhgh0kzx50gwvvp5xs8ktmqutcy3dfs9dc3w7lm9rq0zs76vf959mmrp"},{"amount":218267645,"address":"kaspa:qqzffjn32q670kat0huq5j0pcvk95r8j0am62c8fyzd6yr24tefaq758ug3tw"},{"amount":218267645,"address":"kaspa:qqje6ps46n6pvjstupfxgrg6v3pegd22q84jachnfrnz2vh5vznqw8redgln6"},{"amount":218267645,"address":"kaspa:qzyzhlkd8thwywu2ajylmzlz9hxdqw9s5xznf0kzed8s9y4h6mtfj222rtgcn"},{"amount":218267645,"address":"kaspa:qpamkvhgh0kzx50gwvvp5xs8ktmqutcy3dfs9dc3w7lm9rq0zs76vf959mmrp"},{"amount":218267645,"address":"kaspa:qpamkvhgh0kzx50gwvvp5xs8ktmqutcy3dfs9dc3w7lm9rq0zs76vf959mmrp"},{"amount":218267645,"address":"kaspa:qrcz0ha5krc2y3snq6vm6quyqdh7fcs8gkx0f5z5v4ld0s32l4p850cvk8udv"}],"subsidy":218267645,"pool":"viabtc","difficulty":1.6751445446279088e+16},"redeem_cls":"ppppooooopoooooooopoooooiioioooooooooiooooopoooooooooooooooooooooiooooiipoooooooiipooopoiooooiooooiipopoooooiipopoooiooooiooooiipopoooooiipopoooiooooiooooiipopoooooiipopoooiooooooooooooooiooooopoooooopoopooooooooopoooiooppopooopoooooopoooopooooiooooooopoooioopoopoooooooooooooooopooooooooooooooooooooooooooooooooooooooooiooooiipoooooooiipooopoiooooiooooiipopoooooiipopoooiooooiooooiipopoooooiipopoooiooooiooooiipopoooooiipopoooiooooooooooooooiooooopoooooopoopooooooooopoooiooppopooopoooooopoooopooooiooooooopoooioopoopoooooooooooooooopooooooooooooooooooooooooooooooooooooooooiooooiipoooooooiipooopoiooooiooooiipopoooooiipopoooiooooiooooiipopoooooiipopoooiooooiooooiipopoooooiipopoooiooooooooooooooiooooopoooooopoopooooooooopoooiooppopooopoooooopoooopooooiooooooopoooioopoopoooooooooooooooopooooooooooooooooooooooooooooooooooooooooiooooiipoooooooiipooopoiooooiooooiipopoooooiipopoooiooooiooooiipopoooooiipopoooiooooiooooiipopoooooiipopoooiooooooooooooooiooooopoooooopoopooooooooopoooiooppopooopoooooopoooopooooiooooooopoooioopoopoooooooooooooooopoooooooooooooooooooooooooooooooooooooopoooooooooooopooooooooooooooooooooooooooooooooooooooooooooooooopooooooooooopooooooooooopooooooooooooooooooooooopoopoopoooooooooooopoooooooooooooipoooooooooooooipoooooioiopopooiooppopooopoooooiiooooooooooooooooopooooooooooooooooooooooooooooooooooooooooooooooooopooooooooooopooooooooooopooooooooooooooooooooooopoopoopoooooooooooopoooooooooooooipoooooooooooooipoooooioiopopooiooppopooopoooooiiooooooooooooooooopooooooooooooooooooooooooooooooooooooooooooooooooopooooooooooopooooooooooopooooooooooooooooooooooopoopoopoooooooooooopoooooooooooooipoooooooooooooipoooooioiopopooiooppopooopoooooiiooooooooooooooooopooooooooooooooooooooooooooooooooooooooooooooooooopooooooooooopooooooooooopooooooooooooooooooooooopoopoopoooooooooooopoooooooooooooipoooooooooooooipoooooioiopopooiooppopooopoooooiiooooooooooooooooopooooooooooooooooooooooooooooooooooooooooooooooooopooooooooooopooooooooooopooooooooooooooooooooooopoopoopoooooooooooopoooooooooooooipoooooooooooooipoooooioiopopooiooppopooopoooooiiooooooooooooooooooooooooooopooooooopoooopooooooooooooooooooooooopoooopooooooooooooooooooooooopoooopooooooooooooooooooooooopoooopooooooooooooooooooooooopoooopooooooooooooooooooooooooooooooooooooooooooooooooooooo"};
+</script>
+<script>
+(function(){
+  'use strict';
+  const API='https://api.kaspa.org';
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const short=(h,a,b)=>h?h.slice(0,a||8)+'…'+h.slice(-(b||6)):'';
+  const num=n=>Number(n).toLocaleString('en-US');
+  function kas(s){let v=Number(s)/1e8;let t=v.toFixed(8).replace(/0+$/,'');if(t.endsWith('.'))t+='00';else if(/\.\d$/.test(t))t+='0';return t+' KAS';}
+  const utc=ms=>{const d=new Date(Number(ms));const p=n=>String(n).padStart(2,'0');return p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds())+'.'+String(d.getUTCMilliseconds()).padStart(3,'0')+' UTC';};
+  const day=ms=>{const d=new Date(Number(ms));return d.getUTCDate()+' '+['January','February','March','April','May','June','July','August','September','October','November','December'][d.getUTCMonth()]+' '+d.getUTCFullYear();};
+  const POOLS={viabtc:'ViaBTC',zkmm:'ZKMM',k1pool:'K1Pool',f2pool:'F2Pool',wpool:'wpool',humpool:'humpool'};
+  const poolName=s=>{if(!s)return 'a miner';const k=String(s).toLowerCase();for(const p in POOLS){if(k.startsWith(p))return POOLS[p];}return s.length>12?s.slice(0,12)+'…':s;};
+  const hexToBytes=h=>{const o=new Uint8Array(h.length/2);for(let i=0;i<o.length;i++)o[i]=parseInt(h.substr(i*2,2),16);return o;};
+  const bytesToHex=b=>Array.from(b,x=>x.toString(16).padStart(2,'0')).join('');
+  const SUBSIDY_EX=EX.accepting_block.subsidy;
+  const WALLET_LINE=100, FINAL_LINE=432000;
+  /* opcode names for the parts of a script the page shows */
+  const INTRO_LO=0xb2, INTRO_HI=0xd6;
+  function pushes(bytes){const out=[];let i=0;while(i<bytes.length){const op=bytes[i++];if(op>=1&&op<=0x4b){out.push({op,data:bytes.subarray(i,i+op)});i+=op;}else if(op===0x4c){const n=bytes[i];i+=1;out.push({op,data:bytes.subarray(i,i+n)});i+=n;}else if(op===0x4d){const n=bytes[i]|(bytes[i+1]<<8);i+=2;out.push({op,data:bytes.subarray(i,i+n)});i+=n;}else if(op===0x4e){const n=(bytes[i]|(bytes[i+1]<<8)|(bytes[i+2]<<16)|(bytes[i+3]<<24))>>>0;i+=4;out.push({op,data:bytes.subarray(i,i+n)});i+=n;}else out.push({op});}return out;}
+  function classify(bytes){const ops=pushes(bytes);let intro=0;const cls=[];for(const o of ops){if(o.data){cls.push('p');}else if(o.op>=INTRO_LO&&o.op<=INTRO_HI){intro++;cls.push('i');}else cls.push('o');}return {count:ops.length,intro,cls:cls.join('')};}
+  function lockKind(spk){if(!spk)return 'other';if(/^20[0-9a-f]{64}ac$/.test(spk))return 'q';if(/^21[0-9a-f]{66}ab$/.test(spk))return 'e';if(/^aa20[0-9a-f]{64}87$/.test(spk))return 'p';return 'other';}
+  const kindLetter=k=>k==='p'?'p':'q';
+
+  /* ---------- the model ---------- */
+  function modelFromExample(){return EX;}
+  async function j(url){let r;try{r=await fetch(url,{headers:{accept:'application/json'}});}catch(e){throw {code:'net'};}if(r.status===404)throw {code:404};if(r.status===422)throw {code:404};if(!r.ok)throw {code:'net'};return r.json();}
+  function coinbasePayload(hex){/* blue score u64 LE, subsidy u64 LE, version u16, script length u8, script */const b=hexToBytes(hex);let s=0n;for(let i=15;i>=8;i--)s=(s<<8n)|BigInt(b[i]);const len=b[18];return {subsidy:Number(s),script:bytesToHex(b.subarray(19,19+len))};}
+  async function modelFromApi(txid,say){
+    say('Reading api.kaspa.org…');
+    const tx=await j(API+'/transactions/'+txid+'?inputs=true&outputs=true&resolve_previous_outpoints=full');
+    if(!tx||!tx.is_accepted||!tx.accepting_block_hash)throw {code:404};
+    if(!tx.inputs||!tx.inputs.length)throw {code:'coinbase'};
+    const m={txid:tx.transaction_id,version:tx.version,mass:tx.mass,subnetwork:tx.subnetwork_id,lock_time:0,block_time:tx.block_time,inputs:[],outputs:[],carriers:[],accepted_in:null,accepting_block:null};
+    for(const i of tx.inputs){const r=i.previous_outpoint_resolved||{};m.inputs.push({prev_txid:i.previous_outpoint_hash,prev_index:i.previous_outpoint_index,amount:Number(r.amount!=null?r.amount:i.previous_outpoint_amount||0),prev_spk:r.script_public_key||'',prev_address:r.script_public_key_address||i.previous_outpoint_address||'',sig_script:i.signature_script||'',compute_budget:i.compute_budget,sig_op_count:i.sig_op_count});}
+    for(const o of tx.outputs){m.outputs.push({index:o.index,amount:Number(o.amount),spk:o.script_public_key,address:o.script_public_key_address,type:o.script_public_key_type,covenant_authorizing_input:o.covenant_authorizing_input,covenant_id:o.covenant_id});}
+    say('Reading the accepting block…');
+    const acc=await j(API+'/blocks/'+tx.accepting_block_hash+'?includeTransactions=true&includeColor=false');
+    const vd=acc.verboseData||{},hd=acc.header||{},cbt=(acc.transactions||[])[0]||{outputs:[]};
+    m.accepting_block={hash:vd.hash||tx.accepting_block_hash,time:Number(hd.timestamp),blue_score:Number(vd.blueScore),daa_score:Number(hd.daaScore),miner:(acc.extra||{}).minerAddress||'',pool:poolName((acc.extra||{}).minerInfo),difficulty:vd.difficulty,mergeset_blues:vd.mergeSetBluesHashes||[],mergeset_reds:vd.mergeSetRedsHashes||[],coinbase_txid:(cbt.verboseData||{}).transactionId||'',coinbase_outputs:(cbt.outputs||[]).map(o=>({amount:Number(o.amount),address:(o.verboseData||{}).scriptPublicKeyAddress||''})),subsidy:0};
+    const carriers=(tx.block_hash||[]).slice(0,24);
+    say('Reading the blocks that carried it…');
+    const blocks=await Promise.all(carriers.map(h=>j(API+'/blocks/'+h+'?includeTransactions=true&includeColor=false').catch(()=>null)));
+    blocks.forEach((b,ix)=>{if(!b)return;const v=b.verboseData||{},h=b.header||{},x=b.extra||{};m.carriers.push({hash:v.hash||carriers[ix],time:Number(h.timestamp),blue_score:Number(v.blueScore),daa_score:Number(h.daaScore),chain:!!v.isChainBlock,miner:x.minerAddress||'',pool:poolName(x.minerInfo),txs:(b.transactions||[]).length,mergeset_pos:m.accepting_block.mergeset_blues.indexOf(v.hash||carriers[ix]),bits:h.bits,nonce:h.nonce,difficulty:v.difficulty,_b:b});});
+    m.carriers.sort((a,b)=>a.time-b.time);
+    let win=null;for(const h of m.accepting_block.mergeset_blues){const c=m.carriers.find(x=>x.hash===h);if(c){win=c;break;}}
+    if(!win){const r=m.carriers.find(x=>m.accepting_block.mergeset_reds.indexOf(x.hash)>=0);if(r)win=r;}
+    if(win){
+      const b=win._b,cb=(b.transactions||[])[0]||{};let subsidy=0;try{subsidy=coinbasePayload(cb.payload||'').subsidy;}catch(e){}
+      m.accepted_in={hash:win.hash,time:win.time,blue_score:win.blue_score,daa_score:win.daa_score,bits:win.bits,nonce:win.nonce,miner:win.miner,pool:win.pool,txs:win.txs,difficulty:win.difficulty,subsidy,fees_accepted:null,other_fees:null,red:m.accepting_block.mergeset_blues.indexOf(win.hash)<0};
+      const others=(b.transactions||[]).slice(1).map(t=>(t.verboseData||{}).transactionId).filter(id=>id&&id!==m.txid);
+      if(others.length<=25){
+        say('Adding up the fees of that block…');
+        const fees=await Promise.all(others.map(id=>j(API+'/transactions/'+id+'?inputs=true&outputs=true&resolve_previous_outpoints=light').then(t=>{const i=(t.inputs||[]).reduce((s,x)=>s+Number(x.previous_outpoint_amount||0),0),o=(t.outputs||[]).reduce((s,x)=>s+Number(x.amount||0),0);return {fee:Math.max(0,i-o),mass:Number(t.mass||0),ours:t.accepting_block_hash===m.accepting_block.hash};}).catch(()=>null)));
+        if(fees.every(f=>f!==null)){const other=fees.reduce((s,f)=>s+(f.ours?f.fee:0),0);const fee=m.inputs.reduce((s,i)=>s+i.amount,0)-m.outputs.reduce((s,o)=>s+o.amount,0);m.accepted_in.other_fees=other;m.accepted_in.fees_accepted=other+fee;m.accepted_in.others=fees.filter(f=>f.ours).map(f=>({fee:f.fee,mass:f.mass}));}
+      }
+      m.accepting_block.subsidy=subsidy;
+    }
+    m.carriers.forEach(c=>{delete c._b;});
+    return m;
+  }
+
+  /* ---------- derived facts ---------- */
+  function derive(m){
+    const d={};
+    d.sumIn=m.inputs.reduce((s,i)=>s+i.amount,0); d.sumOut=m.outputs.reduce((s,o)=>s+o.amount,0); d.fee=d.sumIn-d.sumOut;
+    d.inputs=m.inputs.map(i=>{const kind=lockKind(i.prev_spk);const sig=hexToBytes(i.sig_script||'');const ps=pushes(sig);const r={kind,sigBytes:sig.length,pushes:ps};if(kind==='p'&&ps.length){const last=ps[ps.length-1];if(last.data){r.redeem=last.data;r.hash=null;r.want=i.prev_spk.slice(4,68);}}return r;});
+    d.outputs=m.outputs.map(o=>({kind:lockKind(o.spk)}));
+    d.feerate=m.mass?d.fee/m.mass:0;
+    return d;
+  }
+
+  /* ---------- rendering ---------- */
+  let M=null,D=null,timers=[],liveTimer=null,broken=false;
+  function clearTimers(){timers.forEach(clearTimeout);timers=[];}
+  const later=(fn,ms)=>timers.push(setTimeout(fn,ms));
+  function pill(id,text,cls){const p=$(id);p.textContent=text;p.className='pill'+(cls?' '+cls:'');}
+  function ckRow(what,val,node){return '<li class="wait'+(node?' node':'')+'"><span class="tick"></span><span class="what">'+what+'</span><span class="val">'+val+'</span></li>';}
+  function playList(ol,step,done){const rows=ol.querySelectorAll('li');rows.forEach((li,ix)=>{li.classList.remove('on','bad');li.classList.add('wait');later(()=>{li.classList.remove('wait');li.classList.add('on');if(ix===rows.length-1&&done)done();},step*(ix+1));});}
+
+  function renderTx(){
+    const m=M,d=D;
+    const a=$('txlink');a.textContent=short(m.txid,8,6);a.href='https://kaspa.stream/transactions/'+m.txid;
+    $('txmeta').textContent='version '+m.version+' · '+(m.subnetwork&&/^0+$/.test(m.subnetwork)?'native':'subnetwork '+short(m.subnetwork,4,4))+' · lock time '+num(m.lock_time||0)+' · mass '+num(m.mass)+' grams';
+    $('hin').textContent=m.inputs.length+(m.inputs.length===1?' input':' inputs');
+    $('hout').textContent=m.outputs.length+(m.outputs.length===1?' output':' outputs');
+    $('ins').innerHTML=m.inputs.map((i,ix)=>'<div class="u"><span class="k '+kindLetter(d.inputs[ix].kind)+'">'+kindLetter(d.inputs[ix].kind)+'</span><span class="ref"><a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/'+i.prev_txid+'">'+short(i.prev_txid,8,4)+'</a>:'+i.prev_index+'</span><span class="amt">'+kas(i.amount)+'</span></div>').join('');
+    $('outs').innerHTML=m.outputs.map((o,ix)=>'<div class="u"><span class="k '+kindLetter(d.outputs[ix].kind)+'">'+kindLetter(d.outputs[ix].kind)+'</span><span class="ref">'+short(o.address||o.spk,12,6)+'</span><span class="amt">'+kas(o.amount)+'</span></div>').join('');
+    $('feeline').innerHTML='<span>in <b>'+kas(d.sumIn)+'</b></span><span>out <b>'+kas(d.sumOut)+'</b></span><span>fee <span class="fee">'+kas(d.fee)+'</span> = '+num(d.fee)+' sompi</span>';
+    pill('p1','received');
+  }
+
+  function renderList(){
+    const m=M,d=D;const rows=[];
+    rows.push(['at least one input, at most 1,000',m.inputs.length+(m.inputs.length===1?' input':' inputs')]);
+    rows.push(['each signature script within 250,000 bytes',d.inputs.map(i=>num(i.sigBytes)).join(' and ')+' bytes']);
+    rows.push(['at most 1,000 outputs',m.outputs.length+(m.outputs.length===1?' output':' outputs')]);
+    rows.push(['each output script within 10,000 bytes',m.outputs.map(o=>o.spk.length/2).join(' and ')+' bytes']);
+    rows.push(['not shaped like a coinbase','has inputs']);
+    rows.push(['every output above zero, the total under 29 billion KAS',m.outputs.map(o=>kas(o.amount)).join(', ')]);
+    rows.push(['no input listed twice',m.inputs.length+' distinct']);
+    rows.push(['gas is zero','0']);
+    rows.push(['subnetwork is native',(m.subnetwork&&/^0+$/.test(m.subnetwork))?'native':short(m.subnetwork,4,4)]);
+    rows.push(['version known',m.version===1?'1, Toccata':String(m.version)]);
+    if(m.version>=1)rows.push(['a compute budget on each input, no sigop count',m.inputs.map(i=>num(i.compute_budget==null?0:i.compute_budget)).join(' and ')+' units']);
+    else rows.push(['a sigop count on each input, no compute budget',m.inputs.map(i=>num(i.sig_op_count==null?0:i.sig_op_count)).join(' and ')]);
+    const ol=$('cks2');ol.innerHTML=rows.map(r=>ckRow(r[0],r[1],false)).join('');
+    ol.querySelectorAll('li').forEach(li=>{li.addEventListener('click',()=>breakRow(li));});
+    pill('p2','checking');
+    playList(ol,140,()=>pill('p2','passed','ok'));
+  }
+  function breakRow(li){
+    const ol=$('cks2');
+    if(li.classList.contains('bad')){unbreak();return;}
+    ol.querySelectorAll('li').forEach(x=>x.classList.remove('bad'));
+    li.classList.remove('wait');li.classList.add('on','bad');
+    const v=li.querySelector('.val');v.setAttribute('data-was',v.textContent);v.textContent='fails';
+    broken=true;pill('p2','dropped, the transaction goes no further','bad');
+    for(let n=3;n<=8;n++){$('s'+n).classList.add('dim');const p=$('p'+n);p.setAttribute('data-was',p.textContent);p.textContent='never reached';p.className='pill';}
+  }
+  function unbreak(){
+    if(!broken)return;broken=false;
+    $('cks2').querySelectorAll('li').forEach(li=>{if(li.classList.contains('bad')){li.classList.remove('bad');const v=li.querySelector('.val');v.textContent=v.getAttribute('data-was')||'';}});
+    pill('p2','passed','ok');
+    for(let n=3;n<=8;n++){$('s'+n).classList.remove('dim');const p=$('p'+n);p.textContent=p.getAttribute('data-was')||'';p.className='pill ok';}
+  }
+
+  function renderSet(){
+    const m=M,d=D;const N=120;const cells=[];const pos=[17,63,41,88,29,74,52,97,8,109].slice(0,Math.min(m.inputs.length,10));
+    for(let i=0;i<N;i++)cells.push('<i id="c'+i+'"></i>');
+    $('set').innerHTML=cells.join('');
+    $('found').innerHTML=m.inputs.map((i,ix)=>'<div class="u"><span class="k '+kindLetter(d.inputs[ix].kind)+'">'+kindLetter(d.inputs[ix].kind)+'</span><span class="ref">'+short(i.prev_txid,8,4)+':'+i.prev_index+' <span style="color:var(--muted)">'+(d.inputs[ix].kind==='p'?'script lock':d.inputs[ix].kind==='other'?'lock of '+i.prev_spk.length/2+' bytes':'key lock')+'</span></span><span class="amt">'+kas(i.amount)+'</span></div>').join('');
+    m.inputs.forEach((i,ix)=>{later(()=>{const c=$('c'+pos[ix%pos.length]);if(c)c.classList.add('f');},300+ix*350);});
+    $('sum').innerHTML='<span class="lab">inputs</span><span class="num">'+kas(d.sumIn)+'</span><span class="lab">outputs</span><span class="num">'+kas(d.sumOut)+'</span><span class="lab">fee</span><span><span class="num fee">'+kas(d.fee)+'</span> <span style="color:var(--muted);font-size:.85em">'+num(d.fee)+' sompi, '+d.feerate.toFixed(1)+' per gram</span></span>';
+    const rows=[];
+    rows.push(['every input exists in the set and is unspent',m.inputs.length+' found',true]);
+    rows.push(['none is a coinbase younger than 1,000 blocks','not too young',true]);
+    rows.push(['the inputs add up without overflow',kas(d.sumIn),false]);
+    rows.push(['the outputs do not exceed the inputs',kas(d.sumOut)+' ≤ '+kas(d.sumIn),false]);
+    rows.push(['fee = inputs − outputs',num(d.fee)+' sompi',false]);
+    rows.push(['the mass the transaction commits to equals the node\'s own count','storage mass',true]);
+    rows.push(['no relative time lock still running on an input','none',true]);
+    rows.push(['fee rate above the mempool\'s floor of 1 sompi per gram',d.feerate.toFixed(1)+' per gram',false]);
+    const cov=m.outputs.filter(o=>o.covenant_id);
+    if(cov.length)rows.push(['the covenant binding: output '+cov.map(o=>o.index).join(', ')+' continues the covenant of input '+cov.map(o=>o.covenant_authorizing_input).join(', '),'id '+short(cov[0].covenant_id,8,4),true]);
+    rows.push(['then the scripts, step 4','',true]);
+    const ol=$('cks3');ol.innerHTML=rows.map(r=>ckRow(r[0],r[1],r[2])).join('');
+    pill('p3','looking up');
+    later(()=>playList(ol,160,()=>pill('p3','passed','ok')),900);
+  }
+
+  function renderLocks(){
+    const m=M,d=D;const lanes=[];
+    m.inputs.forEach((i,ix)=>{
+      const k=d.inputs[ix];let h='';
+      if(k.kind==='q'||k.kind==='e'){
+        const key=k.kind==='q'?i.prev_spk.slice(2,66):i.prev_spk.slice(2,68);
+        h+='<div class="lane"><div class="lh"><span class="k q">q</span>input '+ix+', a key lock, '+kas(i.amount)+'</div><ol class="steps">';
+        h+='<li class="wait node"><span class="tick"></span><span>the lock: <span class="op"><b>'+(k.kind==='q'?'20':'21')+'</b> push the key</span><span class="op hi">'+short(key,8,6)+'</span><span class="op"><b>'+(k.kind==='q'?'ac':'ab')+'</b> OP_CHECKSIG'+(k.kind==='e'?'ECDSA':'')+'</span></span></li>';
+        h+='<li class="wait node"><span class="tick"></span><span>the input brings a signature, '+num(k.sigBytes)+' bytes: <span class="hex">'+short(i.sig_script,10,8)+'</span></span></li>';
+        h+='<li class="wait node"><span class="tick"></span><span>OP_CHECKSIG: the signature is by that key, over this transaction</span></li>';
+        h+='<li class="wait node"><span class="tick"></span><span>the stack ends with one item, true <span class="yes">yes</span></span></li>';
+        h+='</ol></div>';
+      } else if(k.kind==='p'&&k.redeem){
+        const want=k.want;const n=classify(k.redeem);
+        h+='<div class="lane"><div class="lh"><span class="k">p</span>input '+ix+', a script lock, '+kas(i.amount)+'</div><ol class="steps">';
+        h+='<li class="wait node"><span class="tick"></span><span>the lock: <span class="op"><b>aa</b> OP_BLAKE2B</span><span class="op"><b>20</b> push 32 bytes</span><span class="op hi">'+short(want,8,6)+'</span><span class="op"><b>87</b> OP_EQUAL</span></span></li>';
+        h+='<li class="wait node"><span class="tick"></span><span>the input brings '+k.pushes.length+' pushes, the last one a script of '+num(k.redeem.length)+' bytes</span></li>';
+        h+='<li class="wait" id="hashrow'+ix+'"><span class="tick"></span><span>blake2b-256 of that script, computed here:<div class="cmp"><span class="lab">got</span><span class="hx" id="got'+ix+'">computing…</span><span class="lab">lock</span><span class="hx" id="want'+ix+'">'+want+'</span></div></span></li>';
+        h+='<li class="wait"><span class="tick"></span><span>OP_EQUAL: the fingerprints match, this is the script the address was made from</span></li>';
+        h+='<li class="wait node"><span class="tick"></span><span>the script runs on the stack it was handed: '+num(n.count)+' operations, '+num(n.intro)+' of them read the transaction itself, budget '+num(i.compute_budget==null?0:i.compute_budget)+' units<svg class="tape" id="tape'+ix+'" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true"></svg><span class="tl"><span><i style="background:var(--accent)"></i>reads the transaction</span><span><i style="background:var(--muted);opacity:.6"></i>pushes data</span><span><i style="background:var(--line)"></i>other operations</span></span></span></li>';
+        h+='<li class="wait node"><span class="tick"></span><span>the stack ends with one item, true <span class="yes">yes</span></span></li>';
+        h+='</ol></div>';
+      } else {
+        h+='<div class="lane"><div class="lh"><span class="k">?</span>input '+ix+', a lock of '+(i.prev_spk.length/2)+' bytes, '+kas(i.amount)+'</div><ol class="steps">';
+        h+='<li class="wait node"><span class="tick"></span><span>the lock: <span class="hex">'+short(i.prev_spk,12,8)+'</span></span></li>';
+        h+='<li class="wait node"><span class="tick"></span><span>the input brings '+num(k.sigBytes)+' bytes</span></li>';
+        h+='<li class="wait node"><span class="tick"></span><span>the node ran both, the stack ended with one item, true <span class="yes">yes</span></span></li>';
+        h+='</ol></div>';
+      }
+      lanes.push(h);
+    });
+    $('lanes').innerHTML=lanes.join('');
+    pill('p4','running scripts');
+    /* tapes */
+    m.inputs.forEach((i,ix)=>{const k=d.inputs[ix];if(k.kind!=='p'||!k.redeem)return;const svg=$('tape'+ix);if(!svg)return;const cls=classify(k.redeem).cls;const bins=Math.min(240,cls.length);const per=cls.length/bins;let s='';for(let b=0;b<bins;b++){const seg=cls.slice(Math.floor(b*per),Math.floor((b+1)*per))||cls[Math.floor(b*per)];const ni=(seg.match(/i/g)||[]).length,np=(seg.match(/p/g)||[]).length;const c=ni?'i':(np>=seg.length/2?'p':'o');const hgt=ni?40:(np?26:16);s+='<rect class="'+c+'" x="'+(b*1000/bins).toFixed(2)+'" y="'+(40-hgt)+'" width="'+(1000/bins-0.6).toFixed(2)+'" height="'+hgt+'"/>';}s+='<rect class="veil" id="veil'+ix+'" x="0" y="0" width="1000" height="40"/>';svg.innerHTML=s;});
+    /* play, lane by lane */
+    let t=200;
+    const lanesEl=$('lanes').querySelectorAll('.lane');
+    lanesEl.forEach((lane,lx)=>{
+      const rows=lane.querySelectorAll('li');
+      rows.forEach((li,rx)=>{
+        later(()=>{li.classList.remove('wait');li.classList.add('on');
+          if(li.id.startsWith('hashrow')){const ix=Number(li.id.slice(7));const k=d.inputs[ix];const got=blake2b256(k.redeem);k.hash=got;const g=$('got'+ix);g.textContent=got;if(got===k.want){g.classList.add('match');$('want'+ix).classList.add('match');}else{li.classList.add('bad');g.style.color='var(--refused)';}}
+          const tp=li.querySelector('.tape');if(tp){const v=tp.querySelector('.veil');if(v)v.classList.add('run');}
+        },t);
+        t+=li.querySelector('.tape')?2600:520;
+      });
+    });
+    later(()=>pill('p4','yes, every lock','ok'),t+100);
+  }
+
+  function renderNet(){
+    const svg=$('net');const cx=210,cy=130,R=88,R2=125;let s='';
+    const peers=[],far=[];
+    for(let i=0;i<8;i++){const a=-Math.PI/2+i*Math.PI/4;peers.push({x:cx+R*Math.cos(a),y:cy+R*Math.sin(a)*0.78,a});}
+    peers.forEach((p,i)=>{for(let k=-1;k<=1;k+=2){const a=p.a+k*0.2;far.push({x:cx+R2*Math.cos(a),y:cy+R2*Math.sin(a)*0.78,from:i});}});
+    far.forEach(f=>{const p=peers[f.from];s+='<line class="e far" x1="'+p.x.toFixed(1)+'" y1="'+p.y.toFixed(1)+'" x2="'+f.x.toFixed(1)+'" y2="'+f.y.toFixed(1)+'"/>';});
+    peers.forEach(p=>{s+='<line class="e" x1="'+cx+'" y1="'+cy+'" x2="'+p.x.toFixed(1)+'" y2="'+p.y.toFixed(1)+'"/>';});
+    far.forEach(f=>{s+='<circle class="nd far" cx="'+f.x.toFixed(1)+'" cy="'+f.y.toFixed(1)+'" r="6"/>';});
+    peers.forEach((p,i)=>{s+='<circle class="nd" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="13"/><path class="ck" id="ck'+i+'" d="M'+(p.x-5).toFixed(1)+' '+(p.y+0.5).toFixed(1)+' l3.5 3.5 l6.5 -7.5"/>';});
+    s+='<circle class="nd me" cx="'+cx+'" cy="'+cy+'" r="22"/><text x="'+cx+'" y="'+(cy-3)+'">this node</text><text class="sm" x="'+cx+'" y="'+(cy+9)+'" id="mem">mempool</text>';
+    peers.forEach((p,i)=>{s+='<circle class="tx" r="4" id="t'+i+'" opacity="0"><animateMotion id="am'+i+'" dur="0.9s" begin="indefinite" fill="freeze" path="M'+cx+','+cy+' L'+p.x.toFixed(1)+','+p.y.toFixed(1)+'"/></circle>';});
+    far.forEach((f,i)=>{const p=peers[f.from];s+='<circle class="tx" r="3" id="f'+i+'" opacity="0"><animateMotion id="fm'+i+'" dur="0.8s" begin="indefinite" fill="freeze" path="M'+p.x.toFixed(1)+','+p.y.toFixed(1)+' L'+f.x.toFixed(1)+','+f.y.toFixed(1)+'"/></circle>';});
+    svg.innerHTML=s;
+    pill('p5','relaying');
+    later(()=>{$('mem').textContent='mempool +1';},300);
+    peers.forEach((p,i)=>{later(()=>{const c=$('t'+i);c.setAttribute('opacity','1');const am=$('am'+i);if(am&&am.beginElement)am.beginElement();},700+i*90);later(()=>{$('ck'+i).classList.add('on');$('t'+i).setAttribute('opacity','0');},1650+i*90);});
+    far.forEach((f,i)=>{later(()=>{const c=$('f'+i);c.setAttribute('opacity','1');const am=$('fm'+i);if(am&&am.beginElement)am.beginElement();},2000+f.from*90+(i%2)*60);later(()=>{$('f'+i).setAttribute('opacity','0');},2900+f.from*90);});
+    later(()=>pill('p5','every peer said yes','ok'),3100);
+  }
+
+  function renderMiner(){
+    const m=M,d=D;
+    const ai=m.accepted_in;const hash=$('hash');hash.classList.remove('found');
+    const all=[{v:d.feerate,ours:true}];(ai&&ai.others||[]).forEach(o=>{if(o.mass)all.push({v:o.fee/o.mass,ours:false});});all.sort((a,b)=>b.v-a.v);
+    $('pick').innerHTML=all.map(x=>'<span class="cand'+(x.ours?' ours':'')+'">'+(x.ours?'this one, ':'')+x.v.toFixed(1)+' sompi per gram</span>').join('')+'<span class="cand">the floor, 1.0</span>';
+    $('hpick').textContent=ai&&ai.others&&ai.others.length?'picked from the mempool by fee rate, with the '+(ai.others.length===1?'other transaction':'other '+ai.others.length+' transactions')+' of the same block':'picked from the mempool by fee rate';
+    const diff=ai&&ai.difficulty?ai.difficulty:(m.accepting_block&&m.accepting_block.difficulty)||0;
+    function rowsHtml(nonce,pow,found){return '<div class="row"><span class="lab">nonce</span><span class="val'+(found?'':' spin')+'">'+nonce+'</span></div><div class="row"><span class="lab">the hash</span><span class="val'+(found?'':' spin')+'">'+pow+'</span></div><div class="row"><span class="lab">under target?</span><span class="val">'+(found?'yes. On average one hash in '+num(Math.round(diff))+' is':'no, again')+'</span></div>'+(found?'<div class="row"><span class="lab">the block</span><span class="val"><a target="_blank" rel="noopener" href="https://kaspa.stream/blocks/'+ai.hash+'">'+short(ai.hash,8,6)+'</a> by '+esc(poolName(ai.pool))+', '+utc(ai.time)+', '+ai.txs+' transactions</span></div>':'');}
+    const rnd=()=>{let s='';for(let i=0;i<64;i++)s+='0123456789abcdef'[Math.floor(Math.random()*16)];return s;};
+    let n=0;const start=Date.now();
+    function spin(){if(M!==m)return;n+=Math.floor(1+Math.random()*7);hash.innerHTML=rowsHtml(num(n)+'…',rnd(),false);if(Date.now()-start<2200)later(spin,120);else if(ai){hash.classList.add('found');hash.innerHTML=rowsHtml(esc(String(ai.nonce)),'kHeavyHash of the header with this nonce, under the target',true);pill('p6','sealed','ok');}else{hash.innerHTML='<div class="row"><span class="lab">block</span><span class="val">the blocks that carried it could not be read</span></div>';pill('p6','sealed','ok');}}
+    pill('p6','mining');spin();
+    const cs=m.carriers.slice();const t0=cs.length?cs[0].time:0;
+    $('hcarry').textContent=cs.length+' blocks carried this transaction'+(cs.length>1?', within '+num(cs[cs.length-1].time-t0)+' ms':'');
+    $('carriers').innerHTML=cs.map(c=>{const acc=ai&&c.hash===ai.hash;const mg=c.mergeset_pos>=0;return '<a class="pool'+(acc?' acc':mg?' mg':' late')+'" target="_blank" rel="noopener" href="https://kaspa.stream/blocks/'+c.hash+'" style="color:inherit;text-decoration:none">'+esc(poolName(c.pool))+' <span class="ms">+'+num(c.time-t0)+' ms</span></a>';}).join('');
+    $('carrylegend').innerHTML='<span><i style="background:var(--accent)"></i>the copy the chain accepted</span><span><i style="border:1.5px solid var(--accent);box-sizing:border-box"></i>merged by the same chain block</span><span><i style="border:1.5px dashed var(--line);box-sizing:border-box"></i>merged later, copy skipped</span>';
+  }
+
+  function renderSpread(){
+    const m=M,d=D;const ai=m.accepted_in,ab=m.accepting_block;
+    const rows=[];
+    rows.push(['header: version, timestamp, parents, proof of work under the target',ai?'block '+short(ai.hash,8,4):'',true]);
+    rows.push(['body: a merkle root that matches the transactions, one coinbase',ai?ai.txs+' transactions':'',true]);
+    rows.push(['each transaction on the list of step 2 again',ai?ai.txs-1+' checked':'',true]);
+    rows.push(['the block\'s mass within the limits','',true]);
+    rows.push(['no two transactions in the block spend the same input','',true]);
+    rows.push(['the coinbase declares this block\'s blue score and the right subsidy',ai&&ai.subsidy?kas(ai.subsidy):'',true]);
+    const ol=$('cks7');ol.innerHTML=rows.map(r=>ckRow(r[0],r[1],r[2])).join('');
+    pill('p7','re-checking');playList(ol,180);
+    /* the merge */
+    const blues=ab.mergeset_blues||[];const carriers=new Set(m.carriers.map(c=>c.hash));
+    $('hmerge').innerHTML='chain block <a target="_blank" rel="noopener" href="https://kaspa.stream/blocks/'+ab.hash+'">'+short(ab.hash,8,6)+'</a> at '+utc(ab.time)+', blue score '+num(ab.blue_score)+', merges '+blues.length+' blue blocks in this order';
+    let seen=false;
+    $('merge').innerHTML=blues.map((h,ix)=>{const c=carriers.has(h);let cls='mb',tag=ix===0?'selected parent':'';if(c&&!seen){cls+=' a';tag='accepted here';seen=true;}else if(c){cls+=' c';tag='copy skipped';}return '<span class="'+cls+'">'+short(h,6,4)+(tag?'<span class="tag">'+tag+'</span>':'')+'</span>';}).join('')+((ab.mergeset_reds||[]).length?'<span class="mb">+ '+ab.mergeset_reds.length+' red</span>':'');
+    /* the set after */
+    const N=120;const pos=[17,63,41,88,29,74,52,97,8,109];const born=[33,79,58,102,21,66,45,91,12,114];let cells='';
+    for(let i=0;i<N;i++)cells+='<i id="d'+i+'"></i>';$('set2').innerHTML=cells;
+    m.inputs.forEach((i,ix)=>{later(()=>{const c=$('d'+pos[ix%pos.length]);if(c)c.classList.add('x');},1200+ix*250);later(()=>{const c=$('d'+pos[ix%pos.length]);if(c){c.classList.remove('x');c.style.opacity='.15';}},2400+ix*250);});
+    m.outputs.forEach((o,ix)=>{later(()=>{const c=$('d'+born[ix%born.length]);if(c)c.classList.add('b');},2600+ix*250);});
+    $('delta').innerHTML='<div class="u"><span class="k" style="background:var(--refused);color:#fff">−</span><span class="ref">'+m.inputs.length+(m.inputs.length===1?' input gone':' inputs gone')+'</span><span class="amt">'+kas(d.sumIn)+'</span></div><div class="u"><span class="k">+</span><span class="ref">'+m.outputs.length+(m.outputs.length===1?' output born':' outputs born')+', stamped with DAA score '+num(ab.daa_score)+'</span><span class="amt">'+kas(d.sumOut)+'</span></div>';
+    /* the coinbase */
+    const co=ab.coinbase_outputs||[];const minerAddr=ai?ai.miner:'';const subsidy=ai?ai.subsidy||0:0;
+    let ourIx=-1;
+    if(ai&&ai.fees_accepted!=null){const want=subsidy+ai.fees_accepted;ourIx=co.findIndex(o=>o.amount===want&&(!minerAddr||o.address===minerAddr));if(ourIx<0)ourIx=co.findIndex(o=>o.amount===want);}
+    if(ourIx<0&&minerAddr){ourIx=co.findIndex(o=>o.address===minerAddr&&o.amount>subsidy);}
+    $('hcb').innerHTML='its coinbase, <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/'+ab.coinbase_txid+'">'+short(ab.coinbase_txid,8,6)+'</a>: '+co.length+' outputs, one per blue block it merged';
+    $('cb').innerHTML=co.map((o,ix)=>'<div class="r'+(ix===ourIx?' ours':'')+'"><span class="i">'+ix+'</span><span class="to">'+(o.address?short(o.address,14,6):'')+(ix===ourIx?' <span style="font-family:system-ui,sans-serif;color:var(--muted);font-weight:400">the miner of '+short(ai.hash,6,4)+'</span>':'')+'</span><span class="am">'+kas(o.amount)+'</span></div>').join('');
+    if(ai&&ai.fees_accepted!=null&&ourIx>=0){$('split').innerHTML='= '+kas(subsidy)+' subsidy + '+kas(ai.fees_accepted)+' fees, of which <b>'+kas(d.fee)+'</b> is this transaction\'s'+(ai.other_fees?' and '+kas(ai.other_fees)+' the other '+(ai.txs-2)+(ai.txs-2===1?' transaction\'s':' transactions\'')+' accepted from that block':'')+(ai.red?'. The block was red, so the reward went to the chain block\'s own miner':'')+'.';}
+    else if(ai){$('split').innerHTML='The output to '+esc(poolName(ai.pool))+' holds '+kas(subsidy)+' subsidy plus the fees of the transactions accepted from that block, this one\'s '+kas(d.fee)+' among them.';}
+    else $('split').innerHTML='';
+    later(()=>pill('p7','accepted, blue score '+num(ab.blue_score),'ok'),3200);
+    /* the cheat */
+    const bA=$('cheatA'),bB=$('cheatB'),wA=$('whatifA'),wB=$('whatifB');const who=ai?esc(poolName(ai.pool)):'the miner';const tries=num(Math.round(ai&&ai.difficulty?ai.difficulty:ab.difficulty||0));
+    wA.innerHTML='<div class="r"><span>one transaction in the block says out '+kas(d.sumOut+100000000)+' from in '+kas(d.sumIn)+'</span><span class="no">outputs exceed inputs</span></div><div class="r"><span>the block\'s own checks, every node</span><span>passed, the shape is fine</span></div><div class="r"><span>the chain block\'s re-check of that transaction</span><span class="no">fails, skipped</span></div><div class="r"><span>the block</span><span>kept, its other transactions accepted</span></div><div class="r"><span>coinbase output for '+who+'</span><span>the subsidy and the fees of the accepted ones, nothing for the skipped one</span></div>';
+    wB.innerHTML='<div class="r"><span>the coinbase payload says subsidy '+kas((ai&&ai.subsidy?ai.subsidy:SUBSIDY_EX)+100000000)+', the rule for this DAA score says '+kas(ai&&ai.subsidy?ai.subsidy:SUBSIDY_EX)+'</span><span class="no">WrongSubsidy</span></div><div class="r"><span>the block\'s own checks, every node</span><span class="no">block refused</span></div><div class="r"><span>its transactions</span><span>wait for another block</span></div><div class="r"><span>coinbase output for '+who+'</span><span class="no">none</span></div><div class="r"><span>hashes spent finding the block</span><span class="no">about '+tries+', wasted</span></div>';
+    function setCheat(which){const onA=which==='A'&&bA.getAttribute('aria-pressed')!=='true',onB=which==='B'&&bB.getAttribute('aria-pressed')!=='true';bA.setAttribute('aria-pressed',onA?'true':'false');bB.setAttribute('aria-pressed',onB?'true':'false');wA.classList.toggle('show',onA);wB.classList.toggle('show',onB);}
+    setCheat('');bA.onclick=()=>setCheat('A');bB.onclick=()=>setCheat('B');
+  }
+
+  function renderPile(){
+    const m=M,ab=m.accepting_block;const scale=$('scale');
+    scale.querySelectorAll('.mk,.you').forEach(e=>e.remove());
+    const lg=v=>Math.log10(v+1)/Math.log10(FINAL_LINE*10+1);
+    const marks=[[0,'0'],[WALLET_LINE,'100'],[FINAL_LINE,'432,000']];
+    marks.forEach(mk=>{const e=document.createElement('span');e.className='mk';e.id='mk'+mk[0];e.style.left=(lg(mk[0])*100).toFixed(2)+'%';e.textContent=mk[1];if(mk[0]===0)e.style.transform='translateX(0)';scale.appendChild(e);});
+    const ladder=[[1,'one block on top: the accepting block\'s child','a tenth of a second'],[WALLET_LINE,'100 blocks: the reference wallet counts it as final and lets you spend what it brought','about ten seconds'],[FINAL_LINE,'432,000 blocks: finality, the node itself will never undo it','twelve hours']];
+    $('cks8').innerHTML=ladder.map(r=>'<li class="wait node" id="ld'+r[0]+'"><span class="tick"></span><span class="what">'+r[1]+'</span><span class="val">'+r[2]+'</span></li>').join('');
+    const you=document.createElement('span');you.className='you';you.id='you';you.textContent='now';scale.appendChild(you);
+    if(liveTimer){clearInterval(liveTimer);liveTimer=null;}
+    let last=null,first=0;
+    function show(bs){const n=Math.max(0,bs-ab.blue_score);$('count').innerHTML=num(n)+'<small>blocks on top</small>';$('fill').style.width=(lg(n)*100).toFixed(2)+'%';you.style.left=(lg(n)*100).toFixed(2)+'%';marks.forEach(mk=>{const e=$('mk'+mk[0]);if(e)e.classList.toggle('done',n>=mk[0]&&mk[0]>0);});ladder.forEach(r=>{const e=$('ld'+r[0]);if(!e)return;const on=n>=r[0];e.classList.toggle('wait',!on);e.classList.toggle('on',on);});
+      const secs=Math.max(0,(Date.now()-ab.time)/1000);const dd=Math.floor(secs/86400),hh=Math.floor(secs%86400/3600),mm=Math.floor(secs%3600/60);
+      $('since').textContent='accepted '+utc(ab.time)+', '+day(ab.time)+' · '+(dd?dd+' d ':'')+(dd||hh?hh+' h ':'')+mm+' min ago · '+(n>=FINAL_LINE?'past finality, the node itself will never undo it':n>=WALLET_LINE?'past the wallet\'s line':'not yet at the wallet\'s line');
+      pill('p8',n>=WALLET_LINE?'confirmed':'live',n>=WALLET_LINE?'ok':'');
+      const st=$('stack');if(last===null){st.innerHTML='';first=n;}else if(n>last){for(let i=0;i<Math.min(80,n-last);i++){const b=document.createElement('i');st.appendChild(b);}while(st.children.length>80)st.removeChild(st.firstChild);}
+      $('hstack').textContent='blocks added while this page was open: '+num(Math.max(0,n-first));
+      last=n;}
+    async function tick(){if(M!==m)return;try{const r=await j(API+'/info/virtual-chain-blue-score');show(Number(r.blueScore));}catch(e){$('since').textContent='api.kaspa.org did not answer, trying again';}}
+    tick();liveTimer=setInterval(tick,10000);
+  }
+
+  function renderAll(m){
+    clearTimers();broken=false;M=m;D=derive(m);
+    for(let n=3;n<=8;n++)$('s'+n).classList.remove('dim');
+    renderTx();renderList();renderSet();renderLocks();renderNet();renderMiner();renderSpread();renderPile();
+  }
+
+  /* ---------- the input ---------- */
+  const inp=$('tin'),msg=$('tmsg'),lab=$('tlab');
+  let seq=0;
+  function say(t,err){msg.textContent=t||'';msg.className='msg'+(err?' err':'');}
+  async function go(txid,fromChip){
+    const id=String(txid||'').trim().toLowerCase();
+    if(!id){say('');return;}
+    if(!/^[0-9a-f]{64}$/.test(id)){say('Txid not confirmed on mainnet',true);return;}
+    const my=++seq;
+    if(id===EX.txid){say('');lab.innerHTML=fromChip?'The example':'Paste any transaction id, or take the example';renderAll(modelFromExample());return;}
+    try{const m=await modelFromApi(id,t=>{if(my===seq)say(t);});if(my!==seq)return;say('');lab.textContent='Your transaction';renderAll(m);}
+    catch(e){if(my!==seq)return;if(e&&e.code==='coinbase')say('A coinbase transaction has no inputs to check. Paste one that spends.',true);else if(e&&e.code===404)say('Txid not confirmed on mainnet',true);else say('No answer from api.kaspa.org, try again',true);}
+  }
+  let deb=null;
+  inp.addEventListener('input',()=>{lab.textContent='Paste any transaction id, or take the example';clearTimeout(deb);deb=setTimeout(()=>go(inp.value,false),350);});
+  $('chip-ex').addEventListener('click',()=>{inp.value=EX.txid;go(EX.txid,true);});
+  inp.value=EX.txid;go(EX.txid,true);
+})();
+</script>
+</body>
+</html>

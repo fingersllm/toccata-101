@@ -103,13 +103,16 @@
   .chain .made li{margin:0 0 .15rem}
   .chain b{color:var(--head)}
   .chain code{font-size:.82rem}
-  .script{background:var(--surface);border-radius:10px;padding:.5rem 1rem;margin:.6rem 0 1rem}
-  .script .srow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:.2rem 1rem;padding:.5rem 0;border-top:1px solid var(--line)}
-  .script .srow:first-child{border-top:0}
-  @media (max-width:560px){.script .srow{grid-template-columns:1fr}}
-  .script .sb{font:.84em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);overflow-wrap:anywhere}
-  .script .sb b{color:var(--link);font-weight:600}
-  .script .sm{font-size:.92rem;color:var(--text)}
+  /* the full case of the second transaction, opened in place */
+  .more{margin:.5rem 0 .2rem;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:.45rem .9rem}
+  .more summary{cursor:pointer;color:var(--link);font-weight:600;font-size:.92rem;list-style:none;display:flex;align-items:center;gap:.5rem}
+  .more summary::-webkit-details-marker{display:none}
+  .more summary::before{content:"";width:.45rem;height:.45rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);transition:transform .2s;flex:none;margin-top:-.15rem}
+  .more[open] summary::before{transform:rotate(45deg)}
+  .more summary:hover{color:var(--head)}
+  .more p{margin:.7rem 0 0;font-size:.95rem}
+  .more p:last-child{margin-bottom:.4rem}
+  .more code{font-size:.84rem}
   /* term links: a regular green link that opens the glossary in a new tab */
   a.t{color:var(--link)}
   a.t:hover{color:var(--head)}
@@ -159,19 +162,22 @@
       <li>a q output, the change to <span class="addr">kaspa:qpc6655zfnql67…kzy9jz8q</span>.</li>
     </ul>
     One transaction created both locks.</li>
-  <li><b>The script comes out.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…f7501f3d</code></a> spent the p output. Its signature script holds a 65-byte signature and then the script itself, 187 bytes. Hash the script and you get the 32 bytes inside the p address. The script, read line by line:</li>
+  <li><b>The script revealed.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…f7501f3d</code></a> spent the p output.
+    <details class="more">
+      <summary>Read the full case</summary>
+      <p>Transaction <code>60a2f205…</code> made two outputs: 0.3 KAS behind a p address, and the user's change behind a <a class="t" target="_blank" rel="noopener" href="glossary.html#q-address">q address</a>. A p address is the fingerprint (the hash) of a script. At that moment nobody on the network could see the script itself, <strong>only its fingerprint</strong>.</p>
+      <p>Then <code>2436d2fc…</code> spent that 0.3 KAS. To spend a p output you must put two things in the <a class="t" target="_blank" rel="noopener" href="glossary.html#input">input</a>: the script itself, and whatever that script demands. So the input carries the script (187 bytes) and a signature (65 bytes).</p>
+      <p>The node did two things. First it hashed the script it was handed and compared the result to the 32 bytes inside the p address. <strong>They matched, so this is the script the address was made from</strong> and not a substitute. Only then did it run the script. The script says one thing: key K must sign. The signature was K's, so the script said yes and the 0.3 KAS moved.</p>
+      <p>Two extra facts make the example interesting. The script also carries a dead branch (OP_FALSE OP_IF … OP_ENDIF) that the node never executes, because it's a place to stash a text note that off-chain <a class="t" target="_blank" rel="noopener" href="glossary.html#krc-20">KRC-20</a> software reads. That is why this p address is not a Toccata covenant, it's the older trick of hiding data inside a script. And key K is the very same public key the q address is built from. One owner, one key, two locks: the q output is locked by the key directly, the p output is locked by a script that demands the key. That is "Same key, two locks."</p>
+    </details>
+  </li>
 </ol>
-<div class="script">
-  <div class="srow"><span class="sb"><b>20</b> 71ad5282...dabfd9b3 <b>ac</b></span><span class="sm">push a 32-byte public key, then OP_CHECKSIG: this key must sign</span></div>
-  <div class="srow"><span class="sb"><b>00 63</b> 07 6b6173706c6578 ... <b>68</b></span><span class="sm">OP_FALSE OP_IF ... OP_ENDIF: a branch the node never takes, 153 bytes carrying a note for an off-chain program (a KRC-20 transfer)</span></div>
-</div>
-<p>The key in the first line, <code>71ad...d9b3</code>, is the key inside the <a class="t" target="_blank" rel="noopener" href="glossary.html#q-address">q address</a>. Same key, two locks.</p>
 
 <h2>Sources</h2>
 <p class="src">An address is a prefix, a version byte and a payload, with an 8-character checksum, in rusty-kaspa v2.0.1 <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/lib.rs">crypto/addresses/src/lib.rs</a> (versions 0 PubKey, 32 bytes, 1 PubKeyECDSA, 33 bytes, 8 ScriptHash, 32 bytes) and <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/bech32.rs">bech32.rs</a> (the charset and the checksum). The lock each address stands for is built in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>: <code>OpData32 &lt;key&gt; OpCheckSig</code>, <code>OpData33 &lt;key&gt; OpCheckSigECDSA</code>, <code>OpBlake2b OpData32 &lt;hash&gt; OpEqual</code>, the hash being blake2b-256 of the script. Opcode values are in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">opcodes/mod.rs</a>. The decoder on this page is a line-by-line port of bech32.rs, checked against the node's own test vectors. The two transactions were read from api.kaspa.org on 6 September 2026. The revealed script was hashed with blake2b-256 and matched to the p address.</p>
 
 <footer class="foot">
-  <div class="nav"><a class="prev" href="card-1.3.html">Last card</a> · <span>Next: <span class="soon">Nodes &amp; Miners: Honour among incentives</span></span></div>
+  <div class="nav"><a class="prev" href="card-1.3.html">Last card</a> · <span>Next: <a href="card-1.5.html">Nodes &amp; Miners: Honour among incentives</a></span></div>
   <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio · By FingersLLM</span></div>
 </footer>
 
