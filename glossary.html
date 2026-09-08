@@ -62,9 +62,11 @@
   .az{display:flex;flex-wrap:wrap;gap:.15rem .35rem;margin:.5rem 0 0;font-size:.78rem;letter-spacing:.04em}
   .az a{color:var(--link);text-decoration:none;padding:.05rem .3rem;border-radius:5px;border-bottom:0}
   .az a:hover{background:var(--tint);color:var(--head)}
+  .az a.hit{animation:t101-land 4s ease-out 1}
   .az span{color:var(--soon);padding:.05rem .3rem}
   dl{margin:.6rem 0 0}
-  .letter{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:1.6rem 0 .2rem;padding-left:.8rem;scroll-margin-top:5.5rem}
+  .letter{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:1.6rem 0 .2rem;padding:.15rem .8rem;border-radius:8px;scroll-margin-top:5.5rem}
+  .letter:target{animation:t101-land 4s ease-out 1}
   .letter::before{content:"";display:inline-block;width:.45rem;height:.45rem;border-radius:2px;background:var(--accent);margin-right:.5rem;vertical-align:.05em}
   .term{padding:.1rem .8rem .65rem;margin:0 -.8rem;border-radius:10px;scroll-margin-top:5.6rem}
   .term + .term dt{border-top:1px solid var(--line);padding-top:.6rem}
@@ -166,7 +168,7 @@
 
 <footer class="foot">
   <div class="nav"><a href="index.html">Table of content</a> · <span>Next: <a href="card-0.1.html">What Toccata changed for someone who holds KAS</a></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made by Slancio · FingersLLM</span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio · By FingersLLM</span></div>
 </footer>
 
 <script>
@@ -186,6 +188,8 @@ t101Label();
     count.textContent=(q?shown+' of '+total:total)+' terms';
   }
   inp.addEventListener('input',run);
+  /* a pressed letter lights up in the row for a few seconds, its divider in the list lights up on arrival */
+  var az=document.querySelectorAll('.az a'); for(var a=0;a<az.length;a++){az[a].addEventListener('click',function(){for(var b=0;b<az.length;b++)az[b].classList.remove('hit');var el=this;void el.offsetWidth;el.classList.add('hit');setTimeout(function(){el.classList.remove('hit');},4000);});}
 })();
 </script>
 </body>

@@ -99,6 +99,8 @@
   /* the chain section */
   .chain{padding-left:1.2rem;margin:0}
   .chain li{margin:0 0 .6rem}
+  .chain .made{margin:.25rem 0 .35rem;padding-left:1.1rem;list-style:disc}
+  .chain .made li{margin:0 0 .15rem}
   .chain b{color:var(--head)}
   .chain code{font-size:.82rem}
   .script{background:var(--surface);border-radius:10px;padding:.5rem 1rem;margin:.6rem 0 1rem}
@@ -149,9 +151,14 @@
 </table>
 
 <h2>Look at it on chain</h2>
-<p>Two <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transactions</a> from 6 September 2026, the same pair card 1.3 weighed.</p>
+<p>Two <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transactions</a>:</p>
 <ol class="chain">
-  <li><b>One transaction, both locks.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…3f145914</code></a> created a p output, 0.3 KAS to <span class="addr">kaspa:pzzgtjkyzsgxp24…c62fn0pl</span>, and a q output, the change to <span class="addr">kaspa:qpc6655zfnql67…kzy9jz8q</span>.</li>
+  <li><a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…3f145914</code></a> created:
+    <ul class="made">
+      <li>a p output, 0.3 KAS to <span class="addr">kaspa:pzzgtjkyzsgxp24…c62fn0pl</span>.</li>
+      <li>a q output, the change to <span class="addr">kaspa:qpc6655zfnql67…kzy9jz8q</span>.</li>
+    </ul>
+    One transaction created both locks.</li>
   <li><b>The script comes out.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…f7501f3d</code></a> spent the p output. Its signature script holds a 65-byte signature and then the script itself, 187 bytes. Hash the script and you get the 32 bytes inside the p address. The script, read line by line:</li>
 </ol>
 <div class="script">
@@ -164,8 +171,8 @@
 <p class="src">An address is a prefix, a version byte and a payload, with an 8-character checksum, in rusty-kaspa v2.0.1 <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/lib.rs">crypto/addresses/src/lib.rs</a> (versions 0 PubKey, 32 bytes, 1 PubKeyECDSA, 33 bytes, 8 ScriptHash, 32 bytes) and <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/bech32.rs">bech32.rs</a> (the charset and the checksum). The lock each address stands for is built in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>: <code>OpData32 &lt;key&gt; OpCheckSig</code>, <code>OpData33 &lt;key&gt; OpCheckSigECDSA</code>, <code>OpBlake2b OpData32 &lt;hash&gt; OpEqual</code>, the hash being blake2b-256 of the script. Opcode values are in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">opcodes/mod.rs</a>. The decoder on this page is a line-by-line port of bech32.rs, checked against the node's own test vectors. The two transactions were read from api.kaspa.org on 6 September 2026. The revealed script was hashed with blake2b-256 and matched to the p address.</p>
 
 <footer class="foot">
-  <div class="nav"><a class="prev" href="card-1.3.html">Last card</a> · <span>Next: <span class="soon">Nodes and miners: who checks, who orders</span></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made by Slancio · FingersLLM</span></div>
+  <div class="nav"><a class="prev" href="card-1.3.html">Last card</a> · <span>Next: <span class="soon">Nodes &amp; Miners: Honour among incentives</span></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio · By FingersLLM</span></div>
 </footer>
 
 <script>
