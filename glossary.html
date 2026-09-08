@@ -53,8 +53,6 @@
   .foot a[target="_blank"]{color:var(--ext)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
   .foot .by{color:var(--muted)}
-  .foot .stamp{display:flex;justify-content:flex-end;margin-top:1.1rem}
-  .foot .stamp span{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:2px solid var(--accent);border-radius:5px;padding:.22rem .55rem .2rem;transform:rotate(-4deg);outline:1px solid var(--accent);outline-offset:2px;opacity:.9}
   /* the glossary */
   .tools{position:sticky;top:0;z-index:2;background:var(--bg);padding:.6rem 0 .5rem;margin:0 0 .4rem;border-bottom:1px solid var(--line)}
   .filter{display:flex;gap:.6rem;align-items:center}
@@ -89,7 +87,7 @@
 <p>The terms the cards use, one short explanation each. Tap a term on any card and you land here, on its line. New terms join as the cards land.</p>
 
 <div class="tools">
-  <div class="filter"><input id="gfilter" type="search" placeholder="Type to filter" aria-label="filter the terms" autocomplete="off" spellcheck="false"><span class="n" id="gcount">49 terms</span></div>
+  <div class="filter"><input id="gfilter" type="search" placeholder="Type a term" aria-label="filter the terms" autocomplete="off" spellcheck="false"><span class="n" id="gcount">49 terms</span></div>
   <nav class="az" aria-label="letters"><a href="#l-a">A</a><a href="#l-b">B</a><a href="#l-c">C</a><a href="#l-d">D</a><a href="#l-e">E</a><a href="#l-f">F</a><a href="#l-g">G</a><a href="#l-h">H</a><a href="#l-i">I</a><span>J</span><a href="#l-k">K</a><a href="#l-l">L</a><a href="#l-m">M</a><a href="#l-n">N</a><a href="#l-o">O</a><a href="#l-p">P</a><a href="#l-q">Q</a><span>R</span><a href="#l-s">S</a><a href="#l-t">T</a><a href="#l-u">U</a><a href="#l-v">V</a><a href="#l-w">W</a><span>X</span><span>Y</span><span>Z</span></nav>
 </div>
 <dl id="gl">
@@ -168,8 +166,7 @@
 
 <footer class="foot">
   <div class="nav"><a href="index.html">Table of content</a> · <span>Next: <a href="card-0.1.html">What Toccata changed for someone who holds KAS</a></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio</span></div>
-  <div class="stamp"><span>FingersLLM</span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made by Slancio · FingersLLM</span></div>
 </footer>
 
 <script>
@@ -177,12 +174,13 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
-/* the filter: hides the terms that do not contain what is typed, and the letters left empty */
+/* the filter: keeps the terms whose name, or a word of it, starts with what is typed; the letters left empty are hidden */
 (function(){
   var inp=document.getElementById('gfilter'), terms=document.querySelectorAll('.term'), letters=document.querySelectorAll('.letter'), none=document.getElementById('gnone'), count=document.getElementById('gcount'), total=terms.length;
+  function hit(term,q){var t=term.toLowerCase();if(t.indexOf(q)===0)return true;var w=t.split(/[^a-z0-9]+/);for(var k=0;k<w.length;k++){if(w[k].indexOf(q)===0)return true;}return false;}
   function run(){
     var q=inp.value.trim().toLowerCase(), shown=0;
-    for(var i=0;i<terms.length;i++){var ok=!q||terms[i].textContent.toLowerCase().indexOf(q)>=0;terms[i].classList.toggle('hide',!ok);if(ok)shown++;}
+    for(var i=0;i<terms.length;i++){var name=terms[i].querySelector('dt').textContent;var ok=!q||hit(name,q);terms[i].classList.toggle('hide',!ok);if(ok)shown++;}
     for(var j=0;j<letters.length;j++){var any=false,e=letters[j].nextElementSibling;while(e&&!e.classList.contains('letter')){if(e.classList.contains('term')&&!e.classList.contains('hide')){any=true;break;}e=e.nextElementSibling;}letters[j].classList.toggle('hide',!any);}
     none.classList.toggle('show',shown===0);
     count.textContent=(q?shown+' of '+total:total)+' terms';

@@ -63,8 +63,6 @@
   .foot a[target="_blank"]{color:var(--ext)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
   .foot .by{color:var(--muted)}
-  .foot .stamp{display:flex;justify-content:flex-end;margin-top:1.1rem}
-  .foot .stamp span{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:2px solid var(--accent);border-radius:5px;padding:.22rem .55rem .2rem;transform:rotate(-4deg);outline:1px solid var(--accent);outline-offset:2px;opacity:.9}
   .foot .soon{color:var(--soon)}
   code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   /* the transaction */
@@ -107,9 +105,9 @@
   /* highlight, both directions */
   .tx[data-hl="1"] [data-m="1"],.tx[data-hl="2"] [data-m="2"],.tx[data-hl="3"] [data-m="3"],.tx[data-hl="4"] [data-m="4"],.tx[data-hl="5"] [data-m="5"],.tx[data-hl="6"] [data-m="6"]{border-color:var(--accent);background:var(--tint)}
   .legend[data-hl="1"] li[data-m="1"],.legend[data-hl="2"] li[data-m="2"],.legend[data-hl="3"] li[data-m="3"],.legend[data-hl="4"] li[data-m="4"],.legend[data-hl="5"] li[data-m="5"],.legend[data-hl="6"] li[data-m="6"]{background:var(--surface)}
-  /* term links: quiet, green underline, the glossary is one tap away */
-  a.t{color:inherit;text-decoration:none;border-bottom:1px dotted var(--link)}
-  a.t:hover{color:var(--link);border-bottom-style:solid}
+  /* term links: a regular green link that opens the glossary in a new tab */
+  a.t{color:var(--link)}
+  a.t:hover{color:var(--head)}
 </style>
 </head>
 <body>
@@ -118,17 +116,17 @@
   <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
 </div>
 <h1 class="c">Transaction</h1>
-<p class="subt"><a class="t" href="glossary.html#input">inputs</a>, <a class="t" href="glossary.html#output">outputs</a>, <a class="t" href="glossary.html#signature">signatures</a>, <a class="t" href="glossary.html#fee">fee</a>, all or nothing</p>
+<p class="subt"><a class="t" target="_blank" rel="noopener" href="glossary.html#input">inputs</a>, <a class="t" target="_blank" rel="noopener" href="glossary.html#output">outputs</a>, <a class="t" target="_blank" rel="noopener" href="glossary.html#signature">signatures</a>, <a class="t" target="_blank" rel="noopener" href="glossary.html#fee">fee</a>, all or nothing</p>
 
 <div class="tx" id="tx"></div>
 
 <ol class="legend" id="legend">
-  <li data-m="1"><span class="m">1</span><b>Input.</b> An existing <a class="t" href="glossary.html#utxo">UTXO</a> from a past <a class="t" href="glossary.html#transaction">transaction</a>, ready to be used.</li>
-  <li data-m="2"><span class="m">2</span><b>Signature.</b> A proof, made with the spender's <a class="t" href="glossary.html#private-key">private key</a> (seed), that authorizes using this UTXO.</li>
-  <li data-m="3"><span class="m">3</span><b>Output.</b> The brand-new UTXO(s) created from the combined inputs, representing the payment to the receiver, and any <a class="t" href="glossary.html#change">change</a> back to the sender.</li>
-  <li data-m="4"><span class="m">4</span><b>Change.</b> An output that comes back to the sender's own <a class="t" href="glossary.html#address">address</a>: what's left from the inputs after the payment and the fee.</li>
-  <li data-m="5"><span class="m">5</span><b>Fee.</b> Input minus output, goes to the <a class="t" href="glossary.html#miner">miner</a> who placed the transaction inside a <a class="t" href="glossary.html#block">block</a> in the network.</li>
-  <li data-m="6"><span class="m">6</span><b><a class="t" href="glossary.html#node">Node</a> verification.</b> Every node independently verifies that every input UTXO is authentic and unspent, then updates the global ledger: those inputs are "destroyed" and the new outputs are created.</li>
+  <li data-m="1"><span class="m">1</span><b>Input.</b> An existing <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> from a past <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a>, ready to be used.</li>
+  <li data-m="2"><span class="m">2</span><b>Signature.</b> A proof, made with the spender's <a class="t" target="_blank" rel="noopener" href="glossary.html#private-key">private key</a> (seed), that authorizes using this UTXO.</li>
+  <li data-m="3"><span class="m">3</span><b>Output.</b> The brand-new UTXO(s) created from the combined inputs, representing the payment to the receiver, and any <a class="t" target="_blank" rel="noopener" href="glossary.html#change">change</a> back to the sender.</li>
+  <li data-m="4"><span class="m">4</span><b>Change.</b> An output that comes back to the sender's own <a class="t" target="_blank" rel="noopener" href="glossary.html#address">address</a>: what's left from the inputs after the payment and the fee.</li>
+  <li data-m="5"><span class="m">5</span><b>Fee.</b> Input minus output, goes to the <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> who placed the transaction inside a <a class="t" target="_blank" rel="noopener" href="glossary.html#block">block</a> in the network.</li>
+  <li data-m="6"><span class="m">6</span><b><a class="t" target="_blank" rel="noopener" href="glossary.html#node">Node</a> verification.</b> Every node independently verifies that every input UTXO is authentic and unspent, then updates the global ledger: those inputs are "destroyed" and the new outputs are created.</li>
 </ol>
 
 <h2>Sources</h2>
@@ -136,8 +134,7 @@
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.1.html">Last card</a> · <span>Next: <a href="card-1.3.html">Fee and mass: why a very small output costs more</a></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio</span></div>
-  <div class="stamp"><span>FingersLLM</span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made by Slancio · FingersLLM</span></div>
 </footer>
 
 <script>

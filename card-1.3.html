@@ -58,8 +58,6 @@
   .foot a[target="_blank"]{color:var(--ext)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
   .foot .by{color:var(--muted)}
-  .foot .stamp{display:flex;justify-content:flex-end;margin-top:1.1rem}
-  .foot .stamp span{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:2px solid var(--accent);border-radius:5px;padding:.22rem .55rem .2rem;transform:rotate(-4deg);outline:1px solid var(--accent);outline-offset:2px;opacity:.9}
   .foot .soon{color:var(--soon)}
   code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   /* the slider */
@@ -95,9 +93,9 @@
   .chain li{margin:0 0 .6rem}
   .chain b{color:var(--head)}
   .chain code{font-size:.82rem}
-  /* term links: quiet, green underline, the glossary is one tap away */
-  a.t{color:inherit;text-decoration:none;border-bottom:1px dotted var(--link)}
-  a.t:hover{color:var(--link);border-bottom-style:solid}
+  /* term links: a regular green link that opens the glossary in a new tab */
+  a.t{color:var(--link)}
+  a.t:hover{color:var(--head)}
 </style>
 </head>
 <body>
@@ -108,9 +106,9 @@
 <h1>Fee and mass: why a very small output costs more</h1>
 <p class="one">The fee is a price per gram of weight, and a very small new piece of KAS weighs a lot.</p>
 
-<p>A Kaspa <a class="t" href="glossary.html#transaction">transaction</a> is weighed in <a class="t" href="glossary.html#gram">grams</a>, and the <a class="t" href="glossary.html#fee">fee</a> is a price per gram: 100 <a class="t" href="glossary.html#sompi">sompi</a> a gram today, a hundred-millionth of a KAS each. A plain payment (one <a class="t" href="glossary.html#utxo">UTXO</a> in, two UTXOs out) weighs about two thousand grams and costs a fraction of a cent.</p>
-<p>Two things go on the scale. The first is size: the <a class="t" href="glossary.html#byte">bytes</a> and the checking work, the same for 10 KAS and for 10,000. The second is storage. Every <a class="t" href="glossary.html#piece">piece</a> of KAS you create is a UTXO that every <a class="t" href="glossary.html#node">node</a> keeps for as long as it exists, so the network prices it. A big piece is light. A small piece is heavy, and the weight climbs fast as the piece shrinks. Carving 1 KAS out of a large piece adds ten thousand grams. 0.1 KAS adds a hundred thousand, and the fee equals the amount. At 0.02 KAS you reach the most a <a class="t" href="glossary.html#block">block</a> can hold. Below that, the nodes refuse the transaction, whatever fee you offer.</p>
-<p>The heavier of the two weights sets the fee. <a class="t" href="glossary.html#spend">Spending</a> small pieces you already hold, or merging them, takes weight off the scale. Your <a class="t" href="glossary.html#wallet">wallet</a> does the weighing and picks the pieces. You only feel it when you ask for a very small piece.</p>
+<p>A Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> is weighed in <a class="t" target="_blank" rel="noopener" href="glossary.html#gram">grams</a>, and the <a class="t" target="_blank" rel="noopener" href="glossary.html#fee">fee</a> is a price per gram: 100 <a class="t" target="_blank" rel="noopener" href="glossary.html#sompi">sompi</a> a gram today, a hundred-millionth of a KAS each. A plain payment (one <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> in, two UTXOs out) weighs about two thousand grams and costs a fraction of a cent.</p>
+<p>Two things go on the scale. The first is size: the <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a> and the checking work, the same for 10 KAS and for 10,000. The second is storage. Every <a class="t" target="_blank" rel="noopener" href="glossary.html#piece">piece</a> of KAS you create is a UTXO that every <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> keeps for as long as it exists, so the network prices it. A big piece is light. A small piece is heavy, and the weight climbs fast as the piece shrinks. Carving 1 KAS out of a large piece adds ten thousand grams. 0.1 KAS adds a hundred thousand, and the fee equals the amount. At 0.02 KAS you reach the most a <a class="t" target="_blank" rel="noopener" href="glossary.html#block">block</a> can hold. Below that, the nodes refuse the transaction, whatever fee you offer.</p>
+<p>The heavier of the two weights sets the fee. <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">Spending</a> small pieces you already hold, or merging them, takes weight off the scale. Your <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> does the weighing and picks the pieces. You only feel it when you ask for a very small piece.</p>
 
 <h2>The piece you create</h2>
 <figure class="w" style="margin:0">
@@ -129,7 +127,7 @@
 </figure>
 
 <h2>Look at it on chain</h2>
-<p>Three transactions from 6 September 2026, all at 100 sompi a gram. The <a class="t" href="glossary.html#explorer">explorer</a>'s "<a class="t" href="glossary.html#mass">mass</a>" is the <a class="t" href="glossary.html#size-weight">size weight</a>. The <a class="t" href="glossary.html#storage-weight">storage weight</a> is not shown there, it shows up in the fee.</p>
+<p>Three transactions from 6 September 2026, all at 100 sompi a gram. The <a class="t" target="_blank" rel="noopener" href="glossary.html#explorer">explorer</a>'s "<a class="t" target="_blank" rel="noopener" href="glossary.html#mass">mass</a>" is the <a class="t" target="_blank" rel="noopener" href="glossary.html#size-weight">size weight</a>. The <a class="t" target="_blank" rel="noopener" href="glossary.html#storage-weight">storage weight</a> is not shown there, it shows up in the fee.</p>
 <ol class="chain">
   <li><b>Carving 0.3 KAS out of a 313 KAS piece.</b> Size 2,047 grams, storage 33,333 grams, fee 0.03333 KAS. <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…3f145914</code></a></li>
   <li><b>Moving a 0.3 KAS piece whole, one in and one out.</b> Storage 203 grams, size 1,813 grams, fee 0.00181 KAS. Same piece size, eighteen times less. <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…f7501f3d</code></a></li>
@@ -141,8 +139,7 @@
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.2.html">Last card</a> · <span>Next: <a href="card-1.4.html">Addresses and locks: key-locked and script-locked outputs</a></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio</span></div>
-  <div class="stamp"><span>FingersLLM</span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made by Slancio · FingersLLM</span></div>
 </footer>
 
 <script>

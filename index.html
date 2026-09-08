@@ -53,9 +53,10 @@
   .foot a[target="_blank"]{color:var(--ext)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
   .foot .by{color:var(--muted)}
-  .foot .stamp{display:flex;justify-content:flex-end;margin-top:1.1rem}
-  .foot .stamp span{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:2px solid var(--accent);border-radius:5px;padding:.22rem .55rem .2rem;transform:rotate(-4deg);outline:1px solid var(--accent);outline-offset:2px;opacity:.9}
   .foot .soon{color:var(--soon)}
+  /* the glossary link: a regular green link that opens in a new tab */
+  a.t{color:var(--link)}
+  a.t:hover{color:var(--head)}
 </style>
 </head>
 <body>
@@ -67,7 +68,7 @@
 
 <h2>Start here</h2>
 <ol start="0">
-  <li><a href="glossary.html">Glossary: the terms the cards use, one short explanation each</a></li>
+  <li><a class="t" target="_blank" rel="noopener" href="glossary.html">Glossary: the terms the cards use, one short explanation each</a></li>
   <li><a href="card-0.1.html">What Toccata changed for someone who holds KAS</a></li>
 </ol>
 
@@ -144,7 +145,7 @@
   <li class="soon">DAGKNIGHT and what comes next</li>
 </ol>
 
-<footer class="foot"><div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio</span></div><div class="stamp"><span>FingersLLM</span></div></footer>
+<footer class="foot"><div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made by Slancio · FingersLLM</span></div></footer>
 
 <script>
 function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}

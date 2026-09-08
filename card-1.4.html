@@ -48,6 +48,7 @@
   h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
   h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
   h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  h2 .lc{text-transform:none}
   .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0 0 1.4rem;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
   p{margin:0 0 1rem}
   strong{color:var(--head)}
@@ -60,8 +61,6 @@
   .foot a[target="_blank"]{color:var(--ext)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
   .foot .by{color:var(--muted)}
-  .foot .stamp{display:flex;justify-content:flex-end;margin-top:1.1rem}
-  .foot .stamp span{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:2px solid var(--accent);border-radius:5px;padding:.22rem .55rem .2rem;transform:rotate(-4deg);outline:1px solid var(--accent);outline-offset:2px;opacity:.9}
   .foot .soon{color:var(--soon)}
   /* the two locks: each box is a padlock, the shackle above, the number in the keyhole */
   .locks{list-style:none;padding:0;margin:1.4rem 0 1rem}
@@ -70,7 +69,8 @@
   .locks .m{position:absolute;left:.95rem;top:.95rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:#0F2926;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
   .locks .m::after{content:"";position:absolute;left:50%;top:100%;width:.36rem;height:.5rem;margin:-.08rem 0 0 -.18rem;background:var(--accent);border-radius:0 0 .12rem .12rem}
   .locks b{color:var(--head)}
-  .addr{font:.86em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--link);word-break:break-all}
+  .addr b{color:var(--head);background:var(--tint);border-radius:4px;padding:0 .2em;font-weight:700}
+  .addr{font:.86em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--link);white-space:nowrap}
   /* the decoder */
   .w{background:var(--surface);border-radius:12px;padding:1rem 1.1rem 1.1rem;margin-top:.2rem}
   .lbl{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
@@ -101,12 +101,16 @@
   .chain li{margin:0 0 .6rem}
   .chain b{color:var(--head)}
   .chain code{font-size:.82rem}
-  .script{background:var(--surface);border-radius:10px;padding:.8rem 1rem;font:.84em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);word-break:break-all;margin:.6rem 0 1rem}
-  .script i{font-style:normal;color:var(--muted)}
-  .script b{color:var(--link);font-weight:600}
-  /* term links: quiet, green underline, the glossary is one tap away */
-  a.t{color:inherit;text-decoration:none;border-bottom:1px dotted var(--link)}
-  a.t:hover{color:var(--link);border-bottom-style:solid}
+  .script{background:var(--surface);border-radius:10px;padding:.5rem 1rem;margin:.6rem 0 1rem}
+  .script .srow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:.2rem 1rem;padding:.5rem 0;border-top:1px solid var(--line)}
+  .script .srow:first-child{border-top:0}
+  @media (max-width:560px){.script .srow{grid-template-columns:1fr}}
+  .script .sb{font:.84em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);overflow-wrap:anywhere}
+  .script .sb b{color:var(--link);font-weight:600}
+  .script .sm{font-size:.92rem;color:var(--text)}
+  /* term links: a regular green link that opens the glossary in a new tab */
+  a.t{color:var(--link)}
+  a.t:hover{color:var(--head)}
 </style>
 </head>
 <body>
@@ -117,10 +121,10 @@
 <h1>Addresses and locks: key-locked and script-locked outputs</h1>
 <p class="one">What protects your funds? Every Kaspa address is a lock on UTXOs, and Kaspa has two kinds of lock.</p>
 
-<p>A Kaspa <a class="t" href="glossary.html#address">address</a> is not an account, it doesn't hold funds. An address's mission is to spell out the <a class="t" href="glossary.html#lock">lock</a> an <a class="t" href="glossary.html#output">output</a> will carry. Kaspa has two kinds of these locks:</p>
+<p>A Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#address">address</a> is not an account, it doesn't hold funds. An address's mission is to spell out the <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a> an <a class="t" target="_blank" rel="noopener" href="glossary.html#output">output</a> will carry. Kaspa has two kinds of these locks:</p>
 <ol class="locks">
-  <li><span class="m">1</span><b>A <a class="t" href="glossary.html#key-lock">key lock</a>:</b> starts with q, <strong>the address is a <a class="t" href="glossary.html#public-key">public key</a> in disguise</strong>. <span class="addr">kaspa:qpc6655zfnql67…kzy9jz8q</span> is the 32 <a class="t" href="glossary.html#byte">bytes</a> of a key, dressed with a <a class="t" href="glossary.html#checksum">checksum</a> so a typo is caught. The lock says: this key must sign. Whoever holds the matching <a class="t" href="glossary.html#private-key">private key</a> can <a class="t" href="glossary.html#spend">spend</a>, and that is what your <a class="t" href="glossary.html#wallet">wallet</a> does for you.</li>
-  <li><span class="m">2</span><b>A <a class="t" href="glossary.html#script-lock">script lock</a>:</b> starts with p, <span class="addr">kaspa:pzzgtjkyzsgxp24…c62fn0pl</span> is the <strong><a class="t" href="glossary.html#fingerprint">fingerprint</a> of a <a class="t" href="glossary.html#script">script</a></strong>, 32 bytes of <a class="t" href="glossary.html#hash">hash</a>. To spend it, you have to show the script itself. The <a class="t" href="glossary.html#node">node</a> takes the script, checks that its fingerprint matches the address, and then runs it. Only when the script is satisfied does the <a class="t" href="glossary.html#utxo">UTXO</a> move. Every <a class="t" href="glossary.html#covenant">covenant</a> since <a class="t" href="glossary.html#toccata">Toccata</a> is a script, so all of them live behind <a class="t" href="glossary.html#p-address">p addresses</a>.</li>
+  <li><span class="m">1</span><b>A <a class="t" target="_blank" rel="noopener" href="glossary.html#key-lock">key lock</a>:</b> starts with q, <strong>the address is a <a class="t" target="_blank" rel="noopener" href="glossary.html#public-key">public key</a> in disguise</strong>. <span class="addr"><b>kaspa:q</b>pc6655zfnql67…kzy9jz8q</span> is the 32 <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a> of a key, dressed with a <a class="t" target="_blank" rel="noopener" href="glossary.html#checksum">checksum</a> so a typo is caught. The lock says: this key must sign. Whoever holds the matching <a class="t" target="_blank" rel="noopener" href="glossary.html#private-key">private key</a> can <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spend</a>, and that is what your <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> does for you.</li>
+  <li><span class="m">2</span><b>A <a class="t" target="_blank" rel="noopener" href="glossary.html#script-lock">script lock</a>:</b> starts with p, <span class="addr"><b>kaspa:p</b>zzgtjkyzsgxp24…c62fn0pl</span> is the <strong><a class="t" target="_blank" rel="noopener" href="glossary.html#fingerprint">fingerprint</a> of a <a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a></strong>, 32 bytes of <a class="t" target="_blank" rel="noopener" href="glossary.html#hash">hash</a>. To spend it, you have to show the script itself. The <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> takes the script, checks that its fingerprint matches the address, and then runs it. Only when the script is satisfied does the <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> move. Every <a class="t" target="_blank" rel="noopener" href="glossary.html#covenant">covenant</a> since <a class="t" target="_blank" rel="noopener" href="glossary.html#toccata">Toccata</a> is a script, so all of them live behind <a class="t" target="_blank" rel="noopener" href="glossary.html#p-address">p addresses</a>.</li>
 </ol>
 <p>From a p address alone you cannot read the script, only its fingerprint, until someone spends it or publishes it. Your wallet shows both kinds as UTXOs. The lock decides what the spend must show.</p>
 
@@ -135,31 +139,33 @@
   <div class="out" id="aout"></div>
 </figure>
 
-<h2>q or p: tell them apart</h2>
+<h2><span class="lc">q vs p</span>: tell them apart</h2>
 <table>
 <tr><th></th><th>Key lock</th><th>Script lock</th></tr>
 <tr><td>The address starts with</td><td>q</td><td>p</td></tr>
 <tr><td>The address carries</td><td>a public key, 32 bytes</td><td>the fingerprint of a script, 32 bytes</td></tr>
-<tr><td>The spend must show</td><td>a <a class="t" href="glossary.html#signature">signature</a> by that key</td><td>the script, matching the fingerprint, and whatever the script demands</td></tr>
-<tr><td>Who uses it</td><td>every wallet</td><td>multisig, timelocks, and every covenant</td></tr>
+<tr><td>The spend must show</td><td>a <a class="t" target="_blank" rel="noopener" href="glossary.html#signature">signature</a> by that key</td><td>the script, matching the fingerprint, and whatever the script demands</td></tr>
+<tr><td>Who uses it</td><td>every wallet</td><td>every covenant</td></tr>
 </table>
 
 <h2>Look at it on chain</h2>
-<p>Two <a class="t" href="glossary.html#transaction">transactions</a> from 6 September 2026, the same pair card 1.3 weighed.</p>
+<p>Two <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transactions</a> from 6 September 2026, the same pair card 1.3 weighed.</p>
 <ol class="chain">
   <li><b>One transaction, both locks.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…3f145914</code></a> created a p output, 0.3 KAS to <span class="addr">kaspa:pzzgtjkyzsgxp24…c62fn0pl</span>, and a q output, the change to <span class="addr">kaspa:qpc6655zfnql67…kzy9jz8q</span>.</li>
-  <li><b>The script comes out.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…f7501f3d</code></a> spent the p output. Its signature script holds a 65-byte signature and then the script itself, 187 bytes. Hash the script and you get the 32 bytes inside the p address.</li>
+  <li><b>The script comes out.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…f7501f3d</code></a> spent the p output. Its signature script holds a 65-byte signature and then the script itself, 187 bytes. Hash the script and you get the 32 bytes inside the p address. The script, read line by line:</li>
 </ol>
-<div class="script"><b>20</b> 71ad52824cc1fd78…dabfd9b3 <b>ac</b> <i>push a public key, OP_CHECKSIG</i><br><b>00 63</b> 07 6b6173706c6578 00 4c 8b 7b2270223a226b72632d3230… <b>68</b> <i>OP_FALSE OP_IF, a note the node never runs, OP_ENDIF</i></div>
-<p>The script says: this key must sign, and it carries a note for an off-chain indexer (a <a class="t" href="glossary.html#krc-20">KRC-20</a> transfer) that the node skips. The key in that script, <code>71ad…d9b3</code>, is the key inside the <a class="t" href="glossary.html#q-address">q address</a>. Same key, two locks.</p>
+<div class="script">
+  <div class="srow"><span class="sb"><b>20</b> 71ad5282...dabfd9b3 <b>ac</b></span><span class="sm">push a 32-byte public key, then OP_CHECKSIG: this key must sign</span></div>
+  <div class="srow"><span class="sb"><b>00 63</b> 07 6b6173706c6578 ... <b>68</b></span><span class="sm">OP_FALSE OP_IF ... OP_ENDIF: a branch the node never takes, 153 bytes carrying a note for an off-chain program (a KRC-20 transfer)</span></div>
+</div>
+<p>The key in the first line, <code>71ad...d9b3</code>, is the key inside the <a class="t" target="_blank" rel="noopener" href="glossary.html#q-address">q address</a>. Same key, two locks.</p>
 
 <h2>Sources</h2>
 <p class="src">An address is a prefix, a version byte and a payload, with an 8-character checksum, in rusty-kaspa v2.0.1 <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/lib.rs">crypto/addresses/src/lib.rs</a> (versions 0 PubKey, 32 bytes, 1 PubKeyECDSA, 33 bytes, 8 ScriptHash, 32 bytes) and <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/bech32.rs">bech32.rs</a> (the charset and the checksum). The lock each address stands for is built in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>: <code>OpData32 &lt;key&gt; OpCheckSig</code>, <code>OpData33 &lt;key&gt; OpCheckSigECDSA</code>, <code>OpBlake2b OpData32 &lt;hash&gt; OpEqual</code>, the hash being blake2b-256 of the script. Opcode values are in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">opcodes/mod.rs</a>. The decoder on this page is a line-by-line port of bech32.rs, checked against the node's own test vectors. The two transactions were read from api.kaspa.org on 6 September 2026. The revealed script was hashed with blake2b-256 and matched to the p address.</p>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.3.html">Last card</a> · <span>Next: <span class="soon">Nodes and miners: who checks, who orders</span></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio</span></div>
-  <div class="stamp"><span>FingersLLM</span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made by Slancio · FingersLLM</span></div>
 </footer>
 
 <script>
@@ -175,21 +181,21 @@ t101Label();
   function conv5to8(u5){var out=[],buff=0,bits=0;for(var i=0;i<u5.length;i++){buff=(buff<<5)|u5[i];bits+=5;while(bits>=8){bits-=8;out.push((buff>>bits)&0xff);buff&=(1<<bits)-1;}}return out;}
   function decode(str){
     var s=String(str||'').trim().toLowerCase(); if(!s) return null;
-    var i=s.indexOf(':'); if(i<0) return {error:'no prefix: a Kaspa address starts with kaspa:'};
+    var i=s.indexOf(':'); if(i<0) return {error:'Invalid address'};
     var prefix=s.slice(0,i), data=s.slice(i+1);
     var names={kaspa:'mainnet',kaspatest:'testnet',kaspasim:'simnet',kaspadev:'devnet'};
-    if(!names[prefix]) return {error:'unknown prefix "'+prefix+'"'};
-    if(data.length<8) return {error:'too short'};
-    var u5=[]; for(var k=0;k<data.length;k++){var v=CHARSET.indexOf(data[k]); if(v<0) return {error:'"'+data[k]+'" is not an address character'}; u5.push(v);}
+    if(!names[prefix]) return {error:'Invalid address'};
+    if(data.length<8) return {error:'Invalid address'};
+    var u5=[]; for(var k=0;k<data.length;k++){var v=CHARSET.indexOf(data[k]); if(v<0) return {error:'Invalid address'}; u5.push(v);}
     var payloadU5=u5.slice(0,-8), checkU5=u5.slice(-8);
     var pre=[]; for(var p=0;p<prefix.length;p++) pre.push(prefix.charCodeAt(p)&0x1f);
     var want=polymod(pre.concat([0],payloadU5,[0,0,0,0,0,0,0,0]));
     var got=0n, cb=conv5to8(checkU5); for(var b=0;b<cb.length;b++) got=(got<<8n)|BigInt(cb[b]);
-    if(want!==got) return {error:'the checksum does not match: one character is off'};
+    if(want!==got) return {error:'Invalid address'};
     var bytes=conv5to8(payloadU5), version=bytes[0], payload=bytes.slice(1);
     var kinds={0:['key lock',32,'Schnorr'],1:['key lock',33,'ECDSA'],8:['script lock',32,'']};
-    if(!kinds[version]) return {error:'unknown version byte '+version};
-    if(payload.length!==kinds[version][1]) return {error:'payload is '+payload.length+' bytes, expected '+kinds[version][1]};
+    if(!kinds[version]) return {error:'Invalid address'};
+    if(payload.length!==kinds[version][1]) return {error:'Invalid address'};
     var hex=payload.map(function(x){return (x<16?'0':'')+x.toString(16);}).join('');
     return {net:names[prefix],version:version,kind:kinds[version][0],curve:kinds[version][2],hex:hex};
   }
