@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Glossary · Toccata 101</title>
+<meta name="description" content="Toccata 101, card 0. The terms the cards use, one short explanation each.">
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  :root{
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60; --ext:#0B5BD3;
+    --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+      --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+    --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+  }
+  html{background:var(--bg)}
+  body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  /* links: green stays inside the series, blue leaves it */
+  a{color:var(--link)}
+  a[target="_blank"]{color:var(--ext)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem;white-space:nowrap;margin-right:auto}
+  .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
+  .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--bg);background:var(--head);border:1px solid var(--head);border-radius:999px;padding:.25rem .75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;flex:none;margin-left:auto}
+  .theme:hover{color:#0F2926;background:var(--accent);border-color:var(--accent)}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  p{margin:0 0 1rem}
+  .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
+  .foot .nav{display:block}
+  .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
+  .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a[target="_blank"]{color:var(--ext)}
+  .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
+  .foot .by{color:var(--muted)}
+  .foot .stamp{display:flex;justify-content:flex-end;margin-top:1.1rem}
+  .foot .stamp span{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:2px solid var(--accent);border-radius:5px;padding:.22rem .55rem .2rem;transform:rotate(-4deg);outline:1px solid var(--accent);outline-offset:2px;opacity:.9}
+  /* the glossary */
+  .tools{position:sticky;top:0;z-index:2;background:var(--bg);padding:.6rem 0 .5rem;margin:0 0 .4rem;border-bottom:1px solid var(--line)}
+  .filter{display:flex;gap:.6rem;align-items:center}
+  .filter input{flex:1 1 auto;font:inherit;font-size:.98rem;padding:.5rem .8rem;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);color:var(--head);min-width:0}
+  .filter input:focus{outline:none;border-color:var(--accent)}
+  .filter .n{font-size:.8rem;color:var(--muted);white-space:nowrap}
+  .az{display:flex;flex-wrap:wrap;gap:.15rem .35rem;margin:.5rem 0 0;font-size:.78rem;letter-spacing:.04em}
+  .az a{color:var(--link);text-decoration:none;padding:.05rem .3rem;border-radius:5px;border-bottom:0}
+  .az a:hover{background:var(--tint);color:var(--head)}
+  .az span{color:var(--soon);padding:.05rem .3rem}
+  dl{margin:.6rem 0 0}
+  .letter{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:1.6rem 0 .2rem;padding-left:.8rem;scroll-margin-top:5.5rem}
+  .letter::before{content:"";display:inline-block;width:.45rem;height:.45rem;border-radius:2px;background:var(--accent);margin-right:.5rem;vertical-align:.05em}
+  .term{padding:.1rem .8rem .65rem;margin:0 -.8rem;border-radius:10px;scroll-margin-top:5.6rem}
+  .term + .term dt{border-top:1px solid var(--line);padding-top:.6rem}
+  .term.hide + .term dt{border-top:0}
+  .term:target{animation:t101-land 4s ease-out 1}
+  @keyframes t101-land{0%{background:var(--tint);box-shadow:inset 4px 0 0 var(--accent)}60%{background:var(--tint);box-shadow:inset 4px 0 0 var(--accent)}100%{background:transparent;box-shadow:inset 4px 0 0 transparent}}
+  dt{font-weight:700;color:var(--head)}
+  dd{margin:.15rem 0 0}
+  .none{display:none;color:var(--muted);padding:1rem .8rem}
+  .none.show{display:block}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="kicker"><a href="index.html">Toccata 101</a> · Part 0 · card 0</p>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
+<h1>Glossary</h1>
+<p>The terms the cards use, one short explanation each. Tap a term on any card and you land here, on its line. New terms join as the cards land.</p>
+
+<div class="tools">
+  <div class="filter"><input id="gfilter" type="search" placeholder="Type to filter" aria-label="filter the terms" autocomplete="off" spellcheck="false"><span class="n" id="gcount">49 terms</span></div>
+  <nav class="az" aria-label="letters"><a href="#l-a">A</a><a href="#l-b">B</a><a href="#l-c">C</a><a href="#l-d">D</a><a href="#l-e">E</a><a href="#l-f">F</a><a href="#l-g">G</a><a href="#l-h">H</a><a href="#l-i">I</a><span>J</span><a href="#l-k">K</a><a href="#l-l">L</a><a href="#l-m">M</a><a href="#l-n">N</a><a href="#l-o">O</a><a href="#l-p">P</a><a href="#l-q">Q</a><span>R</span><a href="#l-s">S</a><a href="#l-t">T</a><a href="#l-u">U</a><a href="#l-v">V</a><a href="#l-w">W</a><span>X</span><span>Y</span><span>Z</span></nav>
+</div>
+<dl id="gl">
+<div class="letter" id="l-a">A</div>
+<div class="term" id="address"><dt>address</dt><dd>Spells out the lock an output will carry. It holds nothing. A q address carries a public key, a p address carries the fingerprint of a script.</dd></div>
+<div class="letter" id="l-b">B</div>
+<div class="term" id="block"><dt>block</dt><dd>A batch of transactions sealed by a miner's proof of work. Kaspa makes ten a second.</dd></div>
+<div class="term" id="byte"><dt>byte</dt><dd>The unit data is counted in: eight bits, about one character of text. A key is 32 bytes, a plain transaction a few hundred.</dd></div>
+<div class="letter" id="l-c">C</div>
+<div class="term" id="change"><dt>change</dt><dd>An output that comes back to the sender's own address: what's left from the inputs after the payment and the fee.</dd></div>
+<div class="term" id="checksum"><dt>checksum</dt><dd>The last eight characters of an address, computed from the rest, so a typo is caught before any coin moves.</dd></div>
+<div class="term" id="covenant"><dt>covenant</dt><dd>A UTXO locked by a program that inspects the transaction spending it and can refuse it.</dd></div>
+<div class="term" id="crescendo"><dt>Crescendo</dt><dd>The Kaspa upgrade of May 2025 that raised the network to ten blocks per second and added the first, narrow introspection opcodes (KIP-10).</dd></div>
+<div class="letter" id="l-d">D</div>
+<div class="term" id="daa-score"><dt>DAA score</dt><dd>Kaspa's counter of accumulated work, used as the network's clock for locks and activations.</dd></div>
+<div class="letter" id="l-e">E</div>
+<div class="term" id="ecdsa-address"><dt>ECDSA address</dt><dd>The rarer kind of q address, carrying a 33-byte ECDSA key. A spend must show an ECDSA signature by that key.</dd></div>
+<div class="term" id="explorer"><dt>explorer</dt><dd>A website that shows the chain: blocks, transactions, addresses and their UTXOs.</dd></div>
+<div class="letter" id="l-f">F</div>
+<div class="term" id="fee"><dt>fee</dt><dd>Input minus output, goes to the miner who placed the transaction inside a block in the network.</dd></div>
+<div class="term" id="fingerprint"><dt>fingerprint</dt><dd>The hash of a script, 32 bytes, the part a p address carries. From the fingerprint alone the script cannot be read.</dd></div>
+<div class="letter" id="l-g">G</div>
+<div class="term" id="gram"><dt>gram</dt><dd>The unit a transaction's mass is counted in. The fee is a price per gram.</dd></div>
+<div class="letter" id="l-h">H</div>
+<div class="term" id="hardfork"><dt>hardfork</dt><dd>A change to Kaspa's rules that every node must adopt. It activates at a fixed DAA score and carries a name (Crescendo, Toccata).</dd></div>
+<div class="term" id="hash"><dt>hash</dt><dd>A fixed-size fingerprint computed from any data. Change one byte of the data and the hash changes completely.</dd></div>
+<div class="letter" id="l-i">I</div>
+<div class="term" id="input"><dt>input</dt><dd>An existing UTXO from a past transaction, ready to be used.</dd></div>
+<div class="term" id="introspection"><dt>introspection</dt><dd>A script's ability to read the transaction it is part of: inputs, outputs, amounts, addresses. Narrow since Crescendo, full since Toccata.</dd></div>
+<div class="letter" id="l-k">K</div>
+<div class="term" id="kas"><dt>KAS</dt><dd>Kaspa's coin. 1 KAS is 100,000,000 sompi.</dd></div>
+<div class="term" id="key-lock"><dt>key lock</dt><dd>The lock a q address stands for: this key must sign. Whoever holds the matching private key can spend.</dd></div>
+<div class="term" id="kip"><dt>KIP</dt><dd>A Kaspa Improvement Proposal, a change to the network's rules.</dd></div>
+<div class="term" id="krc-20"><dt>KRC-20</dt><dd>A token convention that writes a note into a transaction for an off-chain program (an indexer) to read. The node itself skips the note.</dd></div>
+<div class="letter" id="l-l">L</div>
+<div class="term" id="layer-1"><dt>Layer 1 (L1)</dt><dd>The Kaspa network itself, as opposed to anything built on top of it. A covenant runs on L1, checked by every node.</dd></div>
+<div class="term" id="lock"><dt>lock</dt><dd>What an output carries besides its amount: the script that decides what a spending transaction must show. Its technical name is the script public key.</dd></div>
+<div class="letter" id="l-m">M</div>
+<div class="term" id="mainnet"><dt>mainnet</dt><dd>The real Kaspa network, where KAS has value. Its addresses start with kaspa:, test network addresses with kaspatest:.</dd></div>
+<div class="term" id="mass"><dt>mass</dt><dd>A transaction's weight in grams, what the fee is priced by: a size weight and a storage weight, the heavier one counts.</dd></div>
+<div class="term" id="miner"><dt>miner</dt><dd>A node that orders accepted transactions into blocks by proof of work, and collects the fees.</dd></div>
+<div class="letter" id="l-n">N</div>
+<div class="term" id="node"><dt>node</dt><dd>A computer running Kaspa that checks every transaction against the rules and keeps the set of UTXOs.</dd></div>
+<div class="letter" id="l-o">O</div>
+<div class="term" id="opcode"><dt>opcode</dt><dd>One instruction of Kaspa script, one byte, such as OP_CHECKSIG.</dd></div>
+<div class="term" id="output"><dt>output</dt><dd>A piece of KAS created by a transaction, with an amount and a lock.</dd></div>
+<div class="letter" id="l-p">P</div>
+<div class="term" id="p-address"><dt>p address</dt><dd>An address that starts with p. It carries the fingerprint of a script, and a spend must show the script itself.</dd></div>
+<div class="term" id="piece"><dt>piece</dt><dd>The word cards 1.1 to 1.3 use for a UTXO.</dd></div>
+<div class="term" id="private-key"><dt>private key</dt><dd>The secret a wallet keeps (the seed makes it). Whoever holds it can spend what its public key locks.</dd></div>
+<div class="term" id="proof-of-work"><dt>proof of work (PoW)</dt><dd>The computation a miner must do to make a block valid. It is what makes Kaspa's history costly to rewrite and reorganize.</dd></div>
+<div class="term" id="public-key"><dt>public key</dt><dd>The key an address is made from, safe to show. Only the matching private key can make a signature it accepts.</dd></div>
+<div class="letter" id="l-q">Q</div>
+<div class="term" id="q-address"><dt>q address</dt><dd>An address that starts with q. It carries a public key, and a spend must show that key's signature.</dd></div>
+<div class="letter" id="l-s">S</div>
+<div class="term" id="schnorr-key"><dt>Schnorr key</dt><dd>The usual kind of key in a q address, 32 bytes. A spend must show a Schnorr signature by that key.</dd></div>
+<div class="term" id="script"><dt>script</dt><dd>The small program every output carries, run by every node when the output is spent.</dd></div>
+<div class="term" id="script-lock"><dt>script lock</dt><dd>The lock a p address stands for: show the script that matches the fingerprint, then satisfy it. Every covenant lives behind one.</dd></div>
+<div class="term" id="script-public-key"><dt>script public key</dt><dd>The lock on an output: a small program attached to the UTXO that determines what a spending transaction must show, for a normal wallet the signature of a key.</dd></div>
+<div class="term" id="signature"><dt>signature</dt><dd>A proof, made with the spender's private key (seed), that authorizes using a UTXO.</dd></div>
+<div class="term" id="size-weight"><dt>size weight</dt><dd>The weight of a transaction's bytes and checking work (compute mass), about two thousand grams for a plain payment, the same whatever the amounts.</dd></div>
+<div class="term" id="sompi"><dt>sompi</dt><dd>The unit amounts are counted in. 1 KAS is 100,000,000 sompi.</dd></div>
+<div class="term" id="spend"><dt>spend</dt><dd>To use a UTXO as an input. The UTXO is consumed and its amount moves into the new outputs.</dd></div>
+<div class="term" id="storage-weight"><dt>storage weight</dt><dd>The weight of the new pieces a transaction creates (storage mass): about 10¹² divided by each piece's value in sompi, minus a relief for the pieces it spends. Small pieces are heavy, and past 500,000 grams no block can hold the transaction.</dd></div>
+<div class="letter" id="l-t">T</div>
+<div class="term" id="toccata"><dt>Toccata</dt><dd>The Kaspa upgrade, active on mainnet since 30 June 2026. Made the rules a transaction can carry general: a program that reads the whole transaction, keeps memory between spends and carries an identity.</dd></div>
+<div class="term" id="transaction"><dt>transaction</dt><dd>Spends existing UTXOs (its inputs) and creates brand-new ones (its outputs), accepted or refused by every node as a whole.</dd></div>
+<div class="letter" id="l-u">U</div>
+<div class="term" id="utxo"><dt>UTXO</dt><dd>Unspent transaction output. A piece of KAS created by an earlier transaction and not yet spent, with its own amount and its own lock. A balance is the sum of them.</dd></div>
+<div class="letter" id="l-v">V</div>
+<div class="term" id="version-byte"><dt>version byte</dt><dd>The first byte inside a decoded address: 0 for a Schnorr key, 1 for an ECDSA key, 8 for a script fingerprint.</dd></div>
+<div class="letter" id="l-w">W</div>
+<div class="term" id="wallet"><dt>wallet</dt><dd>The software that keeps your keys, adds up the UTXOs they can unlock, and builds and signs your transactions.</dd></div>
+</dl>
+<p class="none" id="gnone">No term matches that. Try a shorter word.</p>
+
+<footer class="foot">
+  <div class="nav"><a href="index.html">Table of content</a> · <span>Next: <a href="card-0.1.html">What Toccata changed for someone who holds KAS</a></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio</span></div>
+  <div class="stamp"><span>FingersLLM</span></div>
+</footer>
+
+<script>
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+/* the filter: hides the terms that do not contain what is typed, and the letters left empty */
+(function(){
+  var inp=document.getElementById('gfilter'), terms=document.querySelectorAll('.term'), letters=document.querySelectorAll('.letter'), none=document.getElementById('gnone'), count=document.getElementById('gcount'), total=terms.length;
+  function run(){
+    var q=inp.value.trim().toLowerCase(), shown=0;
+    for(var i=0;i<terms.length;i++){var ok=!q||terms[i].textContent.toLowerCase().indexOf(q)>=0;terms[i].classList.toggle('hide',!ok);if(ok)shown++;}
+    for(var j=0;j<letters.length;j++){var any=false,e=letters[j].nextElementSibling;while(e&&!e.classList.contains('letter')){if(e.classList.contains('term')&&!e.classList.contains('hide')){any=true;break;}e=e.nextElementSibling;}letters[j].classList.toggle('hide',!any);}
+    none.classList.toggle('show',shown===0);
+    count.textContent=(q?shown+' of '+total:total)+' terms';
+  }
+  inp.addEventListener('input',run);
+})();
+</script>
+</body>
+</html>

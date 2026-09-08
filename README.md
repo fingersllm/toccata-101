@@ -9,11 +9,3 @@ to open at the end wherever one exists.
 Feel free to use this collection to make posts, videos or anything else that broadens Toccata
 understanding — everything here is released under CC0 1.0, so no permission is needed. Found a mistake?
 Open an issue and we'll fix it.
-
-## Cards
-
-**Part 0 — Start here**
-1. [What Toccata changed for someone who holds KAS](card-0.1.html)
-
-Parts 1–8 (UTXO and transactions · script · covenants · composability · tokens · languages and tools ·
-using covenants · beyond L1 script) are published one card at a time; the index page lists them all.

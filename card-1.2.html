@@ -11,33 +11,39 @@
 <style>
   :root{
     --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
-    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60; --ext:#0B5BD3;
     --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
-      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
       --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
     }
   }
   :root[data-theme="dark"]{
     --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
-    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
     --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
   }
   html{background:var(--bg)}
   body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
   body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  /* links: green stays inside the series, blue leaves it */
   a{color:var(--link)}
+  a[target="_blank"]{color:var(--ext)}
   .top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
   .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem}
   .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
   .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
   .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
-  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
-  .theme:hover{color:var(--head);border-color:var(--accent)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--bg);background:var(--head);border:1px solid var(--head);border-radius:999px;padding:.25rem .75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+  .theme:hover{color:#0F2926;background:var(--accent);border-color:var(--accent)}
   .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .top{flex-wrap:wrap}
+  .theme{white-space:nowrap;flex:none;margin-left:auto}
+  .kicker{white-space:nowrap;margin-right:auto}
+  @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
   h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
   h1.c{text-align:center;font-size:2rem;letter-spacing:.02em;margin:1.4rem 0 .2rem}
   .subt{text-align:center;color:var(--muted);font-size:1rem;margin:0 0 1.4rem;white-space:nowrap}
@@ -48,14 +54,17 @@
   .terms{margin:0 0 1.4rem;padding:.6rem 1.1rem .7rem;border-left:4px solid var(--accent);background:var(--surface);border-radius:0 8px 8px 0;font-size:.93rem;color:var(--text)}
   .terms div{margin:.25rem 0}
   .terms b{color:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;margin-right:.5rem;white-space:nowrap}
-  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem}
+  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
   .foot .meta{margin-top:.55rem}
   .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a[target="_blank"]{color:var(--ext)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
   .foot .by{color:var(--muted)}
+  .foot .stamp{display:flex;justify-content:flex-end;margin-top:1.1rem}
+  .foot .stamp span{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:2px solid var(--accent);border-radius:5px;padding:.22rem .55rem .2rem;transform:rotate(-4deg);outline:1px solid var(--accent);outline-offset:2px;opacity:.9}
   .foot .soon{color:var(--soon)}
   code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   /* the transaction */
@@ -98,6 +107,9 @@
   /* highlight, both directions */
   .tx[data-hl="1"] [data-m="1"],.tx[data-hl="2"] [data-m="2"],.tx[data-hl="3"] [data-m="3"],.tx[data-hl="4"] [data-m="4"],.tx[data-hl="5"] [data-m="5"],.tx[data-hl="6"] [data-m="6"]{border-color:var(--accent);background:var(--tint)}
   .legend[data-hl="1"] li[data-m="1"],.legend[data-hl="2"] li[data-m="2"],.legend[data-hl="3"] li[data-m="3"],.legend[data-hl="4"] li[data-m="4"],.legend[data-hl="5"] li[data-m="5"],.legend[data-hl="6"] li[data-m="6"]{background:var(--surface)}
+  /* term links: quiet, green underline, the glossary is one tap away */
+  a.t{color:inherit;text-decoration:none;border-bottom:1px dotted var(--link)}
+  a.t:hover{color:var(--link);border-bottom-style:solid}
 </style>
 </head>
 <body>
@@ -106,17 +118,17 @@
   <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
 </div>
 <h1 class="c">Transaction</h1>
-<p class="subt">inputs, outputs, signatures, fee, all or nothing</p>
+<p class="subt"><a class="t" href="glossary.html#input">inputs</a>, <a class="t" href="glossary.html#output">outputs</a>, <a class="t" href="glossary.html#signature">signatures</a>, <a class="t" href="glossary.html#fee">fee</a>, all or nothing</p>
 
 <div class="tx" id="tx"></div>
 
 <ol class="legend" id="legend">
-  <li data-m="1"><span class="m">1</span><b>Input.</b> An existing UTXO from a past transaction, ready to be used.</li>
-  <li data-m="2"><span class="m">2</span><b>Signature.</b> A proof, made with the spender's private key (seed), that authorizes using this UTXO.</li>
-  <li data-m="3"><span class="m">3</span><b>Output.</b> The brand-new UTXO(s) created from the combined inputs, representing the payment to the receiver, and any change back to the sender.</li>
-  <li data-m="4"><span class="m">4</span><b>Change.</b> An output that comes back to the sender's own address: what's left from the inputs after the payment and the fee.</li>
-  <li data-m="5"><span class="m">5</span><b>Fee.</b> Input minus output, goes to the miner who placed the transaction inside a block in the network.</li>
-  <li data-m="6"><span class="m">6</span><b>Node verification.</b> Every node independently verifies that every input UTXO is authentic and unspent, then updates the global ledger: those inputs are "destroyed" and the new outputs are created.</li>
+  <li data-m="1"><span class="m">1</span><b>Input.</b> An existing <a class="t" href="glossary.html#utxo">UTXO</a> from a past <a class="t" href="glossary.html#transaction">transaction</a>, ready to be used.</li>
+  <li data-m="2"><span class="m">2</span><b>Signature.</b> A proof, made with the spender's <a class="t" href="glossary.html#private-key">private key</a> (seed), that authorizes using this UTXO.</li>
+  <li data-m="3"><span class="m">3</span><b>Output.</b> The brand-new UTXO(s) created from the combined inputs, representing the payment to the receiver, and any <a class="t" href="glossary.html#change">change</a> back to the sender.</li>
+  <li data-m="4"><span class="m">4</span><b>Change.</b> An output that comes back to the sender's own <a class="t" href="glossary.html#address">address</a>: what's left from the inputs after the payment and the fee.</li>
+  <li data-m="5"><span class="m">5</span><b>Fee.</b> Input minus output, goes to the <a class="t" href="glossary.html#miner">miner</a> who placed the transaction inside a <a class="t" href="glossary.html#block">block</a> in the network.</li>
+  <li data-m="6"><span class="m">6</span><b><a class="t" href="glossary.html#node">Node</a> verification.</b> Every node independently verifies that every input UTXO is authentic and unspent, then updates the global ledger: those inputs are "destroyed" and the new outputs are created.</li>
 </ol>
 
 <h2>Sources</h2>
@@ -124,7 +136,8 @@
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.1.html">Last card</a> · <span>Next: <a href="card-1.3.html">Fee and mass: why a very small output costs more</a></span></div>
-  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">By FingersLLM</span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio</span></div>
+  <div class="stamp"><span>FingersLLM</span></div>
 </footer>
 
 <script>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Addresses and locks: key-locked and script-locked outputs · Toccata 101</title>
+<meta name="description" content="Toccata 101, card 1.4. A Kaspa address holds nothing: it spells out the lock an output will carry. Key locks (q) and script locks (p), with a decoder for any address.">
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  :root{
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60; --ext:#0B5BD3;
+    --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+      --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+    --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+  }
+  html{background:var(--bg)}
+  body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  /* links: green stays inside the series, blue leaves it */
+  a{color:var(--link)}
+  a[target="_blank"]{color:var(--ext)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem}
+  .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
+  .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--bg);background:var(--head);border:1px solid var(--head);border-radius:999px;padding:.25rem .75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+  .theme:hover{color:#0F2926;background:var(--accent);border-color:var(--accent)}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .top{flex-wrap:wrap}
+  .theme{white-space:nowrap;flex:none;margin-left:auto}
+  .kicker{white-space:nowrap;margin-right:auto}
+  @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0 0 1.4rem;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
+  p{margin:0 0 1rem}
+  strong{color:var(--head)}
+  code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
+  .foot .nav{display:block}
+  .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
+  .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a[target="_blank"]{color:var(--ext)}
+  .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
+  .foot .by{color:var(--muted)}
+  .foot .stamp{display:flex;justify-content:flex-end;margin-top:1.1rem}
+  .foot .stamp span{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:2px solid var(--accent);border-radius:5px;padding:.22rem .55rem .2rem;transform:rotate(-4deg);outline:1px solid var(--accent);outline-offset:2px;opacity:.9}
+  .foot .soon{color:var(--soon)}
+  /* the two locks: each box is a padlock, the shackle above, the number in the keyhole */
+  .locks{list-style:none;padding:0;margin:1.4rem 0 1rem}
+  .locks li{position:relative;padding:.85rem 1rem .9rem 3.1rem;margin:0 0 1.6rem;background:var(--surface);border:1.5px solid var(--line);border-radius:14px}
+  .locks li::before{content:"";position:absolute;left:1.05rem;top:-.95rem;width:1.4rem;height:1.25rem;box-sizing:border-box;border:3px solid var(--accent);border-bottom:0;border-radius:.8rem .8rem 0 0}
+  .locks .m{position:absolute;left:.95rem;top:.95rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--accent);color:#0F2926;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
+  .locks .m::after{content:"";position:absolute;left:50%;top:100%;width:.36rem;height:.5rem;margin:-.08rem 0 0 -.18rem;background:var(--accent);border-radius:0 0 .12rem .12rem}
+  .locks b{color:var(--head)}
+  .addr{font:.86em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--link);word-break:break-all}
+  /* the decoder */
+  .w{background:var(--surface);border-radius:12px;padding:1rem 1.1rem 1.1rem;margin-top:.2rem}
+  .lbl{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .lbl b{text-transform:none;font-weight:inherit}
+  .in{display:flex;gap:.6rem;flex-wrap:wrap;margin:.5rem 0 .6rem}
+  .in input{flex:1 1 320px;font:.95em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:.55rem .7rem;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--head);min-width:0}
+  .in input:focus{outline:none;border-color:var(--accent)}
+  .chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:0 0 .9rem}
+  .chip{font:inherit;font-size:.8rem;color:var(--link);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer}
+  .chip:hover{border-color:var(--accent);color:var(--head)}
+  .out{display:grid;grid-template-columns:9.5rem 1fr;gap:.45rem .8rem;font-size:.95rem;align-items:baseline}
+  @media (max-width:560px){.out{grid-template-columns:1fr}.out .k{margin-top:.3rem}}
+  .out .k{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+  .out .v{color:var(--head);overflow-wrap:anywhere}
+  .out .v.hex{font:.84em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .out .v b{color:var(--head)}
+  .out .v .op{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:0 .35rem;margin:.1rem .2rem .1rem 0;font:.8em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text)}
+  .out .v .op b{color:var(--link);font-weight:600}
+  .err{color:var(--refused);font-weight:600}
+  .kind{display:inline-block;background:var(--tint);border:1px solid var(--accent);border-radius:999px;padding:.05rem .6rem;font-weight:600;color:var(--head)}
+  /* the table */
+  table{border-collapse:collapse;width:100%;font-size:.95rem}
+  th,td{text-align:left;vertical-align:top;padding:.55rem .7rem;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;background:var(--surface)}
+  td:first-child{width:28%;color:var(--head);font-weight:600}
+  /* the chain section */
+  .chain{padding-left:1.2rem;margin:0}
+  .chain li{margin:0 0 .6rem}
+  .chain b{color:var(--head)}
+  .chain code{font-size:.82rem}
+  .script{background:var(--surface);border-radius:10px;padding:.8rem 1rem;font:.84em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);word-break:break-all;margin:.6rem 0 1rem}
+  .script i{font-style:normal;color:var(--muted)}
+  .script b{color:var(--link);font-weight:600}
+  /* term links: quiet, green underline, the glossary is one tap away */
+  a.t{color:inherit;text-decoration:none;border-bottom:1px dotted var(--link)}
+  a.t:hover{color:var(--link);border-bottom-style:solid}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="kicker"><a href="index.html">Toccata 101</a> · Part 1 · card 4</p>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
+<h1>Addresses and locks: key-locked and script-locked outputs</h1>
+<p class="one">What protects your funds? Every Kaspa address is a lock on UTXOs, and Kaspa has two kinds of lock.</p>
+
+<p>A Kaspa <a class="t" href="glossary.html#address">address</a> is not an account, it doesn't hold funds. An address's mission is to spell out the <a class="t" href="glossary.html#lock">lock</a> an <a class="t" href="glossary.html#output">output</a> will carry. Kaspa has two kinds of these locks:</p>
+<ol class="locks">
+  <li><span class="m">1</span><b>A <a class="t" href="glossary.html#key-lock">key lock</a>:</b> starts with q, <strong>the address is a <a class="t" href="glossary.html#public-key">public key</a> in disguise</strong>. <span class="addr">kaspa:qpc6655zfnql67…kzy9jz8q</span> is the 32 <a class="t" href="glossary.html#byte">bytes</a> of a key, dressed with a <a class="t" href="glossary.html#checksum">checksum</a> so a typo is caught. The lock says: this key must sign. Whoever holds the matching <a class="t" href="glossary.html#private-key">private key</a> can <a class="t" href="glossary.html#spend">spend</a>, and that is what your <a class="t" href="glossary.html#wallet">wallet</a> does for you.</li>
+  <li><span class="m">2</span><b>A <a class="t" href="glossary.html#script-lock">script lock</a>:</b> starts with p, <span class="addr">kaspa:pzzgtjkyzsgxp24…c62fn0pl</span> is the <strong><a class="t" href="glossary.html#fingerprint">fingerprint</a> of a <a class="t" href="glossary.html#script">script</a></strong>, 32 bytes of <a class="t" href="glossary.html#hash">hash</a>. To spend it, you have to show the script itself. The <a class="t" href="glossary.html#node">node</a> takes the script, checks that its fingerprint matches the address, and then runs it. Only when the script is satisfied does the <a class="t" href="glossary.html#utxo">UTXO</a> move. Every <a class="t" href="glossary.html#covenant">covenant</a> since <a class="t" href="glossary.html#toccata">Toccata</a> is a script, so all of them live behind <a class="t" href="glossary.html#p-address">p addresses</a>.</li>
+</ol>
+<p>From a p address alone you cannot read the script, only its fingerprint, until someone spends it or publishes it. Your wallet shows both kinds as UTXOs. The lock decides what the spend must show.</p>
+
+<h2>X-ray an address</h2>
+<figure class="w" style="margin:0">
+  <span class="lbl" id="alab">Paste any address you want</span>
+  <div class="in"><input id="ain" type="text" spellcheck="false" autocomplete="off" placeholder="kaspa:…" aria-label="a Kaspa address"></div>
+  <div class="chips">
+    <button class="chip" type="button" data-a="kaspa:qpc6655zfnql67xqjm06m735st2h5nfn4qq4hqxgml8jj3k6hlvmxkzy9jz8q">the q address</button>
+    <button class="chip" type="button" data-a="kaspa:pzzgtjkyzsgxp24plrwm90tzgqgfytltyfvuakun5p34hnl38ykmyc62fn0pl">the p address</button>
+  </div>
+  <div class="out" id="aout"></div>
+</figure>
+
+<h2>q or p: tell them apart</h2>
+<table>
+<tr><th></th><th>Key lock</th><th>Script lock</th></tr>
+<tr><td>The address starts with</td><td>q</td><td>p</td></tr>
+<tr><td>The address carries</td><td>a public key, 32 bytes</td><td>the fingerprint of a script, 32 bytes</td></tr>
+<tr><td>The spend must show</td><td>a <a class="t" href="glossary.html#signature">signature</a> by that key</td><td>the script, matching the fingerprint, and whatever the script demands</td></tr>
+<tr><td>Who uses it</td><td>every wallet</td><td>multisig, timelocks, and every covenant</td></tr>
+</table>
+
+<h2>Look at it on chain</h2>
+<p>Two <a class="t" href="glossary.html#transaction">transactions</a> from 6 September 2026, the same pair card 1.3 weighed.</p>
+<ol class="chain">
+  <li><b>One transaction, both locks.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…3f145914</code></a> created a p output, 0.3 KAS to <span class="addr">kaspa:pzzgtjkyzsgxp24…c62fn0pl</span>, and a q output, the change to <span class="addr">kaspa:qpc6655zfnql67…kzy9jz8q</span>.</li>
+  <li><b>The script comes out.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…f7501f3d</code></a> spent the p output. Its signature script holds a 65-byte signature and then the script itself, 187 bytes. Hash the script and you get the 32 bytes inside the p address.</li>
+</ol>
+<div class="script"><b>20</b> 71ad52824cc1fd78…dabfd9b3 <b>ac</b> <i>push a public key, OP_CHECKSIG</i><br><b>00 63</b> 07 6b6173706c6578 00 4c 8b 7b2270223a226b72632d3230… <b>68</b> <i>OP_FALSE OP_IF, a note the node never runs, OP_ENDIF</i></div>
+<p>The script says: this key must sign, and it carries a note for an off-chain indexer (a <a class="t" href="glossary.html#krc-20">KRC-20</a> transfer) that the node skips. The key in that script, <code>71ad…d9b3</code>, is the key inside the <a class="t" href="glossary.html#q-address">q address</a>. Same key, two locks.</p>
+
+<h2>Sources</h2>
+<p class="src">An address is a prefix, a version byte and a payload, with an 8-character checksum, in rusty-kaspa v2.0.1 <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/lib.rs">crypto/addresses/src/lib.rs</a> (versions 0 PubKey, 32 bytes, 1 PubKeyECDSA, 33 bytes, 8 ScriptHash, 32 bytes) and <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/bech32.rs">bech32.rs</a> (the charset and the checksum). The lock each address stands for is built in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>: <code>OpData32 &lt;key&gt; OpCheckSig</code>, <code>OpData33 &lt;key&gt; OpCheckSigECDSA</code>, <code>OpBlake2b OpData32 &lt;hash&gt; OpEqual</code>, the hash being blake2b-256 of the script. Opcode values are in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">opcodes/mod.rs</a>. The decoder on this page is a line-by-line port of bech32.rs, checked against the node's own test vectors. The two transactions were read from api.kaspa.org on 6 September 2026. The revealed script was hashed with blake2b-256 and matched to the p address.</p>
+
+<footer class="foot">
+  <div class="nav"><a class="prev" href="card-1.3.html">Last card</a> · <span>Next: <span class="soon">Nodes and miners: who checks, who orders</span></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio</span></div>
+  <div class="stamp"><span>FingersLLM</span></div>
+</footer>
+
+<script>
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+
+/* the decoder: a port of rusty-kaspa crypto/addresses/src/bech32.rs (v2.0.1). No network, nothing leaves the page. */
+(function(){
+  var CHARSET='qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+  function polymod(values){var c=1n;for(var i=0;i<values.length;i++){var c0=c>>35n;c=((c&0x07ffffffffn)<<5n)^BigInt(values[i]);if(c0&1n)c^=0x98f2bc8e61n;if(c0&2n)c^=0x79b76d99e2n;if(c0&4n)c^=0xf33e5fb3c4n;if(c0&8n)c^=0xae2eabe2a8n;if(c0&16n)c^=0x1e4f43e470n;}return c^1n;}
+  function conv5to8(u5){var out=[],buff=0,bits=0;for(var i=0;i<u5.length;i++){buff=(buff<<5)|u5[i];bits+=5;while(bits>=8){bits-=8;out.push((buff>>bits)&0xff);buff&=(1<<bits)-1;}}return out;}
+  function decode(str){
+    var s=String(str||'').trim().toLowerCase(); if(!s) return null;
+    var i=s.indexOf(':'); if(i<0) return {error:'no prefix: a Kaspa address starts with kaspa:'};
+    var prefix=s.slice(0,i), data=s.slice(i+1);
+    var names={kaspa:'mainnet',kaspatest:'testnet',kaspasim:'simnet',kaspadev:'devnet'};
+    if(!names[prefix]) return {error:'unknown prefix "'+prefix+'"'};
+    if(data.length<8) return {error:'too short'};
+    var u5=[]; for(var k=0;k<data.length;k++){var v=CHARSET.indexOf(data[k]); if(v<0) return {error:'"'+data[k]+'" is not an address character'}; u5.push(v);}
+    var payloadU5=u5.slice(0,-8), checkU5=u5.slice(-8);
+    var pre=[]; for(var p=0;p<prefix.length;p++) pre.push(prefix.charCodeAt(p)&0x1f);
+    var want=polymod(pre.concat([0],payloadU5,[0,0,0,0,0,0,0,0]));
+    var got=0n, cb=conv5to8(checkU5); for(var b=0;b<cb.length;b++) got=(got<<8n)|BigInt(cb[b]);
+    if(want!==got) return {error:'the checksum does not match: one character is off'};
+    var bytes=conv5to8(payloadU5), version=bytes[0], payload=bytes.slice(1);
+    var kinds={0:['key lock',32,'Schnorr'],1:['key lock',33,'ECDSA'],8:['script lock',32,'']};
+    if(!kinds[version]) return {error:'unknown version byte '+version};
+    if(payload.length!==kinds[version][1]) return {error:'payload is '+payload.length+' bytes, expected '+kinds[version][1]};
+    var hex=payload.map(function(x){return (x<16?'0':'')+x.toString(16);}).join('');
+    return {net:names[prefix],version:version,kind:kinds[version][0],curve:kinds[version][2],hex:hex};
+  }
+  var inp=document.getElementById('ain'), out=document.getElementById('aout');
+  function row(k,v){return '<span class="k">'+k+'</span><span class="v'+(k==='inside'?' hex':'')+'">'+v+'</span>';}
+  function render(){
+    var r=decode(inp.value);
+    if(!r){out.innerHTML='';return;}
+    if(r.error){out.innerHTML=row('result','<span class="err">'+r.error+'</span>');return;}
+    var h='';
+    h+=row('network',r.net);
+    h+=row('lock','<span class="kind">'+r.kind+(r.curve?' ('+r.curve+' key)':'')+'</span>');
+    h+=row('version byte',String(r.version)+(r.version===0?' (a q address)':r.version===1?' (a q address, the rarer kind)':' (a p address)'));
+    h+=row('inside',r.hex);
+    if(r.version===8){
+      h+=row('the lock, as bytes','<span class="op"><b>aa</b> OP_BLAKE2B</span><span class="op"><b>20</b> push 32 bytes</span><span class="op">the fingerprint</span><span class="op"><b>87</b> OP_EQUAL</span>');
+      h+=row('a spend must show','the script whose blake2b-256 fingerprint is these 32 bytes, then whatever that script demands');
+    } else if(r.version===0){
+      h+=row('the lock, as bytes','<span class="op"><b>20</b> push 32 bytes</span><span class="op">the key</span><span class="op"><b>ac</b> OP_CHECKSIG</span>');
+      h+=row('a spend must show','a Schnorr signature by this key over the transaction');
+    } else {
+      h+=row('the lock, as bytes','<span class="op"><b>21</b> push 33 bytes</span><span class="op">the key</span><span class="op"><b>ab</b> OP_CHECKSIGECDSA</span>');
+      h+=row('a spend must show','an ECDSA signature by this key over the transaction');
+    }
+    out.innerHTML=h;
+  }
+  var lab=document.getElementById('alab');
+  function label(kind){lab.innerHTML=kind?'The <b>'+kind+'</b> address example':'Paste any address you want';}
+  inp.addEventListener('input',function(){label(null);render();});
+  var chips=document.querySelectorAll('.chip'); for(var c=0;c<chips.length;c++){chips[c].addEventListener('click',function(){inp.value=this.getAttribute('data-a');label(this.getAttribute('data-a').indexOf('kaspa:q')===0?'q':'p');render();});}
+  inp.value=''; label(null); render();
+})();
+</script>
+</body>
+</html>

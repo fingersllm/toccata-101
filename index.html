@@ -12,31 +12,32 @@
 <style>
   :root{
     --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
-    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60; --ext:#0B5BD3;
     --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
-      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
       --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
     }
   }
   :root[data-theme="dark"]{
     --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
-    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
     --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
   }
   html{background:var(--bg)}
   body{max-width:720px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
   body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  /* links: green stays inside the series, blue leaves it */
   a{color:var(--link)}
+  a[target="_blank"]{color:var(--ext)}
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
   h1{font-size:2rem;line-height:1.15;margin:0;color:var(--head);letter-spacing:-.01em}
   h1::after{content:"";display:block;width:3rem;height:3px;background:var(--accent);margin-top:.5rem}
-  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer;margin-top:.5rem}
-  .theme:hover{color:var(--head);border-color:var(--accent)}
-  .theme{display:inline-flex;align-items:center;gap:.4rem}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--bg);background:var(--head);border:1px solid var(--head);border-radius:999px;padding:.25rem .75rem;cursor:pointer;margin-top:.5rem;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;flex:none}
+  .theme:hover{color:#0F2926;background:var(--accent);border-color:var(--accent)}
   .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .lead{font-size:1.05rem;color:var(--muted);margin:1rem 0 0}
   h2{font-size:.86rem;margin:2.2rem 0 .5rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
@@ -49,8 +50,11 @@
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
   .foot .meta{margin-top:.55rem}
   .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a[target="_blank"]{color:var(--ext)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
   .foot .by{color:var(--muted)}
+  .foot .stamp{display:flex;justify-content:flex-end;margin-top:1.1rem}
+  .foot .stamp span{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:2px solid var(--accent);border-radius:5px;padding:.22rem .55rem .2rem;transform:rotate(-4deg);outline:1px solid var(--accent);outline-offset:2px;opacity:.9}
   .foot .soon{color:var(--soon)}
 </style>
 </head>
@@ -62,7 +66,8 @@
 <p class="lead">Table of content</p>
 
 <h2>Start here</h2>
-<ol start="1">
+<ol start="0">
+  <li><a href="glossary.html">Glossary: the terms the cards use, one short explanation each</a></li>
   <li><a href="card-0.1.html">What Toccata changed for someone who holds KAS</a></li>
 </ol>
 
@@ -71,7 +76,7 @@
   <li><a href="card-1.1.html">UTXO: your balance is a set of pieces, not a number</a></li>
   <li><a href="card-1.2.html">Transaction: inputs, outputs, signatures, fee, all or nothing</a></li>
   <li><a href="card-1.3.html">Fee and mass: why a very small output costs more</a></li>
-  <li class="soon">Addresses and locks: key-locked and script-locked outputs</li>
+  <li><a href="card-1.4.html">Addresses and locks: key-locked and script-locked outputs</a></li>
   <li class="soon">Nodes and miners: who checks, who orders</li>
   <li class="soon">The blockDAG: blocks in parallel, then ordered</li>
   <li class="soon">Time on Kaspa: DAA score versus timestamps</li>
@@ -139,7 +144,7 @@
   <li class="soon">DAGKNIGHT and what comes next</li>
 </ol>
 
-<footer class="foot"><div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">by FingersLLM</span></div></footer>
+<footer class="foot"><div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio</span></div><div class="stamp"><span>FingersLLM</span></div></footer>
 
 <script>
 function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
