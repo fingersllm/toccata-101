@@ -50,7 +50,11 @@
   h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
   /* two lines from two songs, a small box each, a slalom between them, the set in one frame */
   .lframe{border:1px solid var(--line);border-radius:12px;padding:.85rem 1.05rem 1rem;margin:0 0 1.6rem}
-  .lcap{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 .75rem}
+  .lcap{margin:0 0 .8rem;text-align:center;font-size:.78rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);
+    background-image:linear-gradient(100deg,var(--muted) 44%,var(--head) 50%,var(--muted) 56%);background-size:340% 100%;background-position:120% 0;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:t101shine 9s linear infinite}
+  @keyframes t101shine{from{background-position:120% 0}to{background-position:-120% 0}}
+  @media (prefers-reduced-motion:reduce){.lcap{animation:none;background-image:none;-webkit-text-fill-color:var(--muted)}}
   .lines{margin:0}
   .ln{display:flex;flex-direction:column;align-items:flex-start;gap:.2rem}
   .ln.l2{align-items:flex-end}
@@ -91,6 +95,11 @@
   .dag .b.red.later{fill-opacity:.8}
   .dag .b.chain{stroke:var(--head);stroke-width:2.6}
   .dag .b.chain.blue{fill:var(--blue)}
+  .dag .ring{fill:none;stroke:var(--head);stroke-width:1.4;opacity:0;transition:opacity .4s}
+  .dag .ring.par{stroke:var(--muted);stroke-width:1.2}
+  .dag .ring.on{opacity:.95}
+  .dag .rl{fill:var(--muted);font-size:9px;font-family:system-ui,sans-serif;text-anchor:middle;opacity:0;transition:opacity .4s}
+  .dag .rl.on{opacity:1}
   .dag .num{fill:var(--head);font-size:9.5px;font-weight:700;font-family:system-ui,sans-serif;text-anchor:middle;opacity:0;transition:opacity .4s;pointer-events:none}
   .dag .num.on{opacity:1}
   .dag .cl{fill:var(--head);font-size:9px;font-family:system-ui,sans-serif;text-anchor:middle;opacity:0;transition:opacity .4s}
@@ -138,8 +147,8 @@
   </div>
 </div>
 
-<p>Kaspa does not wait for one <a class="t" target="_blank" rel="noopener" href="glossary.html#block">block</a> to finish before the next one starts. Ten blocks a second come out, each <strong>pointing</strong> at every block its <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> saw last, so the ledger is a web of blocks, a <a class="t" target="_blank" rel="noopener" href="glossary.html#blockdag">blockDAG</a>. The network agrees on one history.</p>
-<p>From every block, the rule follows the <a class="t" target="_blank" rel="noopener" href="glossary.html#parent">parent</a> with the most work behind it, <strong>those parents form one chain</strong>. Each block on that chain merges the blocks beside it that no <a class="t" target="_blank" rel="noopener" href="glossary.html#chain-block">chain block</a> took before, in a fixed order: the well-connected ones counted (blue), the stragglers set aside (red) but kept. Nothing is thrown away, you can see how the twelve copies of one <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> on card 1.5 became one accepted copy.</p>
+<p>Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#block">blocks</a> move in parallel. Currently 10 blocks per second are processed by the network, and future <a class="t" target="_blank" rel="noopener" href="glossary.html#hardfork">hardforks</a> are planned to increase that number too. Each block points at every block its <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> lately saw, and this creates a <a class="t" target="_blank" rel="noopener" href="glossary.html#dag">DAG</a> (Directed Acyclic Graph). We like to call it a <a class="t" target="_blank" rel="noopener" href="glossary.html#blockdag">BlockDAG</a>. The final agreement is on one history.</p>
+<p>From every block, the rule follows the <a class="t" target="_blank" rel="noopener" href="glossary.html#parent">parent</a> with the most work behind it, <strong>those parents form one chain</strong>. Each block on that chain merges the blocks beside it that no <a class="t" target="_blank" rel="noopener" href="glossary.html#chain-block">chain block</a> took before, in a fixed order: the well-connected ones counted (blue), the stragglers set aside (red) but kept.</p>
 
 <h2>3.5 seconds of mainnet</h2>
 <figure class="w">
@@ -153,7 +162,7 @@
   </div>
   <div class="msg" id="msg"></div>
 </figure>
-<p class="note">One <a class="t" target="_blank" rel="noopener" href="glossary.html#red-block">red block</a> in these seconds: made at 1.0 s on fresh parents, merged only 27 seconds later, when more than 124 <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-block">blue blocks</a> sat beside it that never saw it. A red block is kept and its transactions still count, but its miner is paid nothing for it. Most seconds have none.</p>
+<p class="note">The <a class="t" target="_blank" rel="noopener" href="glossary.html#red-block">red block</a> you see was made at 1.0 s on fresh parents, and merged only 27 seconds later. There were more than 124 <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-block">blue blocks</a> beside it that never saw it on the network. The block is kept with all its <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transactions</a>, but its miner was not paid.</p>
 
 <h2>Sources</h2>
 <p class="src">The rule that picks the chain and colours the blocks is GHOSTDAG, in rusty-kaspa v2.0.1 <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/ghostdag/protocol.rs">consensus/src/processes/ghostdag/protocol.rs</a>: the selected parent is the parent with the most blue work, a merged block is blue when at most k blue blocks sit beside it, red otherwise, with k = 124 at ten blocks a second (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/bps.rs">consensus/core/src/config/bps.rs</a>, <code>ghostdag_k</code>, and <code>target_time_per_block</code> 100 ms). The order is in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/model/stores/ghostdag.rs">consensus/src/model/stores/ghostdag.rs</a> (<code>consensus_ordered_mergeset</code>: the selected parent, then the merged blocks in increasing blue work), and a chain block processes its merged blocks in that order in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/pipeline/virtual_processor/utxo_validation.rs">virtual_processor/utxo_validation.rs</a>. A red block's reward goes to the miner of the chain block that merged it, in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/coinbase.rs">consensus/src/processes/coinbase.rs</a> (<code>expected_coinbase_transaction</code>). The blocks drawn here were read from <a target="_blank" rel="noopener" href="https://api.kaspa.org/">api.kaspa.org</a> on 9 September 2026 (each block's parents, blue score, blue work, chain status and merge sets), and the live drawing reads the same fields when you press the button. The numbers on the drawing are computed in your browser from those fields.</p>
@@ -223,6 +232,18 @@ const EX={"t0":1788926495334,"span":3500,"blocks":[{"h":"f1fa5d2ec6c84df4612a35f
       b.p.forEach(ph=>{const q=pos.get(ph);if(!q){out++;return;}const spc=(b.sp===ph&&b.c&&byH.get(ph)&&byH.get(ph).c),sp=(b.sp===ph);s+='<path class="e" data-sp="'+(spc?2:sp?1:0)+'" d="M'+a.x.toFixed(1)+' '+a.y.toFixed(1)+' C'+(a.x-18).toFixed(1)+' '+a.y.toFixed(1)+', '+(q.x+18).toFixed(1)+' '+q.y.toFixed(1)+', '+q.x.toFixed(1)+' '+q.y.toFixed(1)+'"/>';});
       if(out){s+='<path class="e stub" d="M'+a.x.toFixed(1)+' '+a.y.toFixed(1)+' l-14 0"/>';}
     });
+    /* one block and the ones it points at, marked at the parents step */
+    const inside=b=>b.p.filter(h=>pos.has(h));
+    let pick=null;blocks.forEach(b=>{if(!pick||inside(b).length>inside(pick).length)pick=b;});
+    if(pick&&inside(pick).length){
+      const pa=pos.get(pick.h);
+      s+='<circle class="ring pick" cx="'+pa.x.toFixed(1)+'" cy="'+pa.y.toFixed(1)+'" r="'+((pick.c?8.5:6.5)+4.5).toFixed(1)+'"/>';
+      s+='<text class="rl pick" x="'+pa.x.toFixed(1)+'" y="'+(pa.y+19).toFixed(1)+'">one block</text>';
+      const ps=inside(pick).map(h=>pos.get(h)).sort((a,b)=>a.x-b.x);
+      ps.forEach(q=>{s+='<circle class="ring par" cx="'+q.x.toFixed(1)+'" cy="'+q.y.toFixed(1)+'" r="10.5"/>';});
+      const lp=ps[ps.length-1];
+      s+='<text class="rl par" x="'+Math.min(660,lp.x).toFixed(1)+'" y="'+(lp.y-14).toFixed(1)+'">the ones it points at</text>';
+    }
     /* the blocks */
     blocks.forEach(b=>{const a=pos.get(b.h);const r=b.c?8.5:6.5;
       s+='<circle class="b'+(b.c?' chain':'')+'" id="b-'+b.h.slice(0,8)+'" data-h="'+b.h+'" cx="'+a.x.toFixed(1)+'" cy="'+a.y.toFixed(1)+'" r="'+r+'"><title>'+short(b.h)+' · '+(b.t/1000).toFixed(3)+' s · '+b.p.length+' parents · blue score '+num(b.bs)+(b.c?' · chain block':'')+(b.m?' · merged by '+short(b.m)+(b.mt!=null?' at '+(b.mt/1000).toFixed(1)+' s':''):' · not merged yet')+'</title></circle>';
@@ -242,10 +263,10 @@ const EX={"t0":1788926495334,"span":3500,"blocks":[{"h":"f1fa5d2ec6c84df4612a35f
     const c=counts(data);
     const t=[
       '',
-      '<b>'+c.n+' blocks in '+c.secs+' seconds</b>, each placed by the time its miner wrote. Ten a second, side by side, none waiting for another.',
-      '<b>Each block points at every tip its miner saw.</b> '+c.avg+' parents on average here, up to '+c.max+'. Dashed stubs point at blocks before these seconds.',
-      '<b>One chain through the web.</b> From every block the rule follows the parent with the most work behind it (the green links). Follow them from the newest block and you walk one chain: '+c.chain+' chain blocks here, the thick links.',
-      '<b>Each chain block merges the blocks beside it</b> that no chain block took before. '+(c.red?c.blue+' blue and '+c.red+' red here. The red one was merged '+redLate(data)+' after it was made, when more than 124 blue blocks sat beside it that never saw it: set aside, kept, its miner unpaid.':'All '+c.blue+' merged blocks are blue here, well connected.')+(c.laterN?' '+c.laterN+' are merged by chain blocks after these seconds, the dashed ones.':'')+(c.unm?' '+c.unm+' not merged yet, the network is still catching up with them.':''),
+      '<b>'+c.n+' blocks in '+c.secs+' seconds</b>, each entered the network at the time its miner wrote, some in parallel.',
+      '<b>Each block points at every tip its miner saw.</b> '+c.avg+' parents on average here. The ringed block and the ones it points at are marked.',
+      '<b>One chain through the web.</b> Every block follows the parent with the most work behind it (the green links). One pick per block, so the picks lead back through a single line of blocks: '+c.chain+' chain blocks here, the thick links.',
+      '<b>Each chain block merges the blocks</b> beside it that no chain block took before. '+(c.red?c.blue+' blue and '+c.red+' red here. The red one was merged '+redLate(data)+' after it was made, when more than 124 blue blocks sat beside it that never saw it: set aside, kept, its miner unpaid.':'All '+c.blue+' merged blocks are blue here, well connected.')+(c.laterN?' '+c.laterN+' are merged by chain blocks after these seconds, the dashed ones.':'')+(c.unm?' '+c.unm+' not merged yet, the network is still catching up with them.':''),
       '<b>One order.</b> Chain block by chain block: the previous chain block first, then its merged blocks by the work behind them. The order follows the chain, not the clock: a block can wait for a later chain block and get a later number than blocks made after it. Every node computes the same numbers, so every node writes the same history.'
     ];
     return t[k]||'';
@@ -256,6 +277,7 @@ const EX={"t0":1788926495334,"span":3500,"blocks":[{"h":"f1fa5d2ec6c84df4612a35f
     if(k>=1){els.forEach(e=>{const b=data.blocks.find(x=>x.h===e.getAttribute('data-h'));const delay=step===1?Math.round((b.t/data.span)*1800):0;later(()=>e.classList.add('on'),delay);});}else els.forEach(e=>e.classList.remove('on'));
     links.forEach(e=>{const sp=e.getAttribute('data-sp');e.style.opacity=(k>=2?(k>=3&&sp==='0'?'.45':'1'):'0');e.classList.toggle('sp',k>=3&&sp==='2');e.classList.toggle('sp2',k>=3&&sp==='1');});
     cls.forEach(e=>e.classList.toggle('on',k>=3));
+    svg.querySelectorAll('.ring,.rl').forEach(e=>e.classList.toggle('on',k===2));
     els.forEach(e=>{const b=data.blocks.find(x=>x.h===e.getAttribute('data-h'));e.classList.remove('blue','red','later');if(k>=4&&b.col){e.classList.add(b.col);if(b.mt!=null&&b.mt>data.span)e.classList.add('later');}});
     if(k>=5){const n=order(data.blocks);nums.forEach(e=>{const h=e.id.slice(2);const b=data.blocks.find(x=>x.h.slice(0,8)===h);const v=b&&n.get(b.h);e.textContent=v||'';e.classList.toggle('on',!!v);});}else nums.forEach(e=>{e.classList.remove('on');});
     $('cap').innerHTML=caption(k);
@@ -265,21 +287,24 @@ const EX={"t0":1788926495334,"span":3500,"blocks":[{"h":"f1fa5d2ec6c84df4612a35f
   function load(d,title){data=d;$('ltitle').textContent=title;$('lcount').textContent=d.blocks.length+' blocks · '+d.blocks.filter(b=>b.c).length+' chain blocks';draw(d);show(1);}
 
   /* live: the last seconds of mainnet, read from api.kaspa.org */
-  async function j(url){const r=await fetch(url,{headers:{accept:'application/json'}});if(!r.ok)throw new Error(String(r.status));return r.json();}
+  async function j(url){const c=('AbortController' in window)?new AbortController():null;const to=c?setTimeout(()=>c.abort(),9000):0;
+    try{const r=await fetch(url,c?{headers:{accept:'application/json'},signal:c.signal}:{headers:{accept:'application/json'}});
+      if(!r.ok)throw new Error(String(r.status));return await r.json();}finally{if(to)clearTimeout(to);}}
   async function fetchLive(say){
     const span=3000;
     const info=await j(API+'/info/blockdag');
     const tips=(info.virtualParentHashes||info.tipHashes||[]).slice(0,4);
     if(!tips.length)throw new Error('no tips');
-    const got=new Map();let frontier=tips.slice();let calls=0;let t1=0;
+    const got=new Map();let frontier=tips.slice();let calls=0;let t1=0;const queued=new Set(frontier);
     while(frontier.length&&calls<80){
-      const batch=frontier.filter(h=>!got.has(h)).slice(0,25);frontier=frontier.slice(batch.length);
+      const batch=[];
+      while(frontier.length&&batch.length<20){const h=frontier.shift();if(!got.has(h))batch.push(h);}
       if(!batch.length)continue;
       say('Reading blocks… '+got.size);
       const res=await Promise.all(batch.map(h=>j(API+'/blocks/'+h+'?includeTransactions=false&includeColor=false').catch(()=>null)));calls+=batch.length;
       res.forEach((b,ix)=>{if(!b)return;const hd=b.header||{},vd=b.verboseData||{};const t=Number(hd.timestamp);const rec={h:vd.hash||batch[ix],time:t,p:(hd.parents&&hd.parents[0]&&hd.parents[0].parentHashes)||[],c:!!vd.isChainBlock,bs:Number(vd.blueScore),bw:hd.blueWork,sp:vd.selectedParentHash,blues:vd.mergeSetBluesHashes||[],reds:vd.mergeSetRedsHashes||[]};got.set(rec.h,rec);if(t>t1)t1=t;});
       const t0=t1-span;
-      res.forEach(b=>{if(!b)return;const hd=b.header||{};if(Number(hd.timestamp)>=t0){(hd.parents&&hd.parents[0]&&hd.parents[0].parentHashes||[]).forEach(p=>{if(!got.has(p))frontier.push(p);});}});
+      res.forEach(b=>{if(!b)return;const hd=b.header||{};if(Number(hd.timestamp)>=t0){(hd.parents&&hd.parents[0]&&hd.parents[0].parentHashes||[]).forEach(p=>{if(!got.has(p)&&!queued.has(p)){queued.add(p);frontier.push(p);}});}});
     }
     const t0=t1-span;
     const all=[...got.values()];
@@ -292,7 +317,7 @@ const EX={"t0":1788926495334,"span":3500,"blocks":[{"h":"f1fa5d2ec6c84df4612a35f
   const msg=$('msg');const say=(t,err)=>{msg.textContent=t||'';msg.className='msg'+(err?' err':'');};
   $('next').addEventListener('click',()=>{if(step<5)show(step+1);});
   $('back').addEventListener('click',()=>{if(step>1)show(step-1);});
-  $('live').addEventListener('click',async()=>{const b=$('live');b.disabled=true;say('Reading api.kaspa.org…');try{const d=await fetchLive(say);if(d.blocks.length<3)throw new Error('few');live=true;load(d,d.title);say('The newest blocks are still being merged, so a few carry no colour yet. Press the button again for a fresh three and a half seconds.');$('ex').hidden=false;}catch(e){say('No answer from api.kaspa.org, try again',true);}b.disabled=false;});
+  $('live').addEventListener('click',async()=>{const b=$('live');b.disabled=true;say('Reading api.kaspa.org…');try{const d=await fetchLive(say);if(d.blocks.length<3)throw new Error('few');live=true;load(d,d.title);say('The newest blocks are still being merged, so a few carry no colour yet. Press the button again for a fresh three and a half seconds.');$('ex').hidden=false;}catch(e){say(e&&e.message==='few'?'api.kaspa.org answered with too few blocks, try again':'No answer from api.kaspa.org, try again',true);}finally{b.disabled=false;}});
   $('ex').addEventListener('click',()=>{live=false;load(EX,'9 September 2026, from 04:01:35.334 UTC');$('ex').hidden=true;say('');});
   load(EX,'9 September 2026, from 04:01:35.334 UTC');
   /* the slalom between the two lines */
