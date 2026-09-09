@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>Nodes &amp; Miners: Honour among incentives · Toccata 101</title>
+<title>A transaction's journey · Toccata 101</title>
 <meta name="description" content="Toccata 101, card 1.5. One real covenant transaction followed through the nodes and the miners, check by check, from the moment it arrives to the blocks piling on top of it. Paste any transaction id.">
 <script>
 (function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
@@ -92,8 +92,28 @@
   .k{display:inline-flex;align-items:center;justify-content:center;width:1.35rem;height:1.35rem;border-radius:50%;font-weight:700;font-size:.8rem;color:#0F2926;background:var(--accent);flex:none}
   .k.q{background:var(--line);color:var(--head)}
   .st.dim .v,.st.dim .note{opacity:.3;pointer-events:none}
-  .st.off .v,.st.off .note{opacity:.3;pointer-events:none}
+  .st.off .v,.st.off .note{display:none}
   .st.off .pill{display:none}
+  .st.off h2{color:var(--soon)}
+  .st.off .n{background:var(--line);color:var(--muted)}
+  .nx{display:flex;justify-content:flex-end;align-items:center;gap:.8rem;margin-top:.8rem}
+  .nx.two{justify-content:space-between;flex-wrap:wrap;margin-top:.5rem}
+  .nx .hint{margin:0}
+  .nx:not(.two):not(:has(.go:not([hidden]))){display:none}
+  .go{font:inherit;font-size:.86rem;font-weight:600;color:#0F2926;background:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:.4rem 1rem;cursor:pointer}
+  .go:hover{background:var(--head);color:var(--bg);border-color:var(--head)}
+  .go[hidden]{display:none}
+  .note .more{margin:.6rem 0 0;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:.4rem .9rem}
+  .note .more summary{cursor:pointer;color:var(--link);font-weight:600;font-size:.9rem;list-style:none;display:flex;align-items:center;gap:.5rem}
+  .note .more summary::-webkit-details-marker{display:none}
+  .note .more summary::before{content:"";width:.45rem;height:.45rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);transition:transform .2s;flex:none;margin-top:-.15rem}
+  .note .more[open] summary::before{transform:rotate(45deg)}
+  .note .more summary:hover{color:var(--head)}
+  .note .more p{margin:.6rem 0 .3rem;font-size:.93rem;color:var(--text)}
+  .cks li.sub{display:block;padding:.2rem 0 .5rem 1.9rem;border-top:0;font:.84em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--head);overflow-wrap:anywhere}
+  .cks li.sub[hidden]{display:none}
+  .lnk{font:inherit;color:var(--link);background:transparent;border:0;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--line)}
+  .lnk:hover{color:var(--head)}
   .st.dim h2 .pill{background:var(--surface);color:var(--soon);border-color:var(--line)}
   @media (max-width:480px){.st{padding-left:2.2rem}.v{padding:.8rem .8rem}.u .ref{font-size:.8em}.cb .r{grid-template-columns:1.6rem 1fr}.cb .r .am{grid-column:2}.hash .row .val{font-size:.8em}}
   /* station 1: the transaction */
@@ -235,10 +255,6 @@
   .scale .you{position:absolute;top:2.15rem;transform:translateX(-50%);font-size:.72rem;color:var(--head);white-space:nowrap;transition:left 1s ease-out;font-weight:600}
   .scale .you::before{content:"";display:block;width:0;height:0;border:.35rem solid transparent;border-bottom-color:var(--head);margin:0 auto -.05rem}
   .since{font-size:.86rem;color:var(--muted)}
-  .stack{display:flex;gap:2px;align-items:flex-end;height:1.4rem;margin:.3rem 0 .2rem;overflow:hidden}
-  .stack i{display:block;flex:none;width:6px;height:100%;background:var(--accent);opacity:.9;border-radius:1px 1px 0 0;animation:t101-rise .5s ease-out}
-  @keyframes t101-rise{from{transform:translateY(100%)}to{transform:translateY(0)}}
-  .stack i.you{background:var(--head)}
   /* term links: a regular green link that opens the glossary in a new tab */
   a.t{color:var(--link)}
   a.t:hover{color:var(--head)}
@@ -249,7 +265,7 @@
   <p class="kicker"><a href="index.html">Toccata 101</a> · Part 1 · card 5</p>
   <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
 </div>
-<h1>Nodes &amp; Miners: Honour among incentives</h1>
+<h1>A transaction's journey</h1>
 
 <figure class="w">
   <span class="lbl" id="tlab">Paste any transaction id, or take the example</span>
@@ -258,6 +274,7 @@
     <button class="chip" type="button" id="chip-ex">covenant transaction</button>
   </div>
   <div class="msg" id="tmsg"></div>
+  <div class="nx"><button type="button" class="go" id="go1" hidden>Pass the transaction to the node</button></div>
 </figure>
 
 <div class="sim" id="sim">
@@ -276,6 +293,7 @@
       </div>
       <div class="feeline" id="feeline"></div>
     </div>
+    <div class="nx"><button type="button" class="go" id="go2" hidden>Run the node's list</button></div>
   </figure>
 </section>
 
@@ -284,7 +302,7 @@
   <h2>The node runs its list <span class="pill" id="p2">checking</span></h2>
   <figure class="v">
     <ol class="cks press" id="cks2"></ol>
-    <p class="hint">Press any line to break it, press it again to mend it.</p>
+    <div class="nx two"><p class="hint">Press any line to break it, press it again to mend it.</p><button type="button" class="go" id="go3" hidden>Passed, look it up in the UTXO set</button></div>
   </figure>
   <p class="note">Every <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> runs the same list. One thing fails and the whole <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> drops out.</p>
 </section>
@@ -297,13 +315,14 @@
     <div id="found"></div>
     <div class="sum" id="sum"></div>
     <ol class="cks" id="cks3"></ol>
+    <div class="nx"><button type="button" class="go" id="go4" hidden>Open the locks</button></div>
   </figure>
 </section>
 
 <section class="st" id="s4">
   <span class="n">4</span>
   <h2>The locks are opened <span class="pill" id="p4">running scripts</span></h2>
-  <figure class="v"><div class="lanes" id="lanes"></div></figure>
+  <figure class="v"><div class="lanes" id="lanes"></div><div class="nx"><button type="button" class="go" id="go5" hidden>Send to the mempool</button></div></figure>
   <p class="note">The node doesn't know what the <a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a> is for. It confirms this script is the one the <a class="t" target="_blank" rel="noopener" href="glossary.html#address">address</a> was made from, then runs it and asks one thing: yes or no.</p>
 </section>
 
@@ -312,6 +331,7 @@
   <h2>Into the mempool, out to the peers <span class="pill" id="p5">relaying</span></h2>
   <figure class="v">
     <svg class="net" id="net" viewBox="0 0 420 260" aria-label="the transaction spreading from one node to its peers, each peer checking it"></svg>
+    <div class="nx"><button type="button" class="go" id="go6" hidden>Seal it in a block</button></div>
   </figure>
   <p class="note">The transaction goes into the <a class="t" target="_blank" rel="noopener" href="glossary.html#mempool">mempool</a>, then to the <a class="t" target="_blank" rel="noopener" href="glossary.html#peer">peers</a>. Every node validates for itself and repeats steps 2 to 4.</p>
 </section>
@@ -322,11 +342,12 @@
   <figure class="v">
     <div class="h" id="hpick">picked from the mempool by fee rate</div>
     <div class="pick" id="pick"></div>
-    <div class="h">proof of work <button class="chip" type="button" id="mine">try a nonce</button></div>
+    <div class="h">proof of work</div>
     <div class="hash" id="hash"></div>
     <div class="h" id="hcarry">blocks that carried this transaction</div>
     <div class="blocks" id="carriers"></div>
     <p class="tl" id="carrylegend"></p>
+    <div class="nx"><button type="button" class="go" id="go7" hidden>Spread the block</button></div>
   </figure>
   <p class="note"><a class="t" target="_blank" rel="noopener" href="glossary.html#miner">Miners</a> get rewards only for <a class="t" target="_blank" rel="noopener" href="glossary.html#block">blocks</a> and transactions accepted by every node in the network, and a block that breaks the rules costs them the resources they wasted on it. It is an incentive game, and bad actors cannot sustainably play it.</p>
 </section>
@@ -348,6 +369,7 @@
       <div class="whatif" id="whatifA"></div>
       <div class="whatif" id="whatifB"></div>
     </div>
+    <div class="nx"><button type="button" class="go" id="go8" hidden>Count the blocks on top</button></div>
   </figure>
   <p class="note">The block spreads, each node re-checks each transaction, the <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo-set">UTXO set</a> changes: <a class="t" target="_blank" rel="noopener" href="glossary.html#input">inputs</a> gone, <a class="t" target="_blank" rel="noopener" href="glossary.html#output">outputs</a> born. If one transaction inside a block fails the re-check, the nodes skip that transaction and keep the block. There is no limit, every transaction in a block may fail this re-check and the block stays. Kaspa's blocks are built to tolerate that, which is what lets ten of them a second run in parallel.</p>
 </section>
@@ -364,10 +386,14 @@
       </div>
     </div>
     <ol class="cks" id="cks8"></ol>
-    <div class="h mt" id="hstack">blocks added while this page was open</div>
-    <div class="stack" id="stack"></div>
   </figure>
-  <p class="note">Blocks keep piling on top of the one our transaction lives in, ten a second. Undoing this transaction means redoing all of them. It gets harder every second, and after 100 blocks, about ten seconds, the reference <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> counts it as final and lets you <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spend</a> what it brought. This is what we call <a class="t" target="_blank" rel="noopener" href="glossary.html#confirmation">confirmation</a>. After 432,000 blocks, twelve hours of them at ten a second, the node itself will never undo it, whatever it hears. That depth is Kaspa's finality.</p>
+  <div class="note">Blocks keep piling on top of the one our transaction lives in, ten a second. Undoing this transaction means redoing all of them, and it gets harder every second. Each block on top is one <a class="t" target="_blank" rel="noopener" href="glossary.html#confirmation">confirmation</a>.
+    <details class="more">
+      <summary>Why 100, 1,000 and 432,000 blocks</summary>
+      <p>How many confirmations make "confirmed" is the <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a>'s choice, not the network's. The reference wallet code marks a payment confirmed after 100 blocks, about ten seconds, and a mined reward after 1,000, about 100 seconds. The 1,000 is the only line the network itself enforces: a mined reward cannot be <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spent</a> before it, and many wallets show "confirmed" at 1,000 for everything because of it. Spending earlier is allowed, a node's mempool takes a spend of an output the moment the output exists, so a wallet may let you pay onward with coins that arrived seconds ago.</p>
+      <p>After 432,000 blocks, twelve hours at ten a second, the node itself will never undo it. Twelve hours is a wall Kaspa chose: past that depth a node refuses to switch to any other version of history, however much work it carries, so even a miner with most of the <a class="t" target="_blank" rel="noopener" href="glossary.html#hash">hash</a> power cannot rewrite anything older than that. A deeper disagreement would need a network split longer than twelve hours, longer than any accident the network is built to survive on its own.</p>
+    </details>
+  </div>
 </section>
 
 </div>
@@ -501,6 +527,7 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
     $('feeline').innerHTML='<span>in <b>'+kas(d.sumIn)+'</b></span><span>out <b>'+kas(d.sumOut)+'</b></span><span>fee <span class="fee">'+kas(d.fee)+'</span> = '+num(d.fee)+' sompi</span>';
     pill('p1','received');
     const dot=$('dot');dot.classList.remove('go');void dot.offsetWidth;dot.classList.add('go');
+    later(()=>ready(2),3400);
   }
 
   function renderList(){
@@ -510,7 +537,7 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
     rows.push(['at most 1,000 outputs',m.outputs.length+(m.outputs.length===1?' output':' outputs')]);
     rows.push(['each output script within 10,000 bytes',m.outputs.map(o=>o.spk.length/2).join(' and ')+' bytes']);
     rows.push(['not shaped like a coinbase','has inputs']);
-    rows.push(['every output above zero, the total under 29 billion KAS',m.outputs.map(o=>kas(o.amount)).join(', ')]);
+    rows.push(['every output above zero, the total under 29 billion KAS',m.outputs.length===1?kas(d.sumOut):'<button type="button" class="lnk" id="seeouts">'+m.outputs.length+' outputs, total '+kas(d.sumOut)+'</button>']);
     rows.push(['no input listed twice',m.inputs.length+' distinct']);
     rows.push(['gas is zero','0']);
     rows.push(['subnetwork is native',(m.subnetwork&&/^0+$/.test(m.subnetwork))?'native':short(m.subnetwork,4,4)]);
@@ -519,8 +546,9 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
     else rows.push(['a sigop count on each input, no compute budget',m.inputs.map(i=>num(i.sig_op_count==null?0:i.sig_op_count)).join(' and ')]);
     const ol=$('cks2');ol.innerHTML=rows.map(r=>ckRow(r[0],r[1],false)).join('');
     ol.querySelectorAll('li').forEach(li=>{li.addEventListener('click',()=>breakRow(li));});
+    const see=$('seeouts');if(see){const li=see.closest('li');const sub=document.createElement('li');sub.className='sub';sub.hidden=true;sub.textContent=m.outputs.map(o=>kas(o.amount)).join(' · ');li.after(sub);see.addEventListener('click',e=>{e.stopPropagation();sub.hidden=!sub.hidden;see.textContent=(sub.hidden?'':'hide, ')+m.outputs.length+' outputs, total '+kas(d.sumOut);});}
     pill('p2','checking');
-    playList(ol,140,()=>pill('p2','passed','ok'));
+    playList(ol,140,()=>{pill('p2','passed','ok');ready(3);});
   }
   function breakRow(li){
     const v=li.querySelector('.val');
@@ -528,10 +556,10 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
     else{li.classList.remove('wait');li.classList.add('on','bad');v.setAttribute('data-was',v.textContent);v.textContent='fails';}
     const bad=$('cks2').querySelectorAll('li.bad').length;
     if(bad&&!broken){
-      broken=true;pill('p2','dropped, the transaction goes no further','bad');
+      broken=true;pill('p2','dropped, the transaction goes no further','bad');$('go3').hidden=true;
       for(let n=3;n<=8;n++){$('s'+n).classList.add('dim');const p=$('p'+n);p.setAttribute('data-was',p.textContent);p.setAttribute('data-cls',p.className.replace('pill','').trim());p.textContent='never reached';p.className='pill';}
     } else if(!bad&&broken){
-      broken=false;pill('p2','passed','ok');
+      broken=false;pill('p2','passed','ok');if(stage===2)$('go3').hidden=false;
       for(let n=3;n<=8;n++){$('s'+n).classList.remove('dim');const p=$('p'+n);p.textContent=p.getAttribute('data-was')||'';const c=p.getAttribute('data-cls')||'';p.className='pill'+(c?' '+c:'');}
     } else if(bad){pill('p2',bad===1?'dropped, the transaction goes no further':'dropped, '+bad+' lines fail','bad');}
   }
@@ -554,7 +582,7 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
     rows.push(['then the scripts, step 4','',true]);
     const ol=$('cks3');ol.innerHTML=rows.map(r=>ckRow(r[0],r[1],r[2])).join('');
     pill('p3','looking up');
-    later(()=>playList(ol,160,()=>pill('p3','passed','ok')),900);
+    later(()=>playList(ol,160,()=>{pill('p3','passed','ok');ready(4);}),900);
   }
 
   function renderLocks(){
@@ -605,7 +633,7 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
         t+=li.querySelector('.tape')?2600:520;
       });
     });
-    later(()=>pill('p4','yes, every lock','ok'),t+100);
+    later(()=>{pill('p4','yes, every lock','ok');ready(5);},t+100);
   }
 
   function renderNet(){
@@ -625,7 +653,7 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
     later(()=>{$('mem').textContent='mempool +1';},300);
     peers.forEach((p,i)=>{later(()=>{const c=$('t'+i);c.setAttribute('opacity','1');const am=$('am'+i);if(am&&am.beginElement)am.beginElement();},700+i*90);later(()=>{$('ck'+i).classList.add('on');$('t'+i).setAttribute('opacity','0');},1650+i*90);});
     far.forEach((f,i)=>{later(()=>{const c=$('f'+i);c.setAttribute('opacity','1');const am=$('fm'+i);if(am&&am.beginElement)am.beginElement();},2000+f.from*90+(i%2)*60);later(()=>{$('f'+i).setAttribute('opacity','0');},2900+f.from*90);});
-    later(()=>pill('p5','every peer said yes','ok'),3100);
+    later(()=>{pill('p5','every peer said yes','ok');ready(6);},3100);
   }
 
   function renderMiner(){
@@ -640,7 +668,7 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
     let n=0,start=0,run=0;
     function spin(myRun){if(M!==m||myRun!==run)return;n+=Math.floor(1+Math.random()*7);hash.innerHTML=rowsHtml(num(n)+'…',rnd(),false);if(Date.now()-start<2200)later(()=>spin(myRun),120);else if(ai){hash.classList.add('found');hash.innerHTML=rowsHtml(esc(String(ai.nonce)),'kHeavyHash of the header with this nonce, under the target',true);pill('p6','sealed','ok');}else{hash.innerHTML='<div class="row"><span class="lab">block</span><span class="val">the blocks that carried it could not be read</span></div>';pill('p6','sealed','ok');}}
     function mine(){n=0;start=Date.now();run++;hash.classList.remove('found');pill('p6','mining');spin(run);}
-    $('mine').onclick=mine;mine();
+    mine();later(()=>ready(7),2600);
     const cs=m.carriers.slice();const t0=cs.length?cs[0].time:0;
     $('hcarry').textContent=cs.length+' blocks carried this transaction'+(cs.length>1?', within '+num(cs[cs.length-1].time-t0)+' ms':'');
     $('carriers').innerHTML=cs.map(c=>{const acc=ai&&c.hash===ai.hash;const mg=c.mergeset_pos>=0;return '<a class="pool'+(acc?' acc':mg?' mg':' late')+'" target="_blank" rel="noopener" href="https://kaspa.stream/blocks/'+c.hash+'" style="color:inherit;text-decoration:none">'+esc(poolName(c.pool))+' <span class="ms">+'+num(c.time-t0)+' ms</span></a>';}).join('');
@@ -675,7 +703,7 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
     if(ai&&ai.fees_accepted!=null&&ourIx>=0){$('split').innerHTML='= '+kas(subsidy)+' subsidy + '+kas(ai.fees_accepted)+' fees, of which <b>'+kas(d.fee)+'</b> is this transaction\'s'+(ai.other_fees?' and '+kas(ai.other_fees)+' the other '+(ai.txs-2)+(ai.txs-2===1?' transaction\'s':' transactions\'')+' accepted from that block':'')+(ai.red?'. The block was red, so the reward went to the chain block\'s own miner':'')+'.';}
     else if(ai){$('split').innerHTML='The output to '+esc(poolName(ai.pool))+' holds '+kas(subsidy)+' subsidy plus the fees of the transactions accepted from that block, this one\'s '+kas(d.fee)+' among them.';}
     else $('split').innerHTML='';
-    later(()=>pill('p7','accepted, blue score '+num(ab.blue_score),'ok'),3200);
+    later(()=>{pill('p7','accepted, blue score '+num(ab.blue_score),'ok');ready(8);},3200);
     /* the cheat */
     const bA=$('cheatA'),bB=$('cheatB'),wA=$('whatifA'),wB=$('whatifB');const who=ai?esc(poolName(ai.pool)):'the miner';const tries=num(Math.round(ai&&ai.difficulty?ai.difficulty:ab.difficulty||0));
     wA.innerHTML='<div class="r"><span>one transaction in the block says out '+kas(d.sumOut+100000000)+' from in '+kas(d.sumIn)+'</span><span class="no">outputs exceed inputs</span></div><div class="r"><span>the block\'s own checks, every node</span><span>passed, the shape is fine</span></div><div class="r"><span>the chain block\'s re-check of that transaction</span><span class="no">fails, skipped</span></div><div class="r"><span>the block</span><span>kept, its other transactions accepted</span></div><div class="r"><span>coinbase output for '+who+'</span><span>the subsidy and the fees of the accepted ones, nothing for the skipped one</span></div>';
@@ -688,48 +716,59 @@ const EX={"txid":"f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063
     const m=M,ab=m.accepting_block;const scale=$('scale');
     scale.querySelectorAll('.mk,.you').forEach(e=>e.remove());
     const lg=v=>Math.log10(v+1)/Math.log10(FINAL_LINE*10+1);
-    const marks=[[0,'0'],[WALLET_LINE,'100'],[FINAL_LINE,'432,000']];
+    const marks=[[0,'0'],[WALLET_LINE,'100'],[1000,'1,000'],[FINAL_LINE,'432,000']];
     marks.forEach(mk=>{const e=document.createElement('span');e.className='mk';e.id='mk'+mk[0];e.style.left=(lg(mk[0])*100).toFixed(2)+'%';e.textContent=mk[1];if(mk[0]===0)e.style.transform='translateX(0)';scale.appendChild(e);});
-    const ladder=[[1,'one block on top: the accepting block\'s child','a tenth of a second'],[WALLET_LINE,'100 blocks: the reference wallet counts it as final and lets you spend what it brought','about ten seconds'],[FINAL_LINE,'432,000 blocks: finality, the node itself will never undo it','twelve hours']];
+    const ladder=[[1,'one block on top: the accepting block\'s child','a tenth of a second'],[WALLET_LINE,'100 blocks: the reference wallet counts a payment confirmed','about ten seconds'],[1000,'1,000 blocks: a mined reward may be spent, the line many wallets use for everything','about 100 seconds'],[FINAL_LINE,'432,000 blocks: finality, good luck trying to reorganize this one','twelve hours']];
     $('cks8').innerHTML=ladder.map(r=>'<li class="wait node" id="ld'+r[0]+'"><span class="tick"></span><span class="what">'+r[1]+'</span><span class="val">'+r[2]+'</span></li>').join('');
     const you=document.createElement('span');you.className='you';you.id='you';you.textContent='now';scale.appendChild(you);
     if(liveTimer){clearInterval(liveTimer);liveTimer=null;}
-    let last=null,first=0;
+    let last=null;
     function show(bs){const n=Math.max(0,bs-ab.blue_score);$('count').innerHTML=num(n)+'<small>blocks on top</small>';$('fill').style.width=(lg(n)*100).toFixed(2)+'%';you.style.left=(lg(n)*100).toFixed(2)+'%';marks.forEach(mk=>{const e=$('mk'+mk[0]);if(e)e.classList.toggle('done',n>=mk[0]&&mk[0]>0);});ladder.forEach(r=>{const e=$('ld'+r[0]);if(!e)return;const on=n>=r[0];e.classList.toggle('wait',!on);e.classList.toggle('on',on);});
       const secs=Math.max(0,(Date.now()-ab.time)/1000);const dd=Math.floor(secs/86400),hh=Math.floor(secs%86400/3600),mm=Math.floor(secs%3600/60);
-      $('since').textContent='accepted '+utc(ab.time)+', '+day(ab.time)+' · '+(dd?dd+' d ':'')+(dd||hh?hh+' h ':'')+mm+' min ago · '+(n>=FINAL_LINE?'past finality, the node itself will never undo it':n>=WALLET_LINE?'past the wallet\'s line':'not yet at the wallet\'s line');
+      $('since').textContent='accepted '+utc(ab.time)+', '+day(ab.time)+' · '+(dd?dd+' d ':'')+(dd||hh?hh+' h ':'')+mm+' min ago · '+(n>=FINAL_LINE?'past finality':n>=1000?'past 1,000 blocks':n>=WALLET_LINE?'past 100 blocks':'fresh');
       pill('p8',n>=WALLET_LINE?'confirmed':'live',n>=WALLET_LINE?'ok':'');
-      const st=$('stack');if(last===null){st.innerHTML='';first=n;}else if(n>last){for(let i=0;i<Math.min(80,n-last);i++){const b=document.createElement('i');st.appendChild(b);}while(st.children.length>80)st.removeChild(st.firstChild);}
-      $('hstack').textContent='blocks added while this page was open: '+num(Math.max(0,n-first));
       last=n;}
     async function tick(){if(M!==m)return;try{const r=await j(API+'/info/virtual-chain-blue-score');show(Number(r.blueScore));}catch(e){$('since').textContent='api.kaspa.org did not answer, trying again';}}
     tick();liveTimer=setInterval(tick,10000);
   }
 
+  const STEPS={1:renderTx,2:renderList,3:renderSet,4:renderLocks,5:renderNet,6:renderMiner,7:renderSpread,8:renderPile};
+  let stage=0;
+  function hideGo(){for(let n=1;n<=8;n++){const b=$('go'+n);if(b)b.hidden=true;}}
   function renderAll(m){
-    clearTimers();broken=false;M=m;D=derive(m);
-    for(let n=3;n<=8;n++)$('s'+n).classList.remove('dim');
-    renderTx();renderList();renderSet();renderLocks();renderNet();renderMiner();renderSpread();renderPile();
+    clearTimers();broken=false;M=m;D=derive(m);stage=0;
+    if(liveTimer){clearInterval(liveTimer);liveTimer=null;}
+    for(let n=1;n<=8;n++){const st=$('s'+n);st.classList.remove('dim');st.classList.add('off');}
+    hideGo();$('go1').hidden=false;
   }
+  function ready(n){if(!M||n>8)return;if(n===3&&broken)return;const b=$('go'+n);if(b&&stage===n-1)b.hidden=false;}
+  function open(n){
+    if(!M||n!==stage+1)return;
+    const prev=$('go'+n);if(prev)prev.hidden=true;
+    stage=n;const st=$('s'+n);st.classList.remove('off');
+    STEPS[n]();
+    try{st.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}
+  }
+  for(let n=1;n<=8;n++){const b=$('go'+n);if(b)b.addEventListener('click',()=>open(n));}
 
   /* ---------- the input ---------- */
   const inp=$('tin'),msg=$('tmsg'),lab=$('tlab');
   let seq=0;
   function say(t,err){msg.textContent=t||'';msg.className='msg'+(err?' err':'');}
-  function setOff(on){for(let n=1;n<=8;n++)$('s'+n).classList.toggle('off',on);}
+  function setOff(on){if(on){clearTimers();if(liveTimer){clearInterval(liveTimer);liveTimer=null;}M=null;stage=0;hideGo();}for(let n=1;n<=8;n++){const st=$('s'+n);st.classList.toggle('off',on);st.classList.remove('dim');}}
   async function go(txid,fromChip){
     const id=String(txid||'').trim().toLowerCase();
     if(!id){say('');setOff(true);return;}
     if(!/^[0-9a-f]{64}$/.test(id)){say('Txid not confirmed on mainnet',true);return;}
     const my=++seq;
-    if(id===EX.txid){say('');lab.innerHTML=fromChip?'The example':'Paste any transaction id, or take the example';setOff(false);renderAll(modelFromExample());return;}
-    try{const m=await modelFromApi(id,t=>{if(my===seq)say(t);});if(my!==seq)return;say('');lab.textContent='Your transaction';setOff(false);renderAll(m);}
+    if(id===EX.txid){say('');lab.innerHTML=fromChip?'The example':'Paste any transaction id, or take the example';renderAll(modelFromExample());return;}
+    try{const m=await modelFromApi(id,t=>{if(my===seq)say(t);});if(my!==seq)return;say('');lab.textContent='Your transaction';renderAll(m);}
     catch(e){if(my!==seq)return;if(e&&e.code==='coinbase')say('A coinbase transaction has no inputs to check. Paste one that spends.',true);else if(e&&e.code===404)say('Txid not confirmed on mainnet',true);else say('No answer from api.kaspa.org, try again',true);}
   }
   let deb=null;
   inp.addEventListener('input',()=>{lab.textContent='Paste any transaction id, or take the example';clearTimeout(deb);deb=setTimeout(()=>go(inp.value,false),350);});
   $('chip-ex').addEventListener('click',()=>{inp.value=EX.txid;go(EX.txid,true);});
-  inp.value='';renderAll(modelFromExample());setOff(true);
+  inp.value='';setOff(true);
 })();
 </script>
 </body>
