@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>BlockDAG: parallel blocks, one chain · Toccata 101</title>
+<meta name="description" content="Toccata 101, card 1.6. Kaspa makes ten blocks a second in parallel and still agrees on one order. Three and a half real seconds of mainnet, drawn step by step, and the last seconds live.">
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  :root{
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60; --ext:#0B5BD3;
+    --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+      --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+    --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+  }
+  html{background:var(--bg)}
+  body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  /* links: green stays inside the series, blue leaves it */
+  a{color:var(--link)}
+  a[target="_blank"]{color:var(--ext)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem}
+  .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
+  .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--bg);background:var(--head);border:1px solid var(--head);border-radius:999px;padding:.25rem .75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem}
+  .theme:hover{color:#0F2926;background:var(--accent);border-color:var(--accent)}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .top{flex-wrap:wrap}
+  .theme{white-space:nowrap;flex:none;margin-left:auto}
+  .kicker{white-space:nowrap;margin-right:auto}
+  @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em;text-align:center}
+  h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  /* two lines from two songs, a small box each, a slalom between them */
+  .lines{margin:0 0 1.6rem}
+  .ln{display:flex;flex-direction:column;align-items:flex-start;gap:.2rem}
+  .ln.l2{align-items:flex-end}
+  .ln .q{display:inline-block;background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:.25rem .75rem;color:var(--head);font-size:1.02rem;line-height:1.45;font-weight:500}
+  .ln .who{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0 .25rem}
+  .sl{display:block;width:100%;height:2.6rem;margin:.05rem 0}
+  .sl path{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round}
+  .sl circle{fill:var(--accent)}
+  p{margin:0 0 1rem}
+  strong{color:var(--head)}
+  code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
+  .foot .nav{display:block}
+  .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
+  .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a[target="_blank"]{color:var(--ext)}
+  .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
+  .foot .by{color:var(--muted)}
+  .foot .soon{color:var(--soon)}
+  /* the drawing */
+  .w{background:var(--surface);border-radius:12px;padding:1rem 1.1rem 1rem;margin:0}
+  .lbl{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline}
+  .lbl b{text-transform:none;font-weight:inherit;color:var(--head)}
+  .dagwrap{overflow-x:auto;margin:.6rem 0 .2rem}
+  .dag{display:block;width:100%;min-width:600px;height:auto;background:var(--bg);border-radius:10px;border:1.5px solid var(--line)}
+  .dag .ax{stroke:var(--line);stroke-width:1}
+  .dag .tk{fill:var(--muted);font-size:10px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .dag .e{fill:none;stroke:var(--line);stroke-width:1.2;opacity:0;transition:opacity .5s}
+  .dag .e.sp{stroke:var(--head);stroke-width:2.4}
+  .dag .e.sp2{stroke:var(--accent);stroke-width:1.5}
+  .dag .e.stub{stroke-dasharray:3 3}
+  .dag .b{fill:var(--bg);stroke:var(--muted);stroke-width:1.6;opacity:0;transition:opacity .35s,fill .5s,stroke .5s,r .3s}
+  .dag .b.on{opacity:1}
+  .dag .b.blue{fill:var(--accent);stroke:var(--accent)}
+  .dag .b.red{fill:var(--refused);stroke:var(--refused)}
+  .dag .b.later{stroke-dasharray:3 2;fill-opacity:.35}
+  .dag .b.red.later{fill-opacity:.8}
+  .dag .b.chain{stroke:var(--head);stroke-width:2.6}
+  .dag .b.chain.blue{fill:var(--accent)}
+  .dag .num{fill:var(--head);font-size:9.5px;font-weight:700;font-family:system-ui,sans-serif;text-anchor:middle;opacity:0;transition:opacity .4s;pointer-events:none}
+  .dag .num.on{opacity:1}
+  .dag .cl{fill:var(--head);font-size:9px;font-family:system-ui,sans-serif;text-anchor:middle;opacity:0;transition:opacity .4s}
+  .dag .cl.on{opacity:1}
+  .cap{min-height:3.2rem;font-size:.95rem;color:var(--head);margin:.5rem 0 .6rem}
+  .cap b{color:var(--head)}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap}
+  .steps{display:flex;gap:.35rem;align-items:center}
+  .steps i{display:block;width:.55rem;height:.55rem;border-radius:50%;background:var(--line)}
+  .steps i.on{background:var(--accent)}
+  .steps i.now{background:var(--head)}
+  .btns{display:flex;gap:.5rem;flex-wrap:wrap}
+  .go{font:inherit;font-size:.86rem;font-weight:600;color:#0F2926;background:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:.4rem 1rem;cursor:pointer}
+  .go:hover{background:var(--head);color:var(--bg);border-color:var(--head)}
+  .go[disabled]{opacity:.45;cursor:default}
+  .chip{font:inherit;font-size:.82rem;color:var(--link);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.3rem .8rem;cursor:pointer}
+  .chip:hover{border-color:var(--accent);color:var(--head)}
+  .chip[disabled]{opacity:.5;cursor:default}
+  .msg{font-size:.86rem;color:var(--muted);min-height:1.3rem;margin-top:.4rem}
+  .msg.err{color:var(--refused);font-weight:600}
+  .leg{display:flex;gap:.4rem 1rem;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:.2rem 0 0}
+  .leg span{white-space:nowrap}
+  .leg i{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;vertical-align:-.1rem;margin-right:.3rem;box-sizing:border-box}
+  .note{margin:1rem 0 0;padding:.7rem 1rem;border-left:4px solid var(--accent);background:var(--tint);border-radius:0 8px 8px 0;font-size:.98rem;color:var(--head)}
+  .chain{padding-left:1.2rem;margin:0}
+  .chain li{margin:0 0 .5rem}
+  .chain code{font-size:.82rem}
+  /* term links: a regular green link that opens the glossary in a new tab */
+  a.t{color:var(--link)}
+  a.t:hover{color:var(--head)}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="kicker"><a href="index.html">Toccata 101</a> · Part 1 · card 6</p>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
+<h1>BlockDAG: parallel blocks, one chain</h1>
+<div class="lines" id="lines">
+  <div class="ln l1"><span class="q" id="q1">[paste the Wiz Khalifa line]</span><span class="who">Wiz Khalifa, "Black and Yellow (G-Mix)"</span></div>
+  <svg class="sl" id="sl" aria-hidden="true"></svg>
+  <div class="ln l2"><span class="q" id="q2">[paste the Eminem line]</span><span class="who">Eminem, "Fall"</span></div>
+</div>
+
+<p>Kaspa does not wait for one <a class="t" target="_blank" rel="noopener" href="glossary.html#block">block</a> to finish before the next one starts. Ten blocks a second come out, each <strong>pointing</strong> at every block its <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> saw last, so the ledger is a web of blocks, a <a class="t" target="_blank" rel="noopener" href="glossary.html#blockdag">blockDAG</a>. The network agrees on one history.</p>
+<p>From every block, the rule follows the <a class="t" target="_blank" rel="noopener" href="glossary.html#parent">parent</a> with the most work behind it, <strong>those parents form one chain</strong>. Each block on that chain merges the blocks beside it that no <a class="t" target="_blank" rel="noopener" href="glossary.html#chain-block">chain block</a> took before, in a fixed order: the well-connected ones counted (blue), the stragglers set aside (red) but kept. Nothing is thrown away, you can see how the twelve copies of one <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> on card 1.5 became one accepted copy.</p>
+
+<h2>3.5 seconds of mainnet</h2>
+<figure class="w">
+  <div class="lbl"><span id="ltitle">9 September 2026, from 04:01:35.334 UTC</span><span id="lcount"></span></div>
+  <div class="dagwrap"><svg class="dag" id="dag" viewBox="0 0 760 300" aria-label="the blocks of a few seconds of Kaspa mainnet, their parent links, the chain through them, and the order they get"></svg></div>
+  <p class="leg"><span><i style="background:var(--bg);border:1.6px solid var(--muted)"></i>a block</span><span><i style="background:var(--accent)"></i>blue, merged and counted</span><span><i style="background:var(--refused)"></i>red, merged but set aside</span><span><i style="background:var(--bg);border:2.4px solid var(--head)"></i>a chain block</span><span><i style="background:var(--bg);border:1.6px dashed var(--accent)"></i>merged after these seconds, dashed</span></p>
+  <p class="cap" id="cap"></p>
+  <div class="row">
+    <div class="steps" id="steps"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="btns"><button type="button" class="chip" id="back">Back</button><button type="button" class="go" id="next">Next</button><button type="button" class="chip" id="live">Draw the last seconds of mainnet, live</button><button type="button" class="chip" id="ex" hidden>Back to 9 September</button></div>
+  </div>
+  <div class="msg" id="msg"></div>
+</figure>
+<p class="note">One <a class="t" target="_blank" rel="noopener" href="glossary.html#red-block">red block</a> in these seconds: made at 1.0 s on fresh parents, merged only 27 seconds later, when more than 124 <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-block">blue blocks</a> sat beside it that never saw it. A red block is kept and its transactions still count, but its miner is paid nothing for it. Most seconds have none.</p>
+
+<h2>Sources</h2>
+<p class="src">The rule that picks the chain and colours the blocks is GHOSTDAG, in rusty-kaspa v2.0.1 <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/ghostdag/protocol.rs">consensus/src/processes/ghostdag/protocol.rs</a>: the selected parent is the parent with the most blue work, a merged block is blue when at most k blue blocks sit beside it, red otherwise, with k = 124 at ten blocks a second (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/bps.rs">consensus/core/src/config/bps.rs</a>, <code>ghostdag_k</code>, and <code>target_time_per_block</code> 100 ms). The order is in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/model/stores/ghostdag.rs">consensus/src/model/stores/ghostdag.rs</a> (<code>consensus_ordered_mergeset</code>: the selected parent, then the merged blocks in increasing blue work), and a chain block processes its merged blocks in that order in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/pipeline/virtual_processor/utxo_validation.rs">virtual_processor/utxo_validation.rs</a>. A red block's reward goes to the miner of the chain block that merged it, in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/coinbase.rs">consensus/src/processes/coinbase.rs</a> (<code>expected_coinbase_transaction</code>). The blocks drawn here were read from <a target="_blank" rel="noopener" href="https://api.kaspa.org/">api.kaspa.org</a> on 9 September 2026 (each block's parents, blue score, blue work, chain status and merge sets), and the live drawing reads the same fields when you press the button. The numbers on the drawing are computed in your browser from those fields.</p>
+
+<footer class="foot">
+  <div class="nav"><a class="prev" href="card-1.5.html">Last card</a> · <span>Next: <span class="soon">Time on Kaspa: DAA score versus timestamps</span></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio · By FingersLLM</span></div>
+</footer>
+
+<script>
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+</script>
+<script>
+/* 26 blocks of 9 September 2026, 04:01:35.334 to 04:01:38.834 UTC, read from api.kaspa.org: hash, ms after the start, parents, chain block, blue score, blue work, the chain block that merged it and when */
+const EX={"t0":1788926495334,"span":3500,"blocks":[{"h":"f1fa5d2ec6c84df4612a35ff47218367a49a5f4cc1871841cf3889bc61127de7","t":265,"p":["fe5f07678958cadab2acc70c3891aa2408cff957813cb0e61f4052353ce22435","4a2ab3424eb5b72245437a7ce86749e7cf92e611e79901d1f3f06d495978e667","864807813c0bbcbc5d637a1acb48cf4acf4001c11da4b29361094d8229fd3cd3"],"c":false,"bs":533126790,"bw":"2f8bbdcf885f6a64ca27ee","sp":"fe5f07678958cadab2acc70c3891aa2408cff957813cb0e61f4052353ce22435","m":"4bac4803d5b3c860b1725c2318d52d91f48be4aa1cf1dce7a72d617a5d32c0a6","col":"blue","mt":2226,"tx":2},{"h":"45898c15638af1653f36ceade626bdc84ff7b5dafa97a808a57560d3f77c91fc","t":345,"p":["fe5f07678958cadab2acc70c3891aa2408cff957813cb0e61f4052353ce22435","4a2ab3424eb5b72245437a7ce86749e7cf92e611e79901d1f3f06d495978e667","22d2bcd832bbee412672d309765511566ecc7239cf3559ad80a8539baec21aa8","864807813c0bbcbc5d637a1acb48cf4acf4001c11da4b29361094d8229fd3cd3"],"c":true,"bs":533126791,"bw":"2f8bbdcffdb583499e4ffa","sp":"fe5f07678958cadab2acc70c3891aa2408cff957813cb0e61f4052353ce22435","m":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","col":"blue","mt":822,"tx":2},{"h":"585642cb1170f27ea4afdf3dff4e51ae9c0e25bbb46b32c271a16fe63517c911","t":394,"p":["21c588de1eace878f0bb7ce5125c7587cb10c1754d4fccc891e34ab2b33c34cf","21c221ac9f22573dd706051ed44cd1787e08a055a277fffa63a7345291a6b24e","ecee44b30cca37dbe2892e140bb83864eddc6261fb7aa4c82d8dbee321b88297","4f5ea3915b59cd9683245b5315db3b67640a09dc882d053e16a683b6dd18cb15","125eedf3a2493ca8127018cd252b393fbe64ef4c4dedf6a5887a6458bd7f9f02","8f9a361fc1e70739c1fb4e2888fde6ae0f0ced2afb8b71670954d1a25400c1a0","ca957058fe7af689d93003979c61826f4006d751bc17fe184f9f10709a3def51","a052fc90418a34a44a316e878fc7718efbad0856d03cdc2a52c283432313fd7c","101a41b8db3b86fd8cc1f06f71f7f657e75db048c51e71caf14ebfc5d6ef86fe","dd2d136fb89d86ea9f83c29cedb1284f30cd0d2555c5ae556421042a92a17be1"],"c":false,"bs":533126781,"bw":"2f8bbdcb6827c834e6838e","sp":"21c588de1eace878f0bb7ce5125c7587cb10c1754d4fccc891e34ab2b33c34cf","m":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","col":"blue","mt":822,"tx":2},{"h":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","t":822,"p":["45898c15638af1653f36ceade626bdc84ff7b5dafa97a808a57560d3f77c91fc","585642cb1170f27ea4afdf3dff4e51ae9c0e25bbb46b32c271a16fe63517c911","815054d845f0e28e115f6623314a5ebc41fb4656a4855260b698007f537ee7b0","3848d6cf88772b05f9890d3e4c151c1954c831fbcd4f3b4f7f222b3e1af2d63b","dc13369e79c969ffc020c5999eb8214576973eadf6fd0539842e346722306c0e","716098e3ccc119243eedc929df9b5225a24f4be44c6acf591d2cdb834106c93c","2434925cee65fc283b42127451799a3fac7142b24e8318ef30c4bfb4a7fd4477"],"c":true,"bs":533126798,"bw":"2f8bbdd33334c326be1545","sp":"45898c15638af1653f36ceade626bdc84ff7b5dafa97a808a57560d3f77c91fc","m":"f04f2f8188f71bf0f1113dd37acbfeaba47f8b95a3d7fcd0b213e1dc8d8441dc","col":"blue","mt":1561,"tx":1},{"h":"4ab2df3ba32c6d439992a2c6a29896b030545dae5b29c5091c542040fcce8bf8","t":1000,"p":["45898c15638af1653f36ceade626bdc84ff7b5dafa97a808a57560d3f77c91fc","585642cb1170f27ea4afdf3dff4e51ae9c0e25bbb46b32c271a16fe63517c911","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","815054d845f0e28e115f6623314a5ebc41fb4656a4855260b698007f537ee7b0","3848d6cf88772b05f9890d3e4c151c1954c831fbcd4f3b4f7f222b3e1af2d63b","dc13369e79c969ffc020c5999eb8214576973eadf6fd0539842e346722306c0e","716098e3ccc119243eedc929df9b5225a24f4be44c6acf591d2cdb834106c93c","2434925cee65fc283b42127451799a3fac7142b24e8318ef30c4bfb4a7fd4477"],"c":false,"bs":533126799,"bw":"2f8bbdd3a88adc0b923d51","sp":"45898c15638af1653f36ceade626bdc84ff7b5dafa97a808a57560d3f77c91fc","m":"e01c0801bb27d5ea630ec867568632e9abed4fa2c44e20de4e80032036f16aec","col":"red","mt":28198,"tx":1},{"h":"de679aa303da091561f51ca46ee0c251279cdebb35baa1f1829f3c1fe462f375","t":1322,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126802,"bw":"2f8bbdd5089957432a4472","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"4bac4803d5b3c860b1725c2318d52d91f48be4aa1cf1dce7a72d617a5d32c0a6","col":"blue","mt":2226,"tx":4},{"h":"ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","t":1537,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126804,"bw":"2f8bbdd5f351b995ee2387","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"4bac4803d5b3c860b1725c2318d52d91f48be4aa1cf1dce7a72d617a5d32c0a6","col":"blue","mt":2226,"tx":4},{"h":"f04f2f8188f71bf0f1113dd37acbfeaba47f8b95a3d7fcd0b213e1dc8d8441dc","t":1561,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":true,"bs":533126804,"bw":"2f8bbdd5f351b995ee2387","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"4bac4803d5b3c860b1725c2318d52d91f48be4aa1cf1dce7a72d617a5d32c0a6","col":"blue","mt":2226,"tx":4},{"h":"86a1961f0f0f0ccce62fddc64f5d01534201e7e559e3d1e08733b019185451c4","t":1734,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126803,"bw":"2f8bbdd57def7027fe6c7e","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"4bac4803d5b3c860b1725c2318d52d91f48be4aa1cf1dce7a72d617a5d32c0a6","col":"blue","mt":2226,"tx":3},{"h":"2ad8ed08812a9901050711343e5e0f7714d048545de0a55a5302c90c2d6f15b9","t":1766,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126803,"bw":"2f8bbdd57def7027fe6c7e","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"4bac4803d5b3c860b1725c2318d52d91f48be4aa1cf1dce7a72d617a5d32c0a6","col":"blue","mt":2226,"tx":4},{"h":"12e71a6157ededbc989b1963e6a3090278006959b794ce4de05677087f7df43b","t":1855,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126805,"bw":"2f8bbdd668a7d27ac24b93","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"4109c855b46c3b4ac71ae08903b34e2b6a205680333f5e4f47a0227fd5975540","col":"blue","mt":3729,"tx":3},{"h":"1c5648c25f8ad69bd3780bed1b0ebdb1f1a865a8db747d9536f55132db8d9076","t":1855,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126805,"bw":"2f8bbdd668a7d27ac24b93","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"4109c855b46c3b4ac71ae08903b34e2b6a205680333f5e4f47a0227fd5975540","col":"blue","mt":3729,"tx":3},{"h":"23fd001980e1efc46478cd9a8fe835cf9e9d669e2a072f8ed27be29d0ced11fc","t":1855,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126805,"bw":"2f8bbdd668a7d27ac24b93","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"4109c855b46c3b4ac71ae08903b34e2b6a205680333f5e4f47a0227fd5975540","col":"blue","mt":3729,"tx":3},{"h":"b657a0a59aa559d75a8cd3c58eb558c24b86d1b978f643e61ee6a9978c3d4a61","t":1855,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126805,"bw":"2f8bbdd668a7d27ac24b93","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"deabab7a6be933c2fade9ff9391a5448e6738c051a9c0c384a896fbe6f8617be","col":"blue","mt":5082,"tx":3},{"h":"06821444632748aac72ad1ad43e4320c02d0c7a4cf5d029838eec17fcaa66cd1","t":1855,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126805,"bw":"2f8bbdd668a7d27ac24b93","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"719d6d62a52e6cf4fc392c802f7acc442f66f1b6834efbfdd720ae5fabaeae86","col":"blue","mt":3157,"tx":3},{"h":"6d025cd9a0553e1a34d088075985f4120cd76cb94a58a8e193a1962ef00cfa73","t":1855,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126805,"bw":"2f8bbdd668a7d27ac24b93","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"719d6d62a52e6cf4fc392c802f7acc442f66f1b6834efbfdd720ae5fabaeae86","col":"blue","mt":3157,"tx":3},{"h":"3c50094d42d7444bb08c07be8c94242b8c81787b569b76e8364222ba529ba783","t":1955,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","1a4e5bdc10a08d0f119c0ba224ee3b800908689a3952b8d7359f825af5034631","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126806,"bw":"2f8bbdd6ddfdeb5f96739f","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"3f9fdea3d5ea34f148574b7b441dd7b821cd6fc8939d1e3a28c89f4f634a6733","col":"blue","mt":4552,"tx":4},{"h":"e6676355189aafbe51654e2f1b6442eac62d9ee77f2c8a1725771420c20b27f6","t":1955,"p":["89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","89dfe5b82d4aad87821a3834c537f3e128fc0a3791d89fdd7404bf2645b185d9","5ccbfce48737b59b86a132fc187c30f152e15b9254ab26c4b2d786aada7cd1a8","1a4e5bdc10a08d0f119c0ba224ee3b800908689a3952b8d7359f825af5034631","c62837eca1a4809da3d547c6d08819e50e1f95953080844164792ecb5249cb19","0e1acf2b80d5e2e71654f1909314afaaaa07b65f8a2cb872a680852dc8fb078f","4ca58f8411cce9f0a27a3015078e31d994de20a095aad6b63d80e13368729d54"],"c":false,"bs":533126806,"bw":"2f8bbdd6ddfdeb5f96739f","sp":"89c5e0254c074bee00d051f7a6e804e1ab2bdb171a833ac0b869d11e49b5ee1b","m":"3f9fdea3d5ea34f148574b7b441dd7b821cd6fc8939d1e3a28c89f4f634a6733","col":"blue","mt":4552,"tx":4},{"h":"d94c7aebe8ff6845cf25be9434d431153f3b4cddee934d095e5ec64c735998d5","t":2194,"p":["ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","2ad8ed08812a9901050711343e5e0f7714d048545de0a55a5302c90c2d6f15b9","de679aa303da091561f51ca46ee0c251279cdebb35baa1f1829f3c1fe462f375","f1fa5d2ec6c84df4612a35ff47218367a49a5f4cc1871841cf3889bc61127de7","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","1a4e5bdc10a08d0f119c0ba224ee3b800908689a3952b8d7359f825af5034631"],"c":false,"bs":533126810,"bw":"2f8bbdd8b3564ef2e713cf","sp":"ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","m":"3f9fdea3d5ea34f148574b7b441dd7b821cd6fc8939d1e3a28c89f4f634a6733","col":"blue","mt":4552,"tx":2},{"h":"e1dab1fbf91733e3b053cf61b029a0b74293e527e6ee95a0d62a8721d83e6d29","t":2214,"p":["ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","86a1961f0f0f0ccce62fddc64f5d01534201e7e559e3d1e08733b019185451c4","2ad8ed08812a9901050711343e5e0f7714d048545de0a55a5302c90c2d6f15b9","de679aa303da091561f51ca46ee0c251279cdebb35baa1f1829f3c1fe462f375","f1fa5d2ec6c84df4612a35ff47218367a49a5f4cc1871841cf3889bc61127de7","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","8dedfda413b76ed512db89384aba74001b807cd3d8a9e428c1fde2a507c2c6be","1a4e5bdc10a08d0f119c0ba224ee3b800908689a3952b8d7359f825af5034631"],"c":false,"bs":533126812,"bw":"2f8bbdd99e0280bc8f63e7","sp":"ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","m":"deabab7a6be933c2fade9ff9391a5448e6738c051a9c0c384a896fbe6f8617be","col":"blue","mt":5082,"tx":3},{"h":"4bac4803d5b3c860b1725c2318d52d91f48be4aa1cf1dce7a72d617a5d32c0a6","t":2226,"p":["f04f2f8188f71bf0f1113dd37acbfeaba47f8b95a3d7fcd0b213e1dc8d8441dc","ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","86a1961f0f0f0ccce62fddc64f5d01534201e7e559e3d1e08733b019185451c4","2ad8ed08812a9901050711343e5e0f7714d048545de0a55a5302c90c2d6f15b9","de679aa303da091561f51ca46ee0c251279cdebb35baa1f1829f3c1fe462f375","f1fa5d2ec6c84df4612a35ff47218367a49a5f4cc1871841cf3889bc61127de7","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","8dedfda413b76ed512db89384aba74001b807cd3d8a9e428c1fde2a507c2c6be","1a4e5bdc10a08d0f119c0ba224ee3b800908689a3952b8d7359f825af5034631"],"c":true,"bs":533126813,"bw":"2f8bbdda135899a1638bf3","sp":"f04f2f8188f71bf0f1113dd37acbfeaba47f8b95a3d7fcd0b213e1dc8d8441dc","m":"719d6d62a52e6cf4fc392c802f7acc442f66f1b6834efbfdd720ae5fabaeae86","col":"blue","mt":3157,"tx":3},{"h":"d2be8576aff5e01adac67868079a70426206f784585d3dddf20aac38db57c547","t":2237,"p":["ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","86a1961f0f0f0ccce62fddc64f5d01534201e7e559e3d1e08733b019185451c4","2ad8ed08812a9901050711343e5e0f7714d048545de0a55a5302c90c2d6f15b9","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","8dedfda413b76ed512db89384aba74001b807cd3d8a9e428c1fde2a507c2c6be","1a4e5bdc10a08d0f119c0ba224ee3b800908689a3952b8d7359f825af5034631"],"c":false,"bs":533126810,"bw":"2f8bbdd8b3564ef2e713cf","sp":"ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","m":"3f9fdea3d5ea34f148574b7b441dd7b821cd6fc8939d1e3a28c89f4f634a6733","col":"blue","mt":4552,"tx":1},{"h":"32ac2fa096f87966e40df723ed660d3057a3e6c95b5bf931c67f17f86bf5b5db","t":2361,"p":["ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","86a1961f0f0f0ccce62fddc64f5d01534201e7e559e3d1e08733b019185451c4","2ad8ed08812a9901050711343e5e0f7714d048545de0a55a5302c90c2d6f15b9","de679aa303da091561f51ca46ee0c251279cdebb35baa1f1829f3c1fe462f375","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","8dedfda413b76ed512db89384aba74001b807cd3d8a9e428c1fde2a507c2c6be","1a4e5bdc10a08d0f119c0ba224ee3b800908689a3952b8d7359f825af5034631"],"c":false,"bs":533126811,"bw":"2f8bbdd928ac67d7bb3bdb","sp":"ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","m":"4109c855b46c3b4ac71ae08903b34e2b6a205680333f5e4f47a0227fd5975540","col":"blue","mt":3729,"tx":1},{"h":"0cb9edb9cbd4b262ff77426154ad8a890e9e2f7a39f457aef028a13aeabe3e24","t":2794,"p":["f04f2f8188f71bf0f1113dd37acbfeaba47f8b95a3d7fcd0b213e1dc8d8441dc","ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","86a1961f0f0f0ccce62fddc64f5d01534201e7e559e3d1e08733b019185451c4","2ad8ed08812a9901050711343e5e0f7714d048545de0a55a5302c90c2d6f15b9","de679aa303da091561f51ca46ee0c251279cdebb35baa1f1829f3c1fe462f375","f1fa5d2ec6c84df4612a35ff47218367a49a5f4cc1871841cf3889bc61127de7","a6ae97bbedda0280b5de1570464a5dd7525270ff538d3feaaccab868fb732f1c","8dedfda413b76ed512db89384aba74001b807cd3d8a9e428c1fde2a507c2c6be","1a4e5bdc10a08d0f119c0ba224ee3b800908689a3952b8d7359f825af5034631","4c6036fbaa063cfe4c5cfc2e58697760777132562806c551c0772284464b20b5"],"c":false,"bs":533126814,"bw":"2f8bbdda88aeb28637b3ff","sp":"f04f2f8188f71bf0f1113dd37acbfeaba47f8b95a3d7fcd0b213e1dc8d8441dc","m":"3f9fdea3d5ea34f148574b7b441dd7b821cd6fc8939d1e3a28c89f4f634a6733","col":"blue","mt":4552,"tx":3},{"h":"0b1c86550f10f49ce8bb58b4c5e29c3bb8b1402cca3cf1221358ba9ed1153060","t":2857,"p":["6d025cd9a0553e1a34d088075985f4120cd76cb94a58a8e193a1962ef00cfa73","f04f2f8188f71bf0f1113dd37acbfeaba47f8b95a3d7fcd0b213e1dc8d8441dc","ebdde830cc9f32079ee4f720c1d91817abaface85cff2c2860597524d9d6098f","86a1961f0f0f0ccce62fddc64f5d01534201e7e559e3d1e08733b019185451c4","2ad8ed08812a9901050711343e5e0f7714d048545de0a55a5302c90c2d6f15b9","de679aa303da091561f51ca46ee0c251279cdebb35baa1f1829f3c1fe462f375","f1fa5d2ec6c84df4612a35ff47218367a49a5f4cc1871841cf3889bc61127de7","8dedfda413b76ed512db89384aba74001b807cd3d8a9e428c1fde2a507c2c6be","1a4e5bdc10a08d0f119c0ba224ee3b800908689a3952b8d7359f825af5034631","4c6036fbaa063cfe4c5cfc2e58697760777132562806c551c0772284464b20b5"],"c":false,"bs":533126815,"bw":"2f8bbddafe04cb6b0bdc0b","sp":"6d025cd9a0553e1a34d088075985f4120cd76cb94a58a8e193a1962ef00cfa73","m":"4109c855b46c3b4ac71ae08903b34e2b6a205680333f5e4f47a0227fd5975540","col":"blue","mt":3729,"tx":4},{"h":"719d6d62a52e6cf4fc392c802f7acc442f66f1b6834efbfdd720ae5fabaeae86","t":3157,"p":["4bac4803d5b3c860b1725c2318d52d91f48be4aa1cf1dce7a72d617a5d32c0a6","6d025cd9a0553e1a34d088075985f4120cd76cb94a58a8e193a1962ef00cfa73","06821444632748aac72ad1ad43e4320c02d0c7a4cf5d029838eec17fcaa66cd1","4c6036fbaa063cfe4c5cfc2e58697760777132562806c551c0772284464b20b5"],"c":true,"bs":533126817,"bw":"2f8bbddbe8d052dc8b3509","sp":"4bac4803d5b3c860b1725c2318d52d91f48be4aa1cf1dce7a72d617a5d32c0a6","m":"4109c855b46c3b4ac71ae08903b34e2b6a205680333f5e4f47a0227fd5975540","col":"blue","mt":3729,"tx":3}]};
+</script>
+<script>
+(function(){
+  'use strict';
+  const API='https://api.kaspa.org';
+  const $=id=>document.getElementById(id);
+  const num=n=>Number(n).toLocaleString('en-US');
+  const short=h=>h.slice(0,8)+'…'+h.slice(-4);
+  const svg=$('dag');
+  let data=null,step=0,live=false,timers=[];
+  const later=(f,ms)=>timers.push(setTimeout(f,ms));
+  const clear=()=>{timers.forEach(clearTimeout);timers=[];};
+
+  /* the order every node computes: chain block by chain block, the previous chain block first, then the merged blocks by blue work */
+  function order(blocks){
+    const byH=new Map(blocks.map(b=>[b.h,b]));
+    const chain=blocks.filter(b=>b.c).sort((a,b)=>a.t-b.t);
+    const n=new Map();let k=0;
+    const bw=b=>BigInt('0x'+(b.bw||'0'));
+    chain.forEach(c=>{
+      if(c.sp&&byH.has(c.sp)&&!n.has(c.sp))n.set(c.sp,++k);
+      const rest=blocks.filter(b=>b.m===c.h&&b.h!==c.sp&&!n.has(b.h)).sort((a,b)=>{const d=bw(a)-bw(b);return d<0n?-1:d>0n?1:(a.h<b.h?-1:1);});
+      rest.forEach(b=>n.set(b.h,++k));
+    });
+    return n;
+  }
+  function layout(d){
+    const W=760,L=34,R=728,cy=150,gap=27;const blocks=d.blocks.slice().sort((a,b)=>a.t-b.t);
+    const x=t=>L+(t/d.span)*(R-L);
+    const laneLast={};const pos=new Map();
+    blocks.forEach(b=>{
+      let lane=0;
+      if(b.c){lane=0;}else{
+        const seq=[1,-1,2,-2,3,-3,4,-4,5,-5];lane=seq.find(l=>(laneLast[l]===undefined)||(x(b.t)-laneLast[l]>=19));if(lane===undefined)lane=5;
+      }
+      laneLast[lane]=x(b.t);
+      pos.set(b.h,{x:x(b.t),y:cy+lane*gap,lane});
+    });
+    return {blocks,pos,x,cy,W};
+  }
+  function draw(d){
+    const {blocks,pos,x,cy}=layout(d);const byH=new Map(blocks.map(b=>[b.h,b]));
+    let s='';
+    /* the axis */
+    for(let t=0;t<=d.span;t+=500){const xx=x(t);s+='<line class="ax" x1="'+xx.toFixed(1)+'" y1="288" x2="'+xx.toFixed(1)+'" y2="282"/><text class="tk" x="'+xx.toFixed(1)+'" y="298" text-anchor="middle">'+(t/1000).toFixed(1)+' s</text>';}
+    s+='<line class="ax" x1="30" y1="288" x2="732" y2="288"/>';
+    /* the links */
+    blocks.forEach(b=>{const a=pos.get(b.h);let out=0;
+      b.p.forEach(ph=>{const q=pos.get(ph);if(!q){out++;return;}const spc=(b.sp===ph&&b.c&&byH.get(ph)&&byH.get(ph).c),sp=(b.sp===ph);s+='<path class="e" data-sp="'+(spc?2:sp?1:0)+'" d="M'+a.x.toFixed(1)+' '+a.y.toFixed(1)+' C'+(a.x-18).toFixed(1)+' '+a.y.toFixed(1)+', '+(q.x+18).toFixed(1)+' '+q.y.toFixed(1)+', '+q.x.toFixed(1)+' '+q.y.toFixed(1)+'"/>';});
+      if(out){s+='<path class="e stub" d="M'+a.x.toFixed(1)+' '+a.y.toFixed(1)+' l-14 0"/>';}
+    });
+    /* the blocks */
+    blocks.forEach(b=>{const a=pos.get(b.h);const r=b.c?8.5:6.5;
+      s+='<circle class="b'+(b.c?' chain':'')+'" id="b-'+b.h.slice(0,8)+'" data-h="'+b.h+'" cx="'+a.x.toFixed(1)+'" cy="'+a.y.toFixed(1)+'" r="'+r+'"><title>'+short(b.h)+' · '+(b.t/1000).toFixed(3)+' s · '+b.p.length+' parents · blue score '+num(b.bs)+(b.c?' · chain block':'')+(b.m?' · merged by '+short(b.m)+(b.mt!=null?' at '+(b.mt/1000).toFixed(1)+' s':''):' · not merged yet')+'</title></circle>';
+      s+='<text class="num" id="n-'+b.h.slice(0,8)+'" x="'+a.x.toFixed(1)+'" y="'+(a.y+3.4).toFixed(1)+'"></text>';
+      if(b.c)s+='<text class="cl" id="c-'+b.h.slice(0,8)+'" x="'+a.x.toFixed(1)+'" y="'+(a.y-13).toFixed(1)+'">chain</text>';
+    });
+    svg.innerHTML=s;
+  }
+  function counts(d){
+    const blocks=d.blocks;const chain=blocks.filter(b=>b.c);const par=blocks.map(b=>b.p.length);
+    const merged=blocks.filter(b=>b.m);const blue=blocks.filter(b=>b.col==='blue').length,red=blocks.filter(b=>b.col==='red').length;
+    const laterN=blocks.filter(b=>b.m&&b.mt!=null&&b.mt>d.span).length,unm=blocks.filter(b=>!b.m).length;
+    return {n:blocks.length,chain:chain.length,avg:(par.reduce((s,v)=>s+v,0)/Math.max(1,par.length)).toFixed(1),max:Math.max(0,...par),blue,red,laterN,unm,secs:(d.span/1000).toFixed(1)};
+  }
+  function redLate(d){const r=d.blocks.filter(b=>b.col==='red'&&b.mt!=null);if(!r.length)return '';const s=Math.max(...r.map(b=>(b.mt-b.t)/1000));return s>=1?Math.round(s)+' seconds':Math.round(s*1000)+' ms';}
+  function caption(k){
+    const c=counts(data);
+    const t=[
+      '',
+      '<b>'+c.n+' blocks in '+c.secs+' seconds</b>, each placed by the time its miner wrote. Ten a second, side by side, none waiting for another.',
+      '<b>Each block points at every tip its miner saw.</b> '+c.avg+' parents on average here, up to '+c.max+'. Dashed stubs point at blocks before these seconds.',
+      '<b>One chain through the web.</b> From every block the rule follows the parent with the most work behind it (the green links). Follow them from the newest block and you walk one chain: '+c.chain+' chain blocks here, the thick links.',
+      '<b>Each chain block merges the blocks beside it</b> that no chain block took before. '+(c.red?c.blue+' blue and '+c.red+' red here. The red one was merged '+redLate(data)+' after it was made, when more than 124 blue blocks sat beside it that never saw it: set aside, kept, its miner unpaid.':'All '+c.blue+' merged blocks are blue here, well connected.')+(c.laterN?' '+c.laterN+' are merged by chain blocks after these seconds, the dashed ones.':'')+(c.unm?' '+c.unm+' not merged yet, the network is still catching up with them.':''),
+      '<b>One order.</b> Chain block by chain block: the previous chain block first, then its merged blocks by the work behind them. The order follows the chain, not the clock: a block can wait for a later chain block and get a later number than blocks made after it. Every node computes the same numbers, so every node writes the same history.'
+    ];
+    return t[k]||'';
+  }
+  function show(k){
+    clear();step=k;
+    const els=svg.querySelectorAll('.b'),links=svg.querySelectorAll('.e'),nums=svg.querySelectorAll('.num'),cls=svg.querySelectorAll('.cl');
+    if(k>=1){els.forEach(e=>{const b=data.blocks.find(x=>x.h===e.getAttribute('data-h'));const delay=step===1?Math.round((b.t/data.span)*1800):0;later(()=>e.classList.add('on'),delay);});}else els.forEach(e=>e.classList.remove('on'));
+    links.forEach(e=>{const sp=e.getAttribute('data-sp');e.style.opacity=(k>=2?(k>=3&&sp==='0'?'.45':'1'):'0');e.classList.toggle('sp',k>=3&&sp==='2');e.classList.toggle('sp2',k>=3&&sp==='1');});
+    cls.forEach(e=>e.classList.toggle('on',k>=3));
+    els.forEach(e=>{const b=data.blocks.find(x=>x.h===e.getAttribute('data-h'));e.classList.remove('blue','red','later');if(k>=4&&b.col){e.classList.add(b.col);if(b.mt!=null&&b.mt>data.span)e.classList.add('later');}});
+    if(k>=5){const n=order(data.blocks);nums.forEach(e=>{const h=e.id.slice(2);const b=data.blocks.find(x=>x.h.slice(0,8)===h);const v=b&&n.get(b.h);e.textContent=v||'';e.classList.toggle('on',!!v);});}else nums.forEach(e=>{e.classList.remove('on');});
+    $('cap').innerHTML=caption(k);
+    $('steps').querySelectorAll('i').forEach((i,ix)=>{i.classList.toggle('on',ix+1<=k);i.classList.toggle('now',ix+1===k);});
+    $('back').disabled=k<=1;$('next').disabled=k>=5;$('next').textContent=k>=5?'Done':'Next';
+  }
+  function load(d,title){data=d;$('ltitle').textContent=title;$('lcount').textContent=d.blocks.length+' blocks · '+d.blocks.filter(b=>b.c).length+' chain blocks';draw(d);show(1);}
+
+  /* live: the last seconds of mainnet, read from api.kaspa.org */
+  async function j(url){const r=await fetch(url,{headers:{accept:'application/json'}});if(!r.ok)throw new Error(String(r.status));return r.json();}
+  async function fetchLive(say){
+    const span=3000;
+    const info=await j(API+'/info/blockdag');
+    const tips=(info.virtualParentHashes||info.tipHashes||[]).slice(0,4);
+    if(!tips.length)throw new Error('no tips');
+    const got=new Map();let frontier=tips.slice();let calls=0;let t1=0;
+    while(frontier.length&&calls<80){
+      const batch=frontier.filter(h=>!got.has(h)).slice(0,25);frontier=frontier.slice(batch.length);
+      if(!batch.length)continue;
+      say('Reading blocks… '+got.size);
+      const res=await Promise.all(batch.map(h=>j(API+'/blocks/'+h+'?includeTransactions=false&includeColor=false').catch(()=>null)));calls+=batch.length;
+      res.forEach((b,ix)=>{if(!b)return;const hd=b.header||{},vd=b.verboseData||{};const t=Number(hd.timestamp);const rec={h:vd.hash||batch[ix],time:t,p:(hd.parents&&hd.parents[0]&&hd.parents[0].parentHashes)||[],c:!!vd.isChainBlock,bs:Number(vd.blueScore),bw:hd.blueWork,sp:vd.selectedParentHash,blues:vd.mergeSetBluesHashes||[],reds:vd.mergeSetRedsHashes||[]};got.set(rec.h,rec);if(t>t1)t1=t;});
+      const t0=t1-span;
+      res.forEach(b=>{if(!b)return;const hd=b.header||{};if(Number(hd.timestamp)>=t0){(hd.parents&&hd.parents[0]&&hd.parents[0].parentHashes||[]).forEach(p=>{if(!got.has(p))frontier.push(p);});}});
+    }
+    const t0=t1-span;
+    const all=[...got.values()];
+    const merged=new Map();
+    all.filter(b=>b.c).sort((a,b)=>a.time-b.time).forEach(c=>{c.blues.forEach(h=>{if(!merged.has(h))merged.set(h,{m:c.h,col:'blue',mt:c.time});});c.reds.forEach(h=>{if(!merged.has(h))merged.set(h,{m:c.h,col:'red',mt:c.time});});});
+    const blocks=all.filter(b=>b.time>=t0&&b.time<=t1).sort((a,b)=>a.time-b.time).map(b=>{const m=merged.get(b.h);return {h:b.h,t:b.time-t0,p:b.p,c:b.c,bs:b.bs,bw:b.bw,sp:b.sp,m:m?m.m:null,col:m?m.col:null,mt:m?m.mt-t0:null};});
+    const d=new Date(t0);const p=n=>String(n).padStart(2,'0');
+    return {t0,span,blocks,title:d.getUTCDate()+' '+['January','February','March','April','May','June','July','August','September','October','November','December'][d.getUTCMonth()]+' '+d.getUTCFullYear()+', from '+p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds())+'.'+String(d.getUTCMilliseconds()).padStart(3,'0')+' UTC, live'};
+  }
+  const msg=$('msg');const say=(t,err)=>{msg.textContent=t||'';msg.className='msg'+(err?' err':'');};
+  $('next').addEventListener('click',()=>{if(step<5)show(step+1);});
+  $('back').addEventListener('click',()=>{if(step>1)show(step-1);});
+  $('live').addEventListener('click',async()=>{const b=$('live');b.disabled=true;say('Reading api.kaspa.org…');try{const d=await fetchLive(say);if(d.blocks.length<3)throw new Error('few');live=true;load(d,d.title);say('The newest blocks are still being merged, so a few carry no colour yet. Press the button again for a fresh three and a half seconds.');$('ex').hidden=false;}catch(e){say('No answer from api.kaspa.org, try again',true);}b.disabled=false;});
+  $('ex').addEventListener('click',()=>{live=false;load(EX,'9 September 2026, from 04:01:35.334 UTC');$('ex').hidden=true;say('');});
+  load(EX,'9 September 2026, from 04:01:35.334 UTC');
+  /* the slalom between the two lines */
+  function slalom(){const box=$('lines'),a=$('q1'),b=$('q2'),sv=$('sl');if(!box||!a||!b||!sv)return;const r=box.getBoundingClientRect(),ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect(),rs=sv.getBoundingClientRect();const W=Math.max(1,r.width),H=Math.max(1,rs.height);const x1=Math.min(W-6,Math.max(6,ra.right-r.left-16)),x2=Math.min(W-6,Math.max(6,rb.left-r.left+16));sv.setAttribute('viewBox','0 0 '+W.toFixed(0)+' '+H.toFixed(0));sv.setAttribute('preserveAspectRatio','none');sv.innerHTML='<path d="M'+x1.toFixed(1)+' 2 C'+x1.toFixed(1)+' '+(H*0.62).toFixed(1)+', '+x2.toFixed(1)+' '+(H*0.38).toFixed(1)+', '+x2.toFixed(1)+' '+(H-2).toFixed(1)+'"/><circle cx="'+x2.toFixed(1)+'" cy="'+(H-2).toFixed(1)+'" r="3"/>';}
+  slalom();window.addEventListener('resize',slalom);if(window.ResizeObserver){new ResizeObserver(slalom).observe($('lines'));}
+})();
+</script>
+</body>
+</html>
