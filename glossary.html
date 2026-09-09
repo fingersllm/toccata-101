@@ -89,15 +89,18 @@
 <p>The terms the cards use, one short explanation each. Tap a term on any card and you land here, on its line. New terms join as the cards land.</p>
 
 <div class="tools">
-  <div class="filter"><input id="gfilter" type="search" placeholder="Type a term" aria-label="filter the terms" autocomplete="off" spellcheck="false"><span class="n" id="gcount">62 terms</span></div>
-  <nav class="az" aria-label="letters"><a href="#l-a">A</a><a href="#l-b">B</a><a href="#l-c">C</a><a href="#l-d">D</a><a href="#l-e">E</a><a href="#l-f">F</a><a href="#l-g">G</a><a href="#l-h">H</a><a href="#l-i">I</a><span>J</span><a href="#l-k">K</a><a href="#l-l">L</a><a href="#l-m">M</a><a href="#l-n">N</a><a href="#l-o">O</a><a href="#l-p">P</a><a href="#l-q">Q</a><span>R</span><a href="#l-s">S</a><a href="#l-t">T</a><a href="#l-u">U</a><a href="#l-v">V</a><a href="#l-w">W</a><span>X</span><span>Y</span><span>Z</span></nav>
+  <div class="filter"><input id="gfilter" type="search" placeholder="Type a term" aria-label="filter the terms" autocomplete="off" spellcheck="false"><span class="n" id="gcount">71 terms</span></div>
+  <nav class="az" aria-label="letters"><a href="#l-a">A</a><a href="#l-b">B</a><a href="#l-c">C</a><a href="#l-d">D</a><a href="#l-e">E</a><a href="#l-f">F</a><a href="#l-g">G</a><a href="#l-h">H</a><a href="#l-i">I</a><span>J</span><a href="#l-k">K</a><a href="#l-l">L</a><a href="#l-m">M</a><a href="#l-n">N</a><a href="#l-o">O</a><a href="#l-p">P</a><a href="#l-q">Q</a><a href="#l-r">R</a><a href="#l-s">S</a><a href="#l-t">T</a><a href="#l-u">U</a><a href="#l-v">V</a><a href="#l-w">W</a><span>X</span><span>Y</span><span>Z</span></nav>
 </div>
 <dl id="gl">
 <div class="letter" id="l-a">A</div>
 <div class="term" id="address"><dt>address</dt><dd>Spells out the lock an output will carry. It holds nothing. A q address carries a public key, a p address carries the fingerprint of a script.</dd></div>
 <div class="letter" id="l-b">B</div>
 <div class="term" id="block"><dt>block</dt><dd>A batch of transactions sealed by a miner's proof of work. Kaspa makes ten a second.</dd></div>
+<div class="term" id="blockdag"><dt>blockDAG</dt><dd>Kaspa's ledger: blocks made in parallel, each pointing at several earlier blocks, a web rather than a line.</dd></div>
+<div class="term" id="blue-block"><dt>blue block</dt><dd>A merged block that was well connected when it arrived, counted in the order and paid. Nearly every block is blue.</dd></div>
 <div class="term" id="blue-score"><dt>blue score</dt><dd>A block's count of the blocks the network agrees came before it. The gap between the newest block's count and an older block's is how many blocks sit on top of that one.</dd></div>
+<div class="term" id="blue-work"><dt>blue work</dt><dd>The proof of work piled up behind a block, counting blue blocks only. The rule that picks the chain compares it.</dd></div>
 <div class="term" id="byte"><dt>byte</dt><dd>The unit data is counted in: eight bits, about one character of text. A key is 32 bytes, a plain transaction a few hundred.</dd></div>
 <div class="letter" id="l-c">C</div>
 <div class="term" id="chain-block"><dt>chain block</dt><dd>A block the network's ordering puts on the main line. It merges the blocks around it, accepts their transactions once and pays their miners in its coinbase.</dd></div>
@@ -119,6 +122,7 @@
 <div class="term" id="finality"><dt>finality</dt><dd>The depth past which a node will not undo a block, whatever it hears: 432,000 blocks, twelve hours.</dd></div>
 <div class="term" id="fingerprint"><dt>fingerprint</dt><dd>The hash of a script, 32 bytes, the part a p address carries. From the fingerprint alone the script cannot be read.</dd></div>
 <div class="letter" id="l-g">G</div>
+<div class="term" id="ghostdag"><dt>GHOSTDAG</dt><dd>The rule that turns the blockDAG into one order: pick the chain by blue work, colour the merged blocks blue or red, sort them.</dd></div>
 <div class="term" id="gram"><dt>gram</dt><dd>The unit a transaction's mass is counted in. The fee is a price per gram.</dd></div>
 <div class="letter" id="l-h">H</div>
 <div class="term" id="hardfork"><dt>hardfork</dt><dd>A change to Kaspa's rules that every node must adopt. It activates at a fixed DAA score and carries a name (Crescendo, Toccata).</dd></div>
@@ -138,6 +142,7 @@
 <div class="term" id="mainnet"><dt>mainnet</dt><dd>The real Kaspa network, where KAS has value. Its addresses start with kaspa:, test network addresses with kaspatest:.</dd></div>
 <div class="term" id="mass"><dt>mass</dt><dd>A transaction's weight in grams, what the fee is priced by: a size weight and a storage weight, the heavier one counts.</dd></div>
 <div class="term" id="mempool"><dt>mempool</dt><dd>A node's waiting room: the transactions it has checked and holds until a miner puts them in a block.</dd></div>
+<div class="term" id="merge-set"><dt>merge set</dt><dd>The blocks a chain block brings into the order: everything in its past that the previous chain block had not covered.</dd></div>
 <div class="term" id="miner"><dt>miner</dt><dd>A node that orders accepted transactions into blocks by proof of work, and collects the fees.</dd></div>
 <div class="letter" id="l-n">N</div>
 <div class="term" id="node"><dt>node</dt><dd>A computer running Kaspa that checks every transaction against the rules and keeps the set of UTXOs.</dd></div>
@@ -147,6 +152,7 @@
 <div class="term" id="output"><dt>output</dt><dd>A piece of KAS created by a transaction, with an amount and a lock.</dd></div>
 <div class="letter" id="l-p">P</div>
 <div class="term" id="p-address"><dt>p address</dt><dd>An address that starts with p. It carries the fingerprint of a script, and a spend must show the script itself.</dd></div>
+<div class="term" id="parent"><dt>parent</dt><dd>An earlier block a new block points at. A Kaspa block points at every tip its miner saw, so it has several.</dd></div>
 <div class="term" id="peer"><dt>peer</dt><dd>Another node this node talks to. Nodes announce transactions and blocks to their peers, and every peer checks for itself.</dd></div>
 <div class="term" id="piece"><dt>piece</dt><dd>The word cards 1.1 to 1.3 use for a UTXO.</dd></div>
 <div class="term" id="private-key"><dt>private key</dt><dd>The secret a wallet keeps (the seed makes it). Whoever holds it can spend what its public key locks.</dd></div>
@@ -154,11 +160,14 @@
 <div class="term" id="public-key"><dt>public key</dt><dd>The key an address is made from, safe to show. Only the matching private key can make a signature it accepts.</dd></div>
 <div class="letter" id="l-q">Q</div>
 <div class="term" id="q-address"><dt>q address</dt><dd>An address that starts with q. It carries a public key, and a spend must show that key's signature.</dd></div>
+<div class="letter" id="l-r">R</div>
+<div class="term" id="red-block"><dt>red block</dt><dd>A merged block that arrived too late for its neighbours. Kept, its transactions still count, but its miner is paid nothing for it.</dd></div>
 <div class="letter" id="l-s">S</div>
 <div class="term" id="schnorr-key"><dt>Schnorr key</dt><dd>The usual kind of key in a q address, 32 bytes. A spend must show a Schnorr signature by that key.</dd></div>
 <div class="term" id="script"><dt>script</dt><dd>The small program every output carries, run by every node when the output is spent.</dd></div>
 <div class="term" id="script-lock"><dt>script lock</dt><dd>The lock a p address stands for: show the script that matches the fingerprint, then satisfy it. Every covenant lives behind one.</dd></div>
 <div class="term" id="script-public-key"><dt>script public key</dt><dd>The lock on an output: a small program attached to the UTXO that determines what a spending transaction must show, for a normal wallet the signature of a key.</dd></div>
+<div class="term" id="selected-parent"><dt>selected parent</dt><dd>Of a block's parents, the one with the most work behind it. Following selected parents from the newest block gives the chain.</dd></div>
 <div class="term" id="signature"><dt>signature</dt><dd>A proof, made with the spender's private key (seed), that authorizes using a UTXO.</dd></div>
 <div class="term" id="size-weight"><dt>size weight</dt><dd>The weight of a transaction's bytes and checking work (compute mass), about two thousand grams for a plain payment, the same whatever the amounts.</dd></div>
 <div class="term" id="sompi"><dt>sompi</dt><dd>The unit amounts are counted in. 1 KAS is 100,000,000 sompi.</dd></div>
@@ -167,6 +176,7 @@
 <div class="term" id="subsidy"><dt>subsidy</dt><dd>The new KAS a block brings into existence, set by the rules for its DAA score and shrinking over the years.</dd></div>
 <div class="letter" id="l-t">T</div>
 <div class="term" id="target"><dt>target</dt><dd>The bar a block's hash must fall under. The lower the target, the more attempts a block takes.</dd></div>
+<div class="term" id="tip"><dt>tip</dt><dd>A block no other block points at yet. The next block will point at the tips its miner sees.</dd></div>
 <div class="term" id="toccata"><dt>Toccata</dt><dd>The Kaspa upgrade, active on mainnet since 30 June 2026. Made the rules a transaction can carry general: a program that reads the whole transaction, keeps memory between spends and carries an identity.</dd></div>
 <div class="term" id="transaction"><dt>transaction</dt><dd>Spends existing UTXOs (its inputs) and creates brand-new ones (its outputs), accepted or refused by every node as a whole.</dd></div>
 <div class="letter" id="l-u">U</div>

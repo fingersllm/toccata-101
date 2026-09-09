@@ -13,19 +13,19 @@
   :root{
     --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
     --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60; --ext:#0B5BD3;
-    --accent:#70C7BA; --refused:#B94A32; --soon:#6F8480;
+    --accent:#70C7BA; --blue:#2C6BE0; --refused:#B94A32; --soon:#6F8480;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
       --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
-      --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+      --accent:#70C7BA; --blue:#7FB4FF; --refused:#E8836B; --soon:#6E837E;
     }
   }
   :root[data-theme="dark"]{
     --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
     --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
-    --accent:#70C7BA; --refused:#E8836B; --soon:#6E837E;
+    --accent:#70C7BA; --blue:#7FB4FF; --refused:#E8836B; --soon:#6E837E;
   }
   html{background:var(--bg)}
   body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
@@ -48,8 +48,10 @@
   h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em;text-align:center}
   h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
   h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
-  /* two lines from two songs, a small box each, a slalom between them */
-  .lines{margin:0 0 1.6rem}
+  /* two lines from two songs, a small box each, a slalom between them, the set in one frame */
+  .lframe{border:1px solid var(--line);border-radius:12px;padding:.85rem 1.05rem 1rem;margin:0 0 1.6rem}
+  .lcap{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 .75rem}
+  .lines{margin:0}
   .ln{display:flex;flex-direction:column;align-items:flex-start;gap:.2rem}
   .ln.l2{align-items:flex-end}
   .ln .q{display:inline-block;background:var(--surface);border:1.5px solid var(--line);border-radius:8px;padding:.25rem .75rem;color:var(--head);font-size:1.02rem;line-height:1.45;font-weight:500}
@@ -74,7 +76,7 @@
   .lbl{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline}
   .lbl b{text-transform:none;font-weight:inherit;color:var(--head)}
   .dagwrap{overflow-x:auto;margin:.6rem 0 .2rem}
-  .dag{display:block;width:100%;min-width:600px;height:auto;background:var(--bg);border-radius:10px;border:1.5px solid var(--line)}
+  .dag{display:block;box-sizing:border-box;width:100%;min-width:600px;height:auto;background:var(--bg);border-radius:10px;border:1.5px solid var(--line)}
   .dag .ax{stroke:var(--line);stroke-width:1}
   .dag .tk{fill:var(--muted);font-size:10px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .dag .e{fill:none;stroke:var(--line);stroke-width:1.2;opacity:0;transition:opacity .5s}
@@ -83,12 +85,12 @@
   .dag .e.stub{stroke-dasharray:3 3}
   .dag .b{fill:var(--bg);stroke:var(--muted);stroke-width:1.6;opacity:0;transition:opacity .35s,fill .5s,stroke .5s,r .3s}
   .dag .b.on{opacity:1}
-  .dag .b.blue{fill:var(--accent);stroke:var(--accent)}
+  .dag .b.blue{fill:var(--blue);stroke:var(--blue)}
   .dag .b.red{fill:var(--refused);stroke:var(--refused)}
   .dag .b.later{stroke-dasharray:3 2;fill-opacity:.35}
   .dag .b.red.later{fill-opacity:.8}
   .dag .b.chain{stroke:var(--head);stroke-width:2.6}
-  .dag .b.chain.blue{fill:var(--accent)}
+  .dag .b.chain.blue{fill:var(--blue)}
   .dag .num{fill:var(--head);font-size:9.5px;font-weight:700;font-family:system-ui,sans-serif;text-anchor:middle;opacity:0;transition:opacity .4s;pointer-events:none}
   .dag .num.on{opacity:1}
   .dag .cl{fill:var(--head);font-size:9px;font-family:system-ui,sans-serif;text-anchor:middle;opacity:0;transition:opacity .4s}
@@ -127,10 +129,13 @@
   <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
 </div>
 <h1>BlockDAG: parallel blocks, one chain</h1>
-<div class="lines" id="lines">
-  <div class="ln l1"><span class="q" id="q1">[paste the Wiz Khalifa line]</span><span class="who">Wiz Khalifa, "Black and Yellow (G-Mix)"</span></div>
-  <svg class="sl" id="sl" aria-hidden="true"></svg>
-  <div class="ln l2"><span class="q" id="q2">[paste the Eminem line]</span><span class="who">Eminem, "Fall"</span></div>
+<div class="lframe">
+  <p class="lcap">Blockdag described by rappers</p>
+  <div class="lines" id="lines">
+    <div class="ln l1"><span class="q" id="q1">[paste the Wiz Khalifa line]</span><span class="who">Wiz Khalifa, "Black and Yellow (G-Mix)"</span></div>
+    <svg class="sl" id="sl" aria-hidden="true"></svg>
+    <div class="ln l2"><span class="q" id="q2">[paste the Eminem line]</span><span class="who">Eminem, "Fall"</span></div>
+  </div>
 </div>
 
 <p>Kaspa does not wait for one <a class="t" target="_blank" rel="noopener" href="glossary.html#block">block</a> to finish before the next one starts. Ten blocks a second come out, each <strong>pointing</strong> at every block its <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> saw last, so the ledger is a web of blocks, a <a class="t" target="_blank" rel="noopener" href="glossary.html#blockdag">blockDAG</a>. The network agrees on one history.</p>
@@ -140,7 +145,7 @@
 <figure class="w">
   <div class="lbl"><span id="ltitle">9 September 2026, from 04:01:35.334 UTC</span><span id="lcount"></span></div>
   <div class="dagwrap"><svg class="dag" id="dag" viewBox="0 0 760 300" aria-label="the blocks of a few seconds of Kaspa mainnet, their parent links, the chain through them, and the order they get"></svg></div>
-  <p class="leg"><span><i style="background:var(--bg);border:1.6px solid var(--muted)"></i>a block</span><span><i style="background:var(--accent)"></i>blue, merged and counted</span><span><i style="background:var(--refused)"></i>red, merged but set aside</span><span><i style="background:var(--bg);border:2.4px solid var(--head)"></i>a chain block</span><span><i style="background:var(--bg);border:1.6px dashed var(--accent)"></i>merged after these seconds, dashed</span></p>
+  <p class="leg"><span><i style="background:var(--bg);border:1.6px solid var(--muted)"></i>a block</span><span><i style="background:var(--blue)"></i>blue, merged and counted</span><span><i style="background:var(--refused)"></i>red, merged but set aside</span><span><i style="background:var(--bg);border:2.4px solid var(--head)"></i>a chain block</span><span><i style="background:var(--bg);border:1.6px dashed var(--blue)"></i>merged after these seconds, dashed</span></p>
   <p class="cap" id="cap"></p>
   <div class="row">
     <div class="steps" id="steps"><i></i><i></i><i></i><i></i><i></i></div>
