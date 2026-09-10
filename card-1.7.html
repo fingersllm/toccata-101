@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Time on Kaspa · Toccata 101</title>
+<meta name="description" content="Toccata 101, card 1.7. How humans came to count time, and what Kaspa counts instead: the six measures the network keeps, and the three a covenant can use.">
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  :root{
+    --mk:url(data:image/png;base64,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);
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60; --ext:#0B5BD3;
+    --accent:#70C7BA; --blue:#2C6BE0; --refused:#B94A32; --soon:#6F8480;
+    --t1:#DEF1EC; --t1b:#B5DCD1; --t2:#DEE9F7; --t2b:#BCD3EE; --t3:#DEE0F7; --t3b:#C0C4EC;
+    --t4:#F3E4F2; --t4b:#E1C8E0; --t5:#F5EEDF; --t5b:#E3D5B7; --t6:#F7E8E2; --t6b:#EDCEC3;
+    --violet:#6B4FB5; --shade:rgba(15,41,38,.58);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+      --accent:#70C7BA; --blue:#7FB4FF; --refused:#E8836B; --soon:#6E837E;
+      --t1:#15302B; --t1b:#28544B; --t2:#152739; --t2b:#274766; --t3:#181B38; --t3b:#2F3568;
+      --t4:#2C1D2C; --t4b:#503457; --t5:#2C2618; --t5b:#524829; --t6:#31201C; --t6b:#5A3B32;
+      --violet:#B9A6EE; --shade:rgba(0,0,0,.74);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+    --accent:#70C7BA; --blue:#7FB4FF; --refused:#E8836B; --soon:#6E837E;
+    --t1:#15302B; --t1b:#28544B; --t2:#152739; --t2b:#274766; --t3:#181B38; --t3b:#2F3568;
+    --t4:#2C1D2C; --t4b:#503457; --t5:#2C2618; --t5b:#524829; --t6:#31201C; --t6b:#5A3B32;
+    --violet:#B9A6EE; --shade:rgba(0,0,0,.74);
+  }
+  html{background:var(--bg)}
+  body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  /* links: green stays inside the series, blue leaves it */
+  a{color:var(--link)}
+  a[target="_blank"]{color:var(--ext)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem;white-space:nowrap;margin-right:auto}
+  .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
+  .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--bg);background:var(--head);border:1px solid var(--head);border-radius:999px;padding:.25rem .75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;flex:none;margin-left:auto}
+  .theme:hover{color:#0F2926;background:var(--accent);border-color:var(--accent)}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em;text-align:center}
+  h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  p{margin:0 0 1rem}
+  strong{color:var(--head)}
+  code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
+  .foot .nav{display:block}
+  .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
+  .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a[target="_blank"]{color:var(--ext)}
+  .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
+  .foot .by{color:var(--muted)}
+  .foot .soon{color:var(--soon)}
+  /* the boxes */
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:0 0 .2rem}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem}
+  @media (max-width:620px){.g2,.g3{grid-template-columns:1fr}}
+  .bx{box-sizing:border-box;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.85rem .95rem;display:flex;flex-direction:column;gap:.5rem;transition:background .9s ease,border-color .9s ease,box-shadow .9s ease}
+  .bx h3{margin:0;font-size:.95rem;color:var(--head);letter-spacing:-.01em}
+  .bx p{margin:0;font-size:.92rem;line-height:1.5}
+  .bx .art{margin-top:auto;padding-top:.2rem}
+  .bx svg{display:block;width:100%;height:auto;max-width:190px;margin:0 auto}
+  .bx.c1{background:var(--t1);border-color:var(--t1b)}
+  .bx.c2{background:var(--t2);border-color:var(--t2b)}
+  .bx.c3{background:var(--t3);border-color:var(--t3b)}
+  .bx.c4{background:var(--t4);border-color:var(--t4b)}
+  .bx.c5{background:var(--t5);border-color:var(--t5b)}
+  .bx.c6{background:var(--t6);border-color:var(--t6b)}
+  .bx.flash{background:var(--tint);border-color:var(--accent);box-shadow:0 0 0 3px var(--tint);transition:none}
+  a.vio{color:var(--violet);text-decoration:none}
+  a.vio:hover{color:var(--head);border-bottom-color:var(--head)}
+  /* the live readings */
+  .num{font:600 1.35rem/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--head);letter-spacing:-.02em;overflow-wrap:anywhere}
+  .cap{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .dot{display:inline-block;width:.4rem;height:.4rem;border-radius:50%;background:var(--accent);margin-right:.35rem;vertical-align:.05rem}
+  .dot.off{background:var(--muted)}
+  /* the drawings */
+  .d .bk{fill:var(--bg);stroke:var(--muted);stroke-width:1.4}
+  .d .bk.big{stroke:var(--head);stroke-width:2}
+  .d .str{stroke:var(--blue);stroke-width:1.2;fill:none;opacity:.75}
+  .d .slab{stroke:none}
+  .d .tx{fill:var(--muted);font:9px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-anchor:middle}
+  .d .tx.big{fill:var(--head);font-size:13px;font-weight:700}
+  .d .tx.on{fill:var(--head)}
+  .d .mid{stroke:var(--head);stroke-width:2;fill:var(--tint)}
+  .d .floor{stroke:var(--head);stroke-width:1.2;stroke-dasharray:3 3}
+  /* the coin */
+  .coinrow{display:flex;align-items:center;gap:.8rem}
+  .coin{width:58px;height:58px;flex:none;background:none;border:0;padding:0;cursor:pointer;perspective:260px}
+  .spin{display:block;position:relative;width:58px;height:58px;transform-style:preserve-3d;animation:t101coin 7s linear infinite}
+  .coin:hover .spin{animation-duration:2.8s}
+  @keyframes t101coin{from{transform:rotateY(-14deg)}to{transform:rotateY(346deg)}}
+  @media (prefers-reduced-motion:reduce){.spin{animation:none}}
+  .cf,.cb,.ce{display:block;position:absolute;inset:0;border-radius:47% 53% 50% 50% / 52% 48% 52% 48%}
+  .cf,.cb{backface-visibility:hidden;background:radial-gradient(circle at 32% 26%,#B4F0E7 0%,#68D6CC 34%,#38B7AC 70%,#1F9088 100%);box-shadow:inset 0 0 0 1.5px rgba(12,80,74,.35)}
+  .cf{transform:translateZ(3.5px)}
+  .cb{transform:rotateY(180deg) translateZ(3.5px)}
+  .ce{background:linear-gradient(180deg,#2AA096,#12766F)}
+  .ce.e1{transform:translateZ(2px)}.ce.e2{transform:translateZ(0)}.ce.e3{transform:translateZ(-2px)}.ce.e4{transform:translateZ(-3.5px)}
+  .mk{display:block;position:absolute;left:50%;top:50%;width:50%;height:58%;transform:translate(-50%,-50%);background:#fff;
+    -webkit-mask:var(--mk) center/contain no-repeat;mask:var(--mk) center/contain no-repeat;filter:drop-shadow(0 1px 0 rgba(10,70,66,.35))}
+  .mk.bk{transform:translate(-50%,-50%) scaleX(-1)}
+  .age{font:600 1.05rem/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--head)}
+  .tiny{font-size:.74rem;color:var(--muted);overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  /* the button that opens the window */
+  .ask{font:inherit;font-size:.8rem;color:var(--violet);background:transparent;border:1px solid var(--t6b);border-radius:999px;padding:.28rem .7rem;cursor:pointer;align-self:flex-start;margin-top:auto}
+  .ask:hover{border-color:var(--violet);color:var(--head)}
+  .ask.more{color:var(--blue);border-color:var(--t3b);margin-top:.1rem}
+  .ask.more:hover{border-color:var(--blue);color:var(--head)}
+  /* the window */
+  dialog{max-width:34rem;width:calc(100% - 2rem);border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--text);padding:1.5rem 1.3rem 1.2rem;font:inherit;box-shadow:0 18px 50px var(--shade)}
+  dialog::backdrop{background:var(--shade)}
+  .scroll{max-height:min(70vh,40rem);overflow:auto}
+  dialog p{font-size:.95rem}
+  dialog p:last-of-type{margin-bottom:0}
+  .x{position:absolute;top:.6rem;right:.7rem;font:inherit;font-size:1.1rem;line-height:1;color:var(--muted);background:transparent;border:0;cursor:pointer;padding:.2rem .35rem;border-radius:6px}
+  .x:hover{color:var(--head);background:var(--surface)}
+  .unixnow{font:600 1rem/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--head)}
+  /* term links: a regular green link that opens the glossary in a new tab */
+  a.t{color:var(--link)}
+  a.t:hover{color:var(--head)}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="kicker"><a href="index.html">Toccata 101</a> · Part 1 · card 7</p>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
+<h1>Time on Kaspa</h1>
+
+<h2>counting time for humans</h2>
+
+<p>Like most human inventions, timekeeping formed to fulfil needs of measurement. From food calculations, like when to plant and when to harvest, to industrial factory needs and train timetables. Each period conceptualized and formed time to its needs. One of the most urgent needs was measuring the day and night. Different reasons, spanning from astrology to counting finger joints, led to the number 12 becoming the number of parts (hours) inside day and night, with 24 of those parts making a full day. The number 60, which has its own vast span of uses through history as well as some connection to the number 12, ended up as the number of minutes in an hour and seconds in a minute.</p>
+
+<p>A second was originally just 1/86,400 of a mean solar day (24 [hours a day] x 60 [minutes an hour] x 60 [seconds a minute]). But Earth's rotation isn't perfectly steady, and when humans developed better measurement tech, the definition changed to an atomic one: the duration of 9,192,631,770 cycles of radiation from a caesium-133 atom.</p>
+
+<p>Those methods of counting time are familiar and comfy for us but as the headline suggests, it's for humans. The Kaspa network uses a different kind of counting, for its own needs.</p>
+
+<h2>What the network counts</h2>
+<div class="g2">
+  <div class="bx c1">
+    <h3>DAA score</h3>
+    <p>The network's count of <a class="t" target="_blank" rel="noopener" href="glossary.html#block">blocks</a>, about ten every second.</p>
+    <div class="art">
+      <div class="num" id="daa">reading</div>
+      <div class="cap"><span class="dot" id="daadot"></span><span id="daacap">live from a <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a></span></div>
+    </div>
+  </div>
+  <div class="bx c2">
+    <h3>Blue score</h3>
+    <p>How many well connected blocks sit behind a block. What puts that block in the order.</p>
+    <div class="art"><svg class="d" viewBox="0 0 190 76" aria-label="a block with the blocks behind it, joined by blue lines">
+      <path class="str" d="M30 22 L128 38"/><path class="str" d="M26 44 L128 38"/><path class="str" d="M52 14 L128 38"/><path class="str" d="M56 60 L128 38"/><path class="str" d="M84 26 L128 38"/><path class="str" d="M88 54 L128 38"/>
+      <rect class="bk" x="22" y="15" width="15" height="15" rx="3"/>
+      <rect class="bk" x="18" y="37" width="15" height="15" rx="3"/>
+      <rect class="bk" x="45" y="7" width="15" height="15" rx="3"/>
+      <rect class="bk" x="49" y="53" width="15" height="15" rx="3"/>
+      <rect class="bk" x="76" y="19" width="16" height="16" rx="3"/>
+      <rect class="bk" x="80" y="46" width="16" height="16" rx="3"/>
+      <rect class="bk big" x="128" y="21" width="34" height="34" rx="5"/><text class="tx big" x="145" y="42">6</text>
+    </svg></div>
+  </div>
+  <div class="bx c3">
+    <h3>Blue work</h3>
+    <p>The mining effort piled up behind a block, added together. <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-score">Blue score</a> counts blocks, <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-work">blue work</a> counts how hard they were to make. The network follows the block with more work behind it.</p>
+    <div class="art"><svg class="d" viewBox="0 0 190 76" aria-label="a bar of pieces of different size behind one block">
+      <rect class="slab" x="6" y="28" width="16" height="20" rx="2" fill="var(--blue)" opacity=".26"/><text class="tx" x="14" y="41">3</text>
+      <rect class="slab" x="22" y="24" width="28" height="28" rx="2" fill="var(--blue)" opacity=".42"/><text class="tx" x="36" y="42">8</text>
+      <rect class="slab" x="50" y="30" width="12" height="16" rx="2" fill="var(--blue)" opacity=".24"/><text class="tx" x="56" y="41">2</text>
+      <rect class="slab" x="62" y="22" width="32" height="32" rx="2" fill="var(--blue)" opacity=".55"/><text class="tx" x="78" y="42">9</text>
+      <rect class="slab" x="94" y="27" width="22" height="22" rx="2" fill="var(--blue)" opacity=".34"/><text class="tx" x="105" y="41">5</text>
+      <rect class="bk big" x="140" y="21" width="40" height="34" rx="5"/><text class="tx big" x="160" y="42">27</text>
+    </svg></div>
+    <button class="ask more" id="askwork" type="button">explore further</button>
+  </div>
+  <div class="bx c4" id="coinage">
+    <h3>Coin age</h3>
+    <p>How far the <a class="t" target="_blank" rel="noopener" href="glossary.html#daa-score">DAA score</a> has climbed since that exact coin was made. Every coin has its own. A coin here means a <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a>.</p>
+    <div class="art coinrow">
+      <button class="coin" id="coinbtn" type="button" title="read it again" aria-label="press to read this coin's age again"><span class="spin"><span class="ce e4"></span><span class="ce e3"></span><span class="ce e2"></span><span class="ce e1"></span><span class="cb"><i class="mk bk"></i></span><span class="cf"><i class="mk"></i></span></span></button>
+      <div>
+        <div class="age" id="coinage-n">reading</div>
+        <div class="tiny" id="coinage-tx">10 KAS, made by c6fe9659…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>What a miner writes</h2>
+<div class="g2">
+  <div class="bx c5">
+    <h3>The block timestamp</h3>
+    <p>A wall clock time the <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> types into its own block. Written once, when the block is made.</p>
+    <div class="art"><svg class="d" viewBox="0 0 190 58" aria-label="a block carrying the time its miner wrote">
+      <rect class="bk big" x="50" y="10" width="90" height="34" rx="5"/>
+      <text class="tx on" x="95" y="32" style="font-size:13px">04:01:35</text>
+    </svg></div>
+  </div>
+  <div class="bx c6">
+    <h3>The past median time</h3>
+    <p>Every block carries a time its miner typed in. The network lines up the times on the recent blocks and uses the middle one as a floor, so a new block has to be later than that. One wrong clock cannot move a middle value.</p>
+    <div class="art"><svg class="d" viewBox="0 0 190 76" aria-label="five blocks with their times, the middle value marked, and the floor it sets">
+      <rect class="bk" x="8" y="18" width="20" height="20" rx="3"/><text class="tx" x="18" y="32">1</text>
+      <rect class="bk" x="32" y="18" width="20" height="20" rx="3"/><text class="tx" x="42" y="32">7</text>
+      <rect class="bk" x="56" y="18" width="20" height="20" rx="3"/><text class="tx" x="66" y="32">4</text>
+      <rect class="bk" x="80" y="18" width="20" height="20" rx="3"/><text class="tx" x="90" y="32">9</text>
+      <rect class="mid" x="104" y="18" width="20" height="20" rx="3"/><text class="tx" x="114" y="32">5</text>
+      <path class="floor" d="M130 28 L146 28" stroke-dasharray="none"/>
+      <path class="floor" d="M141 24 L146 28 L141 32" fill="none" stroke-dasharray="none"/>
+      <rect class="bk big" x="150" y="14" width="30" height="28" rx="4"/><text class="tx" x="165" y="32">&gt; 5</text>
+      <text class="tx" x="114" y="52">middle value</text>
+    </svg></div>
+  </div>
+</div>
+
+<h2>Three Kaspa measures a covenant uses</h2>
+<div class="g3">
+  <div class="bx c1">
+    <h3>DAA score</h3>
+    <p>The <a class="t" target="_blank" rel="noopener" href="glossary.html#covenant">covenant</a> names a score. The coin cannot be <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spent</a> until the network counts that far.</p>
+  </div>
+  <div class="bx c6">
+    <h3>Past median time</h3>
+    <p>The covenant names a date in milliseconds since 1970. The coin cannot be spent until the middle of the recent block times passes it.</p>
+    <button class="ask" id="askunix" type="button">What's Unix 1970 time point</button>
+  </div>
+  <div class="bx c4">
+    <h3>Coin age</h3>
+    <p>The covenant names an <a class="vio" href="#coinage" id="agelink">age</a>. The coin cannot be spent until it is that many scores old. A new coin starts at zero.</p>
+  </div>
+</div>
+
+<dialog id="unix" aria-label="Unix 1970">
+  <button class="x" id="unixclose" type="button" aria-label="close">×</button>
+  <div class="scroll">
+  <p>A computer cannot store "3 March 2026, 14:22" as a date. It can store one number. To turn a moment into a number you need a point to count from, and every machine has to use the same point. If not, the number will lose its meaning the second it leaves the machine that wrote it.</p>
+  <p>The people building Unix at Bell Labs around 1970 needed such a point. They picked the start of the year. As things often do (just like we inherited the timekeeping methods from old civilizations), Unix spread, C spread, the internet spread, and now every phone, browser, database and server on earth counts from that same instant. It's called <a class="t" target="_blank" rel="noopener" href="glossary.html#unix-time">Unix time</a>. Right now it is <span class="unixnow" id="unixnow">0</span> milliseconds, taken from the device you are reading this on.</p>
+  <p>So a <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a> naming a date holds a plain number, and a lock naming a DAA score holds a plain number in the same slot. The network tells them apart by size alone. Below 500,000,000,000 the number is a DAA score. At or above, it is a date.</p>
+  <p>That figure is inherited. Bitcoin drew the line first at 500 million seconds after 1970, which lands in November 1985. Kaspa counts in milliseconds, so the same instant is written a thousand times larger. Both networks split counts from dates at the same moment in 1985. An arbitrary choice, it's just where a round number happens to fall.</p>
+  <p>It works because the two kinds of number are nowhere near each other. A date today is around 1.79 trillion. A DAA score is a few hundred million, and would need roughly 1,600 years at ten blocks a second to reach the line.</p>
+</div>
+</dialog>
+
+<dialog id="work" aria-label="blue work, further">
+  <button class="x" id="workclose" type="button" aria-label="close">×</button>
+  <div class="scroll">
+  <p>Every Kaspa block requires work to find. A miner <a class="t" target="_blank" rel="noopener" href="glossary.html#hash">hashes</a> over and over until one comes out under the <a class="t" target="_blank" rel="noopener" href="glossary.html#difficulty">difficulty</a> <a class="t" target="_blank" rel="noopener" href="glossary.html#target">target</a>. The miner's work is measurable. Blue work is the sum of that effort for every <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-block">blue block</a> behind this one, plus its own.</p>
+  <p>This version of <a class="t" target="_blank" rel="noopener" href="glossary.html#proof-of-work">PoW</a> in our network exists because counting is not honest.</p>
+  <p>Difficulty adjusts over time, so a block from a quiet hour was cheaper and a block from a busy one was more expensive. Two blocks can have the same number of blocks behind them but completely different amounts of work behind them. When the network has to pick which of two blocks to follow, it asks which one has more effort behind it, not which one has more blocks.</p>
+  </div>
+</dialog>
+
+<h2>Sources</h2>
+<p class="src">The counters are in rusty-kaspa v2.0.1. Ten blocks a second is <code>target_time_per_block</code> of 100 ms in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/bps.rs">consensus/core/src/config/bps.rs</a>. Blue score, blue work and the rule that reads them are in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/ghostdag/protocol.rs">ghostdag/protocol.rs</a>. A lock naming a moment is checked in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_header_context.rs">tx_validation_in_header_context.rs</a> (<code>check_tx_is_finalized</code>), which reads the number as a DAA score below <code>LOCK_TIME_THRESHOLD</code> and as a date at or above it. That constant is <code>500_000_000_000</code> in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/constants.rs">consensus/core/src/constants.rs</a>. When the number is a date, the value it is measured against is the past median time, handed in as <code>LockTimeArg::MedianTime</code> in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/pipeline/body_processor/body_validation_in_context.rs">body_validation_in_context.rs</a>. Coin age is in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs">tx_validation_in_utxo_context.rs</a> (<code>check_sequence_lock</code>): the coin's own <code>block_daa_score</code> plus the relative lock, measured against the DAA score being validated. Bitcoin's line is <code>LOCKTIME_THRESHOLD = 500000000</code> in <a target="_blank" rel="noopener" href="https://github.com/bitcoin/bitcoin/blob/master/src/script/script.h">src/script/script.h</a>, carrying the comment <code>Tue Nov  5 00:53:20 1985 UTC</code>, which is the same instant written a thousand times smaller. The second is defined by the <a target="_blank" rel="noopener" href="https://www.bipm.org/en/publications/si-brochure">BIPM</a> as 9,192,631,770 periods of the caesium 133 transition, and it replaced the fraction of a day in 1967. Why the Babylonians counted in 60s has never been settled, and the competing explanations are laid out by <a target="_blank" rel="noopener" href="https://mathshistory.st-andrews.ac.uk/HistTopics/Babylonian_numerals/">MacTutor</a>. The DAA score and the coin's age on this page are read live from <a target="_blank" rel="noopener" href="https://api.kaspa.org/">api.kaspa.org</a>, and the coin is one output of <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/addresses/kaspa:qp3teqqzngwu48d5tqfp9hypl7fgg9wxxuuk7qxynj8hj300hgvnyfckj765g?tab=utxos">the address card 1.1 points at</a>.</p>
+
+<footer class="foot">
+  <div class="nav"><a class="prev" href="card-1.6.html">Last card</a> · <span>Next: <span class="soon">Kaspa script, the program every output carries</span></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio · By FingersLLM</span></div>
+</footer>
+
+<script>
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+</script>
+<script>
+(function(){
+  'use strict';
+  var API='https://api.kaspa.org';
+  var ADDR='kaspa:qp3teqqzngwu48d5tqfp9hypl7fgg9wxxuuk7qxynj8hj300hgvnyfckj765g';
+  var TXID='c6fe96599262e49baab58f91ce9bb8a795403de7713b0dbcfe451e8459304d3f';
+  var $=function(id){return document.getElementById(id);};
+  var num=function(n){return Number(n).toLocaleString('en-US');};
+
+  function j(url){
+    var c=('AbortController' in window)?new AbortController():null;
+    var to=c?setTimeout(function(){c.abort();},9000):0;
+    var opt={headers:{accept:'application/json'}};
+    if(c)opt.signal=c.signal;
+    return fetch(url,opt).then(function(r){
+      if(!r.ok)throw new Error(String(r.status));
+      return r.json();
+    }).finally(function(){if(to)clearTimeout(to);});
+  }
+  function pick(o,keys){for(var i=0;i<keys.length;i++){if(o&&o[keys[i]]!=null)return o[keys[i]];}return null;}
+
+  /* the DAA score, read again every few seconds */
+  var daaNow=null;
+  function showDaa(v,ok){
+    $('daa').textContent = ok? num(v) : 'no reading';
+    $('daadot').className = ok? 'dot' : 'dot off';
+    $('daacap').textContent = ok? 'live from a node' : 'no answer from the node';
+  }
+  function readDaa(){
+    return j(API+'/info/blockdag').then(function(d){
+      var v=Number(pick(d,['virtualDaaScore','virtual_daa_score','virtualDAAScore']));
+      if(!isFinite(v)||v<=0)throw new Error('shape');
+      daaNow=v; showDaa(v,true); return v;
+    }).catch(function(){ showDaa(null,false); return null; });
+  }
+
+  /* the coin: one real output, its age worked out from the score it was made at */
+  var born=null;
+  function span(steps){
+    var s=steps/10, d=Math.floor(s/86400), h=Math.floor((s%86400)/3600), m=Math.floor((s%3600)/60);
+    var out=[];
+    if(d>0)out.push(d+(d===1?' day':' days'));
+    if(h>0)out.push(h+(h===1?' hour':' hours'));
+    if(!d&&m>0)out.push(m+(m===1?' minute':' minutes'));
+    if(!out.length)out.push('under a minute');
+    return 'about '+out.join(' ');
+  }
+  function showAge(){
+    if(born==null||daaNow==null){ $('coinage-n').textContent='no reading'; return; }
+    var a=Math.max(0,daaNow-born);
+    $('coinage-n').textContent=num(a)+' scores old';
+    $('coinage-tx').textContent='10 KAS, made by '+TXID.slice(0,8)+'\u2026 \u00b7 '+span(a);
+  }
+  function readCoin(){
+    return j(API+'/addresses/'+encodeURIComponent(ADDR)+'/utxos').then(function(u){
+      var list=Array.isArray(u)?u:(u&&u.utxos)||[];
+      var hit=null;
+      for(var i=0;i<list.length;i++){
+        var op=list[i].outpoint||{};
+        if(pick(op,['transactionId','transaction_id'])===TXID){hit=list[i];break;}
+      }
+      if(!hit)hit=list[0];
+      var e=hit&&(hit.utxoEntry||hit.utxo_entry);
+      var b=Number(pick(e||{},['blockDaaScore','block_daa_score']));
+      if(!isFinite(b)||b<=0)throw new Error('shape');
+      born=b; showAge();
+    }).catch(function(){ $('coinage-n').textContent='no reading'; });
+  }
+
+  function refresh(){ return readDaa().then(function(){ showAge(); }); }
+  readDaa().then(readCoin);
+  setInterval(function(){ if(document.visibilityState==='visible') refresh(); },3000);
+  $('coinbtn').addEventListener('click',function(){
+    $('coinage-n').textContent='reading';
+    readDaa().then(function(){ return born==null?readCoin():showAge(); });
+  });
+
+  /* the age link jumps up to the coin age box and lights it for a moment */
+  var flashT=null;
+  $('agelink').addEventListener('click',function(){
+    var box=$('coinage');
+    clearTimeout(flashT);
+    box.classList.add('flash');
+    flashT=setTimeout(function(){ box.classList.remove('flash'); },3000);
+  });
+
+  /* the Unix 1970 window */
+  var dlg=$('unix'), tick=null, wdlg=$('work');
+  function unixTick(){ $('unixnow').textContent=num(Date.now()); }
+  $('askunix').addEventListener('click',function(){
+    unixTick();
+    clearInterval(tick); tick=setInterval(unixTick,1000);
+    if(dlg.showModal)dlg.showModal(); else dlg.setAttribute('open','');
+  });
+  function shut(){ clearInterval(tick); if(dlg.close)dlg.close(); else dlg.removeAttribute('open'); }
+  $('unixclose').addEventListener('click',shut);
+  dlg.addEventListener('close',function(){ clearInterval(tick); });
+  dlg.addEventListener('click',function(e){ if(e.target===dlg)shut(); });
+  function wshut(){ if(wdlg.close)wdlg.close(); else wdlg.removeAttribute('open'); }
+  $('askwork').addEventListener('click',function(){ if(wdlg.showModal)wdlg.showModal(); else wdlg.setAttribute('open',''); });
+  $('workclose').addEventListener('click',wshut);
+  wdlg.addEventListener('click',function(e){ if(e.target===wdlg)wshut(); });
+})();
+</script>
+</body>
+</html>
