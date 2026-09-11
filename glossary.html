@@ -89,7 +89,7 @@
 <p>The terms the cards use, one short explanation each. Tap a term on any card and you land here, on its line. New terms join as the cards land.</p>
 
 <div class="tools">
-  <div class="filter"><input id="gfilter" type="search" placeholder="Type a term" aria-label="filter the terms" autocomplete="off" spellcheck="false"><span class="n" id="gcount">72 terms</span></div>
+  <div class="filter"><input id="gfilter" type="search" placeholder="Type a term" aria-label="filter the terms" autocomplete="off" spellcheck="false"><span class="n" id="gcount">76 terms</span></div>
   <nav class="az" aria-label="letters"><a href="#l-a">A</a><a href="#l-b">B</a><a href="#l-c">C</a><a href="#l-d">D</a><a href="#l-e">E</a><a href="#l-f">F</a><a href="#l-g">G</a><a href="#l-h">H</a><a href="#l-i">I</a><span>J</span><a href="#l-k">K</a><a href="#l-l">L</a><a href="#l-m">M</a><a href="#l-n">N</a><a href="#l-o">O</a><a href="#l-p">P</a><a href="#l-q">Q</a><a href="#l-r">R</a><a href="#l-s">S</a><a href="#l-t">T</a><a href="#l-u">U</a><a href="#l-v">V</a><a href="#l-w">W</a><span>X</span><span>Y</span><span>Z</span></nav>
 </div>
 <dl id="gl">
@@ -98,6 +98,7 @@
 <div class="letter" id="l-b">B</div>
 <div class="term" id="block"><dt>block</dt><dd>A batch of transactions sealed by a miner's proof of work. Kaspa makes ten a second.</dd></div>
 <div class="term" id="blockdag"><dt>blockDAG</dt><dd>Kaspa's ledger: blocks made in parallel, each pointing at several earlier blocks, a web rather than a line.</dd></div>
+<div class="term" id="block-timestamp"><dt>block timestamp</dt><dd>The wall clock time a miner writes into the block it makes. The network only checks that it is not too far ahead and not older than the recent blocks.</dd></div>
 <div class="term" id="blue-block"><dt>blue block</dt><dd>A merged block that was well connected when it arrived, counted in the order and paid. Nearly every block is blue.</dd></div>
 <div class="term" id="blue-score"><dt>blue score</dt><dd>A block's count of the blocks the network agrees came before it. The gap between the newest block's count and an older block's is how many blocks sit on top of that one.</dd></div>
 <div class="term" id="blue-work"><dt>blue work</dt><dd>The proof of work piled up behind a block, counting blue blocks only. The rule that picks the chain compares it.</dd></div>
@@ -106,6 +107,7 @@
 <div class="term" id="chain-block"><dt>chain block</dt><dd>A block the network's ordering puts on the main line. It merges the blocks around it, accepts their transactions once and pays their miners in its coinbase.</dd></div>
 <div class="term" id="change"><dt>change</dt><dd>An output that comes back to the sender's own address: what's left from the inputs after the payment and the fee.</dd></div>
 <div class="term" id="checksum"><dt>checksum</dt><dd>The last eight characters of an address, computed from the rest, so a typo is caught before any coin moves.</dd></div>
+<div class="term" id="coin-age"><dt>coin age</dt><dd>How far the network's DAA score has climbed since the block that made a particular coin. Every coin carries its own.</dd></div>
 <div class="term" id="coinbase"><dt>coinbase</dt><dd>The first transaction of a block, made by the miner, with no inputs. It pays the rewards for the blocks that block merges: subsidy plus fees.</dd></div>
 <div class="term" id="confirmation"><dt>confirmation</dt><dd>One block on top of the block that accepted your transaction. The reference wallet waits for 100 of them, about ten seconds.</dd></div>
 <div class="term" id="covenant"><dt>covenant</dt><dd>A UTXO locked by a program that inspects the transaction spending it and can refuse it.</dd></div>
@@ -154,6 +156,7 @@
 <div class="letter" id="l-p">P</div>
 <div class="term" id="p-address"><dt>p address</dt><dd>An address that starts with p. It carries the fingerprint of a script, and a spend must show the script itself.</dd></div>
 <div class="term" id="parent"><dt>parent</dt><dd>An earlier block a new block points at. A Kaspa block points at every tip its miner saw, so it has several.</dd></div>
+<div class="term" id="past-median-time"><dt>past median time</dt><dd>The middle value of the times written on the recent blocks. A new block has to be later than it, so network time never moves backwards.</dd></div>
 <div class="term" id="peer"><dt>peer</dt><dd>Another node this node talks to. Nodes announce transactions and blocks to their peers, and every peer checks for itself.</dd></div>
 <div class="term" id="piece"><dt>piece</dt><dd>The word cards 1.1 to 1.3 use for a UTXO.</dd></div>
 <div class="term" id="private-key"><dt>private key</dt><dd>The secret a wallet keeps (the seed makes it). Whoever holds it can spend what its public key locks.</dd></div>
@@ -181,6 +184,7 @@
 <div class="term" id="toccata"><dt>Toccata</dt><dd>The Kaspa upgrade, active on mainnet since 30 June 2026. Made the rules a transaction can carry general: a program that reads the whole transaction, keeps memory between spends and carries an identity.</dd></div>
 <div class="term" id="transaction"><dt>transaction</dt><dd>Spends existing UTXOs (its inputs) and creates brand-new ones (its outputs), accepted or refused by every node as a whole.</dd></div>
 <div class="letter" id="l-u">U</div>
+<div class="term" id="unix-time"><dt>Unix time</dt><dd>How computers store a moment: the number of seconds, or milliseconds, since the start of 1 January 1970.</dd></div>
 <div class="term" id="utxo"><dt>UTXO</dt><dd>Unspent transaction output. A piece of KAS created by an earlier transaction and not yet spent, with its own amount and its own lock. A balance is the sum of them.</dd></div>
 <div class="term" id="utxo-set"><dt>UTXO set</dt><dd>Every unspent output on the network, kept by each node. A transaction's inputs must be in it, and each block moves pieces out of it and new ones into it.</dd></div>
 <div class="letter" id="l-v">V</div>
