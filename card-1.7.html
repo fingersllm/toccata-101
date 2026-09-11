@@ -172,7 +172,7 @@
   </div>
   <div class="bx c2">
     <h3>Blue score</h3>
-    <p>How many well connected blocks sit behind a block. What puts that block in the order.</p>
+    <p>A block's <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-score">blue score</a> is its <a class="t" target="_blank" rel="noopener" href="glossary.html#selected-parent">selected parent</a>'s blue score plus the number of <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-block">blue blocks</a> in its <a class="t" target="_blank" rel="noopener" href="glossary.html#merge-set">merge set</a>.</p>
     <div class="art"><svg class="d" viewBox="0 0 190 76" aria-label="a block with the blocks behind it, joined by blue lines">
       <path class="str" d="M30 22 L128 38"/><path class="str" d="M26 44 L128 38"/><path class="str" d="M52 14 L128 38"/><path class="str" d="M56 60 L128 38"/><path class="str" d="M84 26 L128 38"/><path class="str" d="M88 54 L128 38"/>
       <rect class="bk" x="22" y="15" width="15" height="15" rx="3"/><text class="tx" x="29.5" y="26">1</text>
@@ -182,11 +182,11 @@
       <rect class="bk" x="76" y="19" width="16" height="16" rx="3"/><text class="tx" x="84" y="30">5</text>
       <rect class="bk" x="80" y="46" width="16" height="16" rx="3"/><text class="tx" x="88" y="57">6</text>
       <rect class="bk big" x="128" y="21" width="34" height="34" rx="5"/>
-    </svg><p class="figcap">Illustration: 6 total <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-block">blue blocks</a>, <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-score">blue score</a> is 6.</p></div>
+    </svg><p class="figcap">Illustration: 6 total blue blocks, blue score is 6.</p></div>
   </div>
   <div class="bx c3">
     <h3>Blue work</h3>
-    <p>The mining effort piled up behind a block, added together. Blue score counts blocks, <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-work">blue work</a> counts how hard they were to find. The network follows the block with more work behind it.</p>
+    <p>A block's <a class="t" target="_blank" rel="noopener" href="glossary.html#blue-work">blue work</a> is its selected parent's blue work plus the work of each blue block in its merge set.</p>
     <div class="art"><svg class="d" viewBox="0 0 190 76" aria-label="a bar of pieces of different size behind one block">
       <rect class="slab" x="6" y="28" width="16" height="20" rx="2" fill="var(--blue)" opacity=".26"/><text class="tx" x="14" y="41">3</text>
       <rect class="slab" x="22" y="24" width="28" height="28" rx="2" fill="var(--blue)" opacity=".42"/><text class="tx" x="36" y="42">8</text>
@@ -199,7 +199,7 @@
   </div>
   <div class="bx c4" id="coinage">
     <h3>Coin age</h3>
-    <p>Every time a <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> is created, it captures the current DAA score at creation, then starts a DAA score count. This count is the <a class="t" target="_blank" rel="noopener" href="glossary.html#coin-age">coin age</a>, the difference between the current global DAA score and the UTXO's creation score.</p>
+    <p>Every time a <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> is created it captures the network's current DAA score. At the same time, a new and specific DAA score count starts. This count is the <a class="t" target="_blank" rel="noopener" href="glossary.html#coin-age">coin age</a>: the difference between the current global DAA score and the UTXO's creation score.</p>
     <div class="art coinrow">
       <button class="coin" id="coinbtn" type="button" title="Update the coin age" aria-label="Update the coin age"><span class="spin"><span class="ce e4"></span><span class="ce e3"></span><span class="ce e2"></span><span class="ce e1"></span><span class="cb"><i class="mk bk"></i></span><span class="cf"><i class="mk"></i></span></span></button>
       <div>
@@ -215,7 +215,7 @@
 <div class="g2">
   <div class="bx c5">
     <h3>The block timestamp</h3>
-    <p>A wall clock time the <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> types into its own block. Written once, when the block is made, and it is what the <a class="t" target="_blank" rel="noopener" href="glossary.html#past-median-time">past median time</a> is taken from.</p>
+    <p>The <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> that builds the block writes the timestamp itself, taking whichever is later, its own clock reading now or the <a class="t" target="_blank" rel="noopener" href="glossary.html#past-median-time">past median time</a> plus one millisecond. These timestamps are what the past median time is taken from.</p>
     <div class="art"><svg class="d" viewBox="0 0 190 58" aria-label="a block carrying the time its miner wrote">
       <rect class="bk big" x="26" y="7" width="64" height="44" rx="5"/>
       <circle class="clk" cx="58" cy="29" r="13"/>
@@ -227,7 +227,7 @@
   </div>
   <div class="bx c6">
     <h3>The past median time</h3>
-    <p>Every block carries a time its miner typed in. The network lines up the times on the recent blocks and uses the middle one as a floor, so a new block has to be later than that. One wrong clock cannot move a middle value.</p>
+    <p>Every block carries a time its <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> typed in. The network lines up the times on the recent blocks and uses the middle one as a floor, so a new block has to be later than that. One wrong clock cannot move a middle value.</p>
     <div class="art"><svg class="d" viewBox="0 0 190 76" aria-label="five blocks with their times, the middle value marked, and the floor it sets">
       <rect class="bk" x="8" y="18" width="20" height="20" rx="3"/><text class="tx" x="18" y="32">1</text>
       <rect class="bk" x="32" y="18" width="20" height="20" rx="3"/><text class="tx" x="42" y="32">7</text>
@@ -242,12 +242,12 @@
   </div>
 </div>
 
-<h2>Three Kaspa measures a covenant utilizes</h2>
+<h2>Time measurements on Kaspa being utilized by covenants</h2>
 <div class="g3">
   <div class="bx c1">
     <span class="nm">1</span>
     <h3>DAA score</h3>
-    <p>The <a class="t" target="_blank" rel="noopener" href="glossary.html#covenant">covenant</a> names a DAA score. The UTXO locked under that covenant is now released and ready to be included in the network blocks.</p>
+    <p>The <a class="t" target="_blank" rel="noopener" href="glossary.html#covenant">covenant</a> <a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a> names a DAA score. <strong>At that score</strong> the UTXO locked under that covenant will be released and ready to be included in future blocks.</p>
   </div>
   <div class="bx c6">
     <span class="nm">2</span>
@@ -258,7 +258,7 @@
   <div class="bx c4">
     <span class="nm">3</span>
     <h3>Coin age</h3>
-    <p>In the contract, an <a class="vio" href="#coinage" id="agelink">age</a> is written and the UTXO will be locked under a covenant until this specific DAA score, that is, this specific coin age, arrives.</p>
+    <p><a class="vio" href="#coinage" id="agelink">Coin age</a> DAA score can be used to unlock UTXO from covenant as regular DAA score does.</p>
   </div>
 </div>
 
