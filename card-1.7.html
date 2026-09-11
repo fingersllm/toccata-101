@@ -17,7 +17,7 @@
     --accent:#70C7BA; --blue:#2C6BE0; --refused:#B94A32; --soon:#6F8480;
     --t1:#DEF1EC; --t1b:#B5DCD1; --t2:#DEE9F7; --t2b:#BCD3EE; --t3:#DEE0F7; --t3b:#C0C4EC;
     --t4:#F3E4F2; --t4b:#E1C8E0; --t5:#F5EEDF; --t5b:#E3D5B7; --t6:#F7E8E2; --t6b:#EDCEC3;
-    --violet:#6B4FB5; --shade:rgba(15,41,38,.58);
+    --violet:#6B4FB5; --bar:#9FC7BD; --shade:rgba(15,41,38,.58);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -26,7 +26,7 @@
       --accent:#70C7BA; --blue:#7FB4FF; --refused:#E8836B; --soon:#6E837E;
       --t1:#15302B; --t1b:#28544B; --t2:#152739; --t2b:#274766; --t3:#181B38; --t3b:#2F3568;
       --t4:#2C1D2C; --t4b:#503457; --t5:#2C2618; --t5b:#524829; --t6:#31201C; --t6b:#5A3B32;
-      --violet:#B9A6EE; --shade:rgba(0,0,0,.74);
+      --violet:#B9A6EE; --bar:#3E5C55; --shade:rgba(0,0,0,.74);
     }
   }
   :root[data-theme="dark"]{
@@ -35,7 +35,7 @@
     --accent:#70C7BA; --blue:#7FB4FF; --refused:#E8836B; --soon:#6E837E;
     --t1:#15302B; --t1b:#28544B; --t2:#152739; --t2b:#274766; --t3:#181B38; --t3b:#2F3568;
     --t4:#2C1D2C; --t4b:#503457; --t5:#2C2618; --t5b:#524829; --t6:#31201C; --t6b:#5A3B32;
-    --violet:#B9A6EE; --shade:rgba(0,0,0,.74);
+    --violet:#B9A6EE; --bar:#3E5C55; --shade:rgba(0,0,0,.74);
   }
   html{background:var(--bg)}
   body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
@@ -84,6 +84,7 @@
   .bx.c5{background:var(--t5);border-color:var(--t5b)}
   .bx.c6{background:var(--t6);border-color:var(--t6b)}
   .bx.flash{border-color:var(--head);box-shadow:0 0 0 2px var(--head);transition:none}
+  .ask.mark{border-color:var(--head);color:var(--head);box-shadow:0 0 0 2px var(--head);transition:none}
   a.vio{color:var(--violet);text-decoration:none}
   a.vio:hover{color:var(--head);border-bottom-color:var(--head)}
   /* the live readings */
@@ -124,7 +125,7 @@
   .age{font:600 1.05rem/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--head)}
   .tiny{font-size:.74rem;color:var(--muted);overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   /* the button that opens the window */
-  .ask{font:inherit;font-size:.8rem;color:var(--violet);background:transparent;border:1px solid var(--t6b);border-radius:999px;padding:.28rem .7rem;cursor:pointer;align-self:flex-start;margin-top:auto}
+  .ask{font:inherit;font-size:.8rem;color:var(--violet);background:transparent;border:1px solid var(--t6b);border-radius:999px;padding:.28rem .7rem;cursor:pointer;align-self:flex-start;margin-top:auto;transition:border-color .9s ease,box-shadow .9s ease,color .9s ease}
   .ask:hover{border-color:var(--violet);color:var(--head)}
   .ask.more{color:var(--blue);border-color:var(--t3b);margin-top:.1rem}
   .ask.more:hover{border-color:var(--blue);color:var(--head)}
@@ -134,7 +135,11 @@
   .winbar{display:flex;align-items:flex-end;gap:.5rem;background:var(--tint);border-bottom:1px solid var(--line);padding:.45rem .55rem 0}
   .wintab{background:var(--bg);border:1px solid var(--line);border-bottom:1px solid var(--bg);border-radius:8px 8px 0 0;padding:.34rem .8rem;font-size:.8rem;color:var(--head);margin-bottom:-1px;white-space:nowrap}
   .winbody{padding:1.1rem 1.2rem 1.15rem}
-  .scroll{max-height:min(68vh,38rem);overflow:auto}
+  .scroll{max-height:min(68vh,38rem);overflow:auto;padding-right:.4rem;scrollbar-width:thin;scrollbar-color:var(--bar) transparent}
+  .scroll::-webkit-scrollbar{width:9px}
+  .scroll::-webkit-scrollbar-track{background:transparent}
+  .scroll::-webkit-scrollbar-thumb{background:var(--bar);border:2px solid var(--bg);border-radius:99px}
+  .scroll::-webkit-scrollbar-thumb:hover{background:var(--accent)}
   dialog p{font-size:.95rem}
   dialog p:last-of-type{margin-bottom:0}
   .x{margin:0 .1rem .35rem auto;font:inherit;font-size:1.1rem;line-height:1;color:var(--muted);background:transparent;border:0;cursor:pointer;padding:.1rem .4rem;border-radius:6px}
@@ -215,7 +220,7 @@
 <div class="g2">
   <div class="bx c5">
     <h3>The block timestamp</h3>
-    <p>The <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> that builds the block writes the timestamp itself, taking whichever is later, its own clock reading now or the <a class="t" target="_blank" rel="noopener" href="glossary.html#past-median-time">past median time</a> plus one millisecond. These timestamps are what the past median time is taken from.</p>
+    <p><a class="t" target="_blank" rel="noopener" href="glossary.html#unix-time">Unix time</a> in milliseconds, stored as a single integer. The <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> that builds the template writes it from its own clock. Consensus accepts it only if it is strictly after the <a class="t" target="_blank" rel="noopener" href="glossary.html#past-median-time">past median time</a>. Each checking node also rejects it if it is more than 132 seconds ahead of that node's clock.</p>
     <div class="art"><svg class="d" viewBox="0 0 190 58" aria-label="a block carrying the time its miner wrote">
       <rect class="bk big" x="26" y="7" width="64" height="44" rx="5"/>
       <circle class="clk" cx="58" cy="29" r="13"/>
@@ -227,7 +232,7 @@
   </div>
   <div class="bx c6">
     <h3>The past median time</h3>
-    <p>Every block carries a time its <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> typed in. The network lines up the times on the recent blocks and uses the middle one as a floor, so a new block has to be later than that. One wrong clock cannot move a middle value.</p>
+    <p>Take the timestamps of 27 sampled blocks from a block's past, one in every 100, sort them, and average the 11 values closest to the centre. <strong>That value is the past median time</strong>. A new block's timestamp must be above it, and a <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a> naming a date is measured against it.</p>
     <div class="art"><svg class="d" viewBox="0 0 190 76" aria-label="five blocks with their times, the middle value marked, and the floor it sets">
       <rect class="bk" x="8" y="18" width="20" height="20" rx="3"/><text class="tx" x="18" y="32">1</text>
       <rect class="bk" x="32" y="18" width="20" height="20" rx="3"/><text class="tx" x="42" y="32">7</text>
@@ -252,7 +257,7 @@
   <div class="bx c6">
     <span class="nm">2</span>
     <h3>Past median time</h3>
-    <p>The covenant names a date in milliseconds since 1970. The coin cannot be <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spent</a> until the middle of the recent block times passes it.</p>
+    <p>The covenant names a date in <a class="vio" href="#askunix" id="unixlink">Unix time</a>. The UTXO cannot be <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spent</a> until the past median time passes it.</p>
     <button class="ask" id="askunix" type="button">What's Unix 1970 time point</button>
   </div>
   <div class="bx c4">
@@ -266,8 +271,8 @@
   <div class="winbar"><span class="wintab">Unix 1970</span><button class="x" id="unixclose" type="button" aria-label="close">×</button></div>
   <div class="winbody"><div class="scroll">
   <p>A computer cannot store "3 March 2026, 14:22" as a date. It can store one number. To turn a moment into a number you need a point to count from, and every machine has to use the same point. If not, the number will lose its meaning the second it leaves the machine that wrote it.</p>
-  <p>The people building Unix at Bell Labs around 1970 needed such a point. They picked the start of the year. As things often do (just like we inherited the timekeeping methods from old civilizations), Unix spread, C spread, the internet spread, and now every phone, browser, database and server on earth counts from that same instant. It's called <a class="t" target="_blank" rel="noopener" href="glossary.html#unix-time">Unix time</a>. Right now it is <span class="unixnow" id="unixnow">0</span> milliseconds, taken from the device you are reading this on.</p>
-  <p>So a <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a> naming a date holds a plain number, and a lock naming a DAA score holds a plain number in the same slot. The network tells them apart by size alone. Below 500,000,000,000 the number is a DAA score. At or above, it is a date.</p>
+  <p>The people building Unix at Bell Labs around 1970 needed such a point. They picked the start of the year. As things often do (just like we inherited the timekeeping methods from old civilizations), Unix spread, C spread, the internet spread, and now every phone, browser, database and server on earth counts from that same instant. It's called Unix time. Right now it is <span class="unixnow" id="unixnow">0</span> milliseconds, taken from the device you are reading this on.</p>
+  <p>So a lock naming a date holds a plain number, and a lock naming a DAA score holds a plain number in the same slot. The network tells them apart by size alone. Below 500,000,000,000 the number is a DAA score. At or above, it is a date.</p>
   <p>That figure is inherited. Bitcoin drew the line first at 500 million seconds after 1970, which lands in November 1985. Kaspa counts in milliseconds, so the same instant is written a thousand times larger. Both networks split counts from dates at the same moment in 1985. An arbitrary choice, it's just where a round number happens to fall.</p>
   <p>It works because the two kinds of number are nowhere near each other. A date today is around 1.79 trillion. A DAA score is a few hundred million, and would need roughly 1,600 years at ten blocks a second to reach the line.</p>
 </div>
@@ -276,9 +281,9 @@
 <dialog id="work" aria-label="blue work, further">
   <div class="winbar"><span class="wintab">Blue work</span><button class="x" id="workclose" type="button" aria-label="close">×</button></div>
   <div class="winbody"><div class="scroll">
-  <p>To form blocks miners solve complex math computation problems until a block under the <a class="t" target="_blank" rel="noopener" href="glossary.html#difficulty">difficulty</a> <a class="t" target="_blank" rel="noopener" href="glossary.html#target">target</a> is found. The miner's work is measurable. Blue work is the sum of that effort for every blue block behind this one, plus its own.</p>
-  <p>This version of <a class="t" target="_blank" rel="noopener" href="glossary.html#proof-of-work">PoW</a> in our network exists because counting isn't honest.</p>
-  <p>Difficulty adjusts over time, so a block from a quiet hour was cheaper and a block from a busy one was more expensive. Two blocks can have the same number of blocks behind them but completely different amounts of work behind them. When the network has to pick which of two blocks to follow, it asks which one has more work behind it, work being the hashing it took to find those blocks, not which one has more blocks.</p>
+  <p><a class="t" target="_blank" rel="noopener" href="glossary.html#miner">Miners</a> solve complex math computation problems until a block under the <a class="t" target="_blank" rel="noopener" href="glossary.html#difficulty">difficulty</a> <a class="t" target="_blank" rel="noopener" href="glossary.html#target">target</a> is found. The miner's work is measurable. Blue work is the sum of that effort for every blue block in its past.</p>
+  <p>This version of <a class="t" target="_blank" rel="noopener" href="glossary.html#proof-of-work">PoW</a> in our network exists because counting isn't honest. Difficulty adjusts over time, so a block from a quiet hour was cheaper and a block from a busy one was more expensive. Two blocks might have the same number of blocks behind them, but there was a different amount of miner work produced to find them. The selected chain picks the block with more blue work behind it.</p>
+  
   </div></div>
 </dialog>
 
@@ -381,6 +386,15 @@ t101Label();
     clearTimeout(flashT);
     box.classList.add('flash');
     flashT=setTimeout(function(){ box.classList.remove('flash'); },3000);
+  });
+  var markT=null;
+  $('unixlink').addEventListener('click',function(e){
+    e.preventDefault();
+    var b=$('askunix');
+    if(b.scrollIntoView)b.scrollIntoView({block:'nearest',behavior:'smooth'});
+    clearTimeout(markT);
+    b.classList.add('mark');
+    markT=setTimeout(function(){ b.classList.remove('mark'); },3000);
   });
 
   /* the Unix 1970 window */
