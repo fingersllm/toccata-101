@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Kaspa script: the program every output carries · Toccata 101</title>
+<meta name="description" content="Toccata 101, card 2.1. What the lock on a Kaspa output really is: a list of one byte instructions, run on a stack by every node, ending in a single true or false. Three real mainnet spends, replayed step by step.">
+<script>
+(function(){try{var t=localStorage.getItem('t101-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+<style>
+  :root{
+    --bg:#F5FAF8; --surface:#E7F4F0; --tint:#DDF2EE; --line:#C9E2DC;
+    --text:#17302D; --head:#0F2926; --muted:#5A6E6A; --link:#1B6B60; --ext:#0B5BD3;
+    --accent:#70C7BA; --blue:#2C6BE0; --refused:#B94A32; --soon:#6F8480;
+    --t1:#DEF1EC; --t1b:#B5DCD1; --t2:#DEE9F7; --t2b:#BCD3EE; --t3:#DEE0F7; --t3b:#C0C4EC;
+    --t4:#F3E4F2; --t4b:#E1C8E0; --t5:#F5EEDF; --t5b:#E3D5B7; --t6:#F7E8E2; --t6b:#EDCEC3;
+    --violet:#6B4FB5; --bar:#9FC7BD; --shade:rgba(15,41,38,.58);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+      --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+      --accent:#70C7BA; --blue:#7FB4FF; --refused:#E8836B; --soon:#6E837E;
+      --t1:#15302B; --t1b:#28544B; --t2:#152739; --t2b:#274766; --t3:#181B38; --t3b:#2F3568;
+      --t4:#2C1D2C; --t4b:#503457; --t5:#2C2618; --t5b:#524829; --t6:#31201C; --t6b:#5A3B32;
+      --violet:#B9A6EE; --bar:#3E5C55; --shade:rgba(0,0,0,.74);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1917; --surface:#162624; --tint:#1C3A36; --line:#25403B;
+    --text:#D3E3DF; --head:#EEF6F4; --muted:#93A7A2; --link:#7ED3C6; --ext:#7DB8FF;
+    --accent:#70C7BA; --blue:#7FB4FF; --refused:#E8836B; --soon:#6E837E;
+    --t1:#15302B; --t1b:#28544B; --t2:#152739; --t2b:#274766; --t3:#181B38; --t3b:#2F3568;
+    --t4:#2C1D2C; --t4b:#503457; --t5:#2C2618; --t5b:#524829; --t6:#31201C; --t6b:#5A3B32;
+    --violet:#B9A6EE; --bar:#3E5C55; --shade:rgba(0,0,0,.74);
+  }
+
+  html{background:var(--bg)}
+  body{max-width:760px;margin:0 auto;padding:0 1rem 3rem;font:17px/1.6 system-ui,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg)}
+  body::before{content:"";display:block;height:4px;background:var(--accent);margin:0 -1rem 2rem}
+  a{color:var(--link)}
+  a[target="_blank"]{color:var(--ext)}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .kicker{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:.5rem;white-space:nowrap;margin-right:auto}
+  .kicker::before{content:"";width:.55rem;height:.55rem;border-radius:2px;background:var(--accent);display:inline-block}
+  .kicker a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .kicker a:hover{color:var(--head);border-bottom-color:var(--head)}
+  .theme{font:inherit;font-size:.8rem;letter-spacing:.04em;color:var(--bg);background:var(--head);border:1px solid var(--head);border-radius:999px;padding:.25rem .75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;flex:none;margin-left:auto}
+  .theme:hover{color:#0F2926;background:var(--accent);border-color:var(--accent)}
+  .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
+  p{margin:0 0 1rem}
+  strong{color:var(--head)}
+  .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0 0 1.6rem;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
+  .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
+  .foot .nav{display:block}
+  .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
+  .foot a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--line)}
+  .foot a[target="_blank"]{color:var(--ext)}
+  .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
+  .foot .by{color:var(--muted)}
+  .soon{color:var(--soon)}
+
+  /* ---- the panel, full width ---- */
+  .panel{margin:0 calc(50% - 50vw) 1.6rem;padding:1.1rem max(1rem,calc(50vw - 47rem)) 1.2rem;background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-sizing:border-box;width:100vw;max-width:100vw;overflow-x:hidden}
+  .pickers{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:flex-start;margin-bottom:.9rem}
+  .pset{display:flex;flex-direction:column;gap:.35rem;min-width:0}
+  .plab{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  .pbtns{display:flex;flex-wrap:wrap;gap:.35rem}
+  .pbtns button{font:inherit;font-size:.84rem;padding:.3rem .75rem;border-radius:999px;cursor:pointer;background:var(--bg);color:var(--text);border:1px solid var(--line)}
+  .pbtns button:hover{border-color:var(--accent);color:var(--head)}
+  .pbtns button[aria-pressed="true"]{background:var(--head);color:var(--bg);border-color:var(--head)}
+  .runsub{font-size:.86rem;color:var(--muted);margin:0 0 .9rem}
+
+  .seg{margin-bottom:.55rem}
+  .seglab{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
+  .seglab::before{content:"";width:.5rem;height:.5rem;border-radius:2px;background:var(--dot,var(--accent))}
+  .tape{display:flex;flex-wrap:wrap;gap:.35rem}
+  .tile{border:1px solid var(--tb,var(--line));background:var(--tc,var(--bg));border-radius:8px;padding:.3rem .5rem .35rem;min-width:4.6rem;max-width:13rem;box-sizing:border-box}
+  .tile .on{font-size:.76rem;font-weight:600;color:var(--head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tile .ob{font-size:.64rem;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace}
+  .tile .od{font-size:.66rem;color:var(--muted);margin-top:.12rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tile.now{outline:2px solid var(--head);outline-offset:1px}
+  .tile.done{opacity:.55}
+  .tile.skip{opacity:.3}
+  .tile.never{opacity:.22;text-decoration:line-through}
+  .sa{--tc:var(--t2);--tb:var(--t2b)} .sb{--tc:var(--t1);--tb:var(--t1b)} .sc{--tc:var(--t3);--tb:var(--t3b)}
+  .la{--dot:var(--t2b)} .lb{--dot:var(--t1b)} .lc{--dot:var(--t3b)}
+
+  .lower{display:flex;gap:1rem;align-items:stretch;margin-top:.9rem;flex-wrap:wrap}
+  .stackbox{flex:0 0 15rem;max-width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.55rem .6rem;box-sizing:border-box;min-height:12.5rem;display:flex;flex-direction:column}
+  .stackbox .plab{margin-bottom:.4rem}
+  .items{display:flex;flex-direction:column-reverse;gap:.3rem;justify-content:flex-start;flex:1}
+  .it{border:1px solid var(--t5b);background:var(--t5);border-radius:7px;padding:.25rem .45rem;font-size:.75rem}
+  .it b{display:block;font-weight:600;color:var(--head);font-size:.72rem}
+  .it span{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.66rem;color:var(--muted);overflow-wrap:anywhere}
+  .it.yes{background:var(--t1);border-color:var(--t1b)}
+  .it.no{background:var(--t6);border-color:var(--t6b)}
+  .empty{font-size:.8rem;color:var(--muted);font-style:normal}
+  .sayb{flex:1 1 18rem;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;box-sizing:border-box;display:flex;flex-direction:column}
+  .say{font-size:.95rem;line-height:1.5;color:var(--text);margin:.35rem 0 0;flex:1}
+  .say b{color:var(--head)}
+  .verdict{margin-top:.5rem;font-size:.95rem;font-weight:600;padding:.4rem .6rem;border-radius:7px;display:none}
+  .verdict.ok{display:block;background:var(--t1);border:1px solid var(--t1b);color:var(--head)}
+  .verdict.bad{display:block;background:var(--t6);border:1px solid var(--t6b);color:var(--refused)}
+  .ctrls{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.8rem;align-items:center}
+  .ctrls button{font:inherit;font-size:.88rem;padding:.35rem .9rem;border-radius:8px;cursor:pointer;background:var(--head);color:var(--bg);border:1px solid var(--head)}
+  .ctrls button.gh{background:var(--bg);color:var(--text);border-color:var(--line)}
+  .ctrls button.gh:hover{border-color:var(--accent);color:var(--head)}
+  .ctrls button:disabled{opacity:.4;cursor:default}
+  .count{font-size:.8rem;color:var(--muted);margin-left:.2rem}
+
+  .grp{display:grid;grid-template-columns:auto 1fr auto;gap:.3rem .7rem;align-items:baseline;margin-top:.5rem;font-size:.86rem}
+  .grp .gn{font-weight:600;color:var(--head)}
+  .grp .gx{color:var(--muted);font-size:.8rem;overflow-wrap:anywhere}
+  .grp .gc{color:var(--muted);font-size:.78rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .grp .used{color:var(--head)}
+  .grp .row{display:contents}
+  .gfoot{font-size:.84rem;color:var(--muted);margin-top:.7rem}
+  .meas{display:grid;grid-template-columns:1fr auto auto;gap:.3rem .9rem;font-size:.88rem;margin-top:.5rem;align-items:baseline}
+  .meas .h{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+  .meas .v{font-variant-numeric:tabular-nums;color:var(--head);font-weight:600;white-space:nowrap}
+  .meas .l{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+  .hide{display:none}
+  @media (max-width:640px){
+    .panel{padding-left:1rem;padding-right:1rem}
+    .stackbox{flex:1 1 100%}
+    .tile{min-width:4.2rem}
+  }
+  /* term links: a regular green link that opens the glossary in a new tab */
+  a.t{color:var(--link)}
+  a.t:hover{color:var(--head)}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="kicker"><a href="index.html">Toccata 101</a> · Part 2 · card 1</p>
+  <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
+</div>
+
+<h1>Kaspa script: the program every output carries</h1>
+
+<p class="one">Every output carries a program. The spender supplies the first half, the node runs both halves on one stack, and the spend is good only if a single true is left at the end.</p>
+
+<p>Card 1.1 called the thing attached to a <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> its <a class="t" target="_blank" rel="noopener" href="glossary.html#script-public-key">script public key</a>. Card 1.4 said a <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> takes that program and runs it. Neither card said what running it means. Below are three real <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spends</a> from Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#mainnet">mainnet</a>, replayed instruction by instruction, on the same <a class="t" target="_blank" rel="noopener" href="glossary.html#stack">stack</a> the node uses.</p>
+
+<div class="panel" id="panel">
+  <div class="pickers">
+    <div class="pset">
+      <span class="plab">The spend</span>
+      <span class="pbtns" id="runpick"></span>
+    </div>
+    <div class="pset">
+      <span class="plab">Looking at</span>
+      <span class="pbtns" id="viewpick"></span>
+    </div>
+  </div>
+
+  <p class="runsub" id="runsub"></p>
+  <div id="tape"></div>
+
+  <div id="v-run">
+    <div class="lower">
+      <div class="stackbox">
+        <span class="plab">The stack</span>
+        <div class="items" id="items"></div>
+      </div>
+      <div class="sayb">
+        <span class="plab">What just happened</span>
+        <p class="say" id="say"></p>
+        <div class="verdict" id="verdict"></div>
+      </div>
+    </div>
+    <div class="ctrls">
+      <button type="button" class="gh" id="back">Back</button>
+      <button type="button" id="step">Step</button>
+      <button type="button" class="gh" id="play">Run it</button>
+      <button type="button" class="gh" id="reset">Start again</button>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  <div id="v-vocab" class="hide">
+    <div class="grp" id="grouptable"></div>
+    <p class="gfoot" id="gfoot"></p>
+  </div>
+
+  <div id="v-meas" class="hide">
+    <div class="meas" id="meastable"></div>
+    <p class="gfoot">The right hand column is the ceiling the node enforces. <a class="t" target="_blank" rel="noopener" href="glossary.html#toccata">Toccata</a> raised three of them and left the stack where it was.</p>
+  </div>
+</div>
+
+<p>A Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a> has no loops and no instruction that jumps backwards, so it always ends. The engine counts as it goes: at most 244 items on the stack at any moment, and a script that runs past its size limit, past its instruction limit, or uses a disabled instruction is refused. Every node runs the same <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a> against the same <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> and reaches the same answer, which is why a <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a> on Kaspa does not depend on anyone being trusted.</p>
+
+<p>The first half, the one the spender brings, may only put data on the stack. It cannot compute. Every decision belongs to the half the coin carries. A <a class="t" target="_blank" rel="noopener" href="glossary.html#covenant">covenant</a> is that same half written to look at the transaction trying to spend it, and to leave false when it does not accept what it sees. The instructions that let it look are card 2.2.</p>
+
+<h2>Sources</h2>
+<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack: the input's signature script, then the script public key of the UTXO it spends. The signature script may contain only push instructions. After every instruction the engine refuses a stack deeper than <code>MAX_STACK_SIZE = 244</code>, and it refuses disabled and reserved instructions. At the end exactly one item must be left and it must be true, otherwise the errors are <code>CleanStack</code>, <code>EmptyStack</code> or <code>EvalFalse</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>execute_inner</code>, <code>execute_script</code>, <code>check_error_condition</code>). For a p address the engine saves the stack before the coin's half runs, checks that half on its own, restores the saved stack, takes the top item as a script and runs it (same file). The limits, each checked per script: 10,000 bytes before Toccata and 1,000,000 after, one stack item 520 bytes before and 1,000,000 after, instructions per script 201 before and 1,000,000 after, stack 244 either way (same file). The two standard locks are <code>OpData32</code> key <code>OpCheckSig</code> and <code>OpBlake2b</code> <code>OpData32</code> hash <code>OpEqual</code>, the hash being blake2b-256 of the revealed script (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). The 256 byte values, which of them are disabled and which are always illegal (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). Read at release v2.0.1. The two transactions were read from api.kaspa.org on 12 September 2026: <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a> created both outputs and <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…501f3d</code></a> spent the p address one. The page holds their real bytes. It does not verify the signature or compute the hash in your browser, it shows the values those two transactions actually carry, and for the third spend the blake2b-256 of the changed script.</p>
+
+<footer class="foot">
+  <div class="nav"><a class="prev" href="card-1.7.html">Last card</a> · <span>Next: <span class="soon">What Toccata added to script</span></span></div>
+  <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio · By FingersLLM</span></div>
+</footer>
+
+<script>
+function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');if(c==='dark')return true;if(c==='light')return false;return !!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
+function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
+function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
+t101Label();
+
+(function(){
+"use strict";
+var RUNS=[{"id":"wallet","title":"A wallet spend","sub":"Input 0 of 60a2f205\u20265914 spending an ordinary q address output","halves":[{"label":"What the spender brought","cls":"a","ops":[{"op":"OpData65","code":"0x41","data":"7cb79c11bfdda0776db020638c10d5a997b273b2a5c2e2ae9c00a0de442334cbe2edebc2cc7836f649e67cb7ac7a92c7f4ce990e130844b5f952a1465f868c9301","note":"the signature, 65 bytes","kind":"push"}]},{"label":"What the coin carried","cls":"b","ops":[{"op":"OpData32","code":"0x20","data":"71ad52824cc1fd78c096dfadfa3482d57a4d33a8015b80c8dfcf2946dabfd9b3","note":"the public key, 32 bytes","kind":"push"},{"op":"OpCheckSig","code":"0xac","data":null,"note":"","kind":"sig"}]}],"p2sh":false},{"id":"reveal","title":"A script revealed","sub":"Input 0 of 2436d2fc\u202604d3f spending the p address output above","halves":[{"label":"What the spender brought","cls":"a","ops":[{"op":"OpData65","code":"0x41","data":"dfe0e166cf6132d93bd425428688763e16ac39eaf31b4561ea74e68d515ef800f9db213d3e38ed7d50e188c01b81a91273af8d13374b087c4042cad3839463da01","note":"the signature, 65 bytes","kind":"push"},{"op":"OpPushData1","code":"0x4c","data":"2071ad52824cc1fd78c096dfadfa3482d57a4d33a8015b80c8dfcf2946dabfd9b3ac0063076b6173706c6578004c8b7b2270223a226b72632d3230222c226f70223a227472616e73666572222c227469636b223a22736f756c73222c22746f223a226b617370613a71706d7972746e783471733077703534727a3378386a6a7775757461717a766d7a6a7633307137667374617637676567363264393676367635727a3872222c22616d74223a2235363030303030303030227d68","note":"the whole script, 187 bytes","kind":"push"}]},{"label":"What the coin carried","cls":"b","ops":[{"op":"OpBlake2b","code":"0xaa","data":null,"note":"","kind":"hash"},{"op":"OpData32","code":"0x20","data":"8485cac4141060aaa1f8ddb2bd624010922feb2259cedb93a0635bcff1392db2","note":"the fingerprint the address stands for","kind":"push"},{"op":"OpEqual","code":"0x87","data":null,"note":"","kind":"cmp"}]},{"label":"The script, revealed","cls":"c","ops":[{"op":"OpData32","code":"0x20","data":"71ad52824cc1fd78c096dfadfa3482d57a4d33a8015b80c8dfcf2946dabfd9b3","note":"the public key, 32 bytes","kind":"push"},{"op":"OpCheckSig","code":"0xac","data":null,"note":"","kind":"sig"},{"op":"OpFalse","code":"0x00","data":"","note":"an empty value","kind":"push"},{"op":"OpIf","code":"0x63","data":null,"note":"","kind":"ctrl"},{"op":"OpData7","code":"0x07","data":"6b6173706c6578","note":"the 7 bytes kasplex","kind":"push"},{"op":"OpFalse","code":"0x00","data":"","note":"an empty value","kind":"push"},{"op":"OpPushData1","code":"0x4c","data":"{\"p\":\"krc-20\",\"op\":\"transfer\",\"tick\":\"souls\",\"to\":\"kaspa:qpmyrtnx4qs0wp54rz3x8jjwuutaqzvmzjv30q7fstav7geg62d96v6v5rz8r\",\"amt\":\"5600000000\"}","note":"139 bytes of text","kind":"push"},{"op":"OpEndIf","code":"0x68","data":null,"note":"","kind":"ctrl"}]}],"p2sh":true,"bad":false,"fp_seen":"8485cac4141060aaa1f8ddb2bd624010922feb2259cedb93a0635bcff1392db2"},{"id":"refused","title":"The same spend, refused","sub":"The same input with one byte of the public key changed inside the revealed script","halves":[{"label":"What the spender brought","cls":"a","ops":[{"op":"OpData65","code":"0x41","data":"dfe0e166cf6132d93bd425428688763e16ac39eaf31b4561ea74e68d515ef800f9db213d3e38ed7d50e188c01b81a91273af8d13374b087c4042cad3839463da01","note":"the signature, 65 bytes","kind":"push"},{"op":"OpPushData1","code":"0x4c","data":"2070ad52824cc1fd78c096dfadfa3482d57a4d33a8015b80c8dfcf2946dabfd9b3ac0063076b6173706c6578004c8b7b2270223a226b72632d3230222c226f70223a227472616e73666572222c227469636b223a22736f756c73222c22746f223a226b617370613a71706d7972746e783471733077703534727a3378386a6a7775757461717a766d7a6a7633307137667374617637676567363264393676367635727a3872222c22616d74223a2235363030303030303030227d68","note":"the whole script, 187 bytes","kind":"push"}]},{"label":"What the coin carried","cls":"b","ops":[{"op":"OpBlake2b","code":"0xaa","data":null,"note":"","kind":"hash"},{"op":"OpData32","code":"0x20","data":"8485cac4141060aaa1f8ddb2bd624010922feb2259cedb93a0635bcff1392db2","note":"the fingerprint the address stands for","kind":"push"},{"op":"OpEqual","code":"0x87","data":null,"note":"","kind":"cmp"}]},{"label":"The script, revealed","cls":"c","ops":[{"op":"OpData32","code":"0x20","data":"70ad52824cc1fd78c096dfadfa3482d57a4d33a8015b80c8dfcf2946dabfd9b3","note":"the public key, 32 bytes","kind":"push"},{"op":"OpCheckSig","code":"0xac","data":null,"note":"","kind":"sig"},{"op":"OpFalse","code":"0x00","data":"","note":"an empty value","kind":"push"},{"op":"OpIf","code":"0x63","data":null,"note":"","kind":"ctrl"},{"op":"OpData7","code":"0x07","data":"6b6173706c6578","note":"the 7 bytes kasplex","kind":"push"},{"op":"OpFalse","code":"0x00","data":"","note":"an empty value","kind":"push"},{"op":"OpPushData1","code":"0x4c","data":"{\"p\":\"krc-20\",\"op\":\"transfer\",\"tick\":\"souls\",\"to\":\"kaspa:qpmyrtnx4qs0wp54rz3x8jjwuutaqzvmzjv30q7fstav7geg62d96v6v5rz8r\",\"amt\":\"5600000000\"}","note":"139 bytes of text","kind":"push"},{"op":"OpEndIf","code":"0x68","data":null,"note":"","kind":"ctrl"}]}],"p2sh":true,"bad":true,"fp_seen":"b053edd3bc199899f2f12ecc081c68e2cdb4096d1917319740f83f0481a642fe"}], GROUPS=[{"label":"Put something on the stack","lo":0,"hi":96,"n":96,"ex":"OpFalse, OpData1 to OpData75, OpPushData1, Op1Negate, OpTrue to Op16","names":["OpFalse","OpData1","OpData2","OpData3","OpData4","OpData5","OpData6","OpData7","OpData8","OpData9","OpData10","OpData11","OpData12","OpData13","OpData14","OpData15","OpData16","OpData17","OpData18","OpData19","OpData20","OpData21","OpData22","OpData23","OpData24","OpData25","OpData26","OpData27","OpData28","OpData29","OpData30","OpData31","OpData32","OpData33","OpData34","OpData35","OpData36","OpData37","OpData38","OpData39","OpData40","OpData41","OpData42","OpData43","OpData44","OpData45","OpData46","OpData47","OpData48","OpData49","OpData50","OpData51","OpData52","OpData53","OpData54","OpData55","OpData56","OpData57","OpData58","OpData59","OpData60","OpData61","OpData62","OpData63","OpData64","OpData65","OpData66","OpData67","OpData68","OpData69","OpData70","OpData71","OpData72","OpData73","OpData74","OpData75","OpPushData1","OpPushData2","OpPushData4","Op1Negate","OpTrue","Op2","Op3","Op4","Op5","Op6","Op7","Op8","Op9","Op10","Op11","Op12","Op13","Op14","Op15","Op16"]},{"label":"Decide whether to run the next part","lo":97,"hi":106,"n":10,"ex":"OpNop, OpIf, OpNotIf, OpElse, OpEndIf, OpVerify, OpReturn","names":["OpNop","OpVer","OpIf","OpNotIf","OpVerIf","OpVerNotIf","OpElse","OpEndIf","OpVerify","OpReturn"]},{"label":"Move things around on the stack","lo":107,"hi":125,"n":19,"ex":"OpDup, OpDrop, OpSwap, OpRot, OpPick, OpRoll, OpToAltStack","names":["OpToAltStack","OpFromAltStack","Op2Drop","Op2Dup","Op3Dup","Op2Over","Op2Rot","Op2Swap","OpIfDup","OpDepth","OpDrop","OpDup","OpNip","OpOver","OpPick","OpRoll","OpRot","OpSwap","OpTuck"]},{"label":"Work on bytes","lo":126,"hi":134,"n":11,"ex":"OpCat, OpSubstr, OpSize, OpAnd, OpOr, OpXor","names":["OpCat","OpSubstr","OpLeft","OpRight","OpSize","OpInvert","OpAnd","OpOr","OpXor"]},{"label":"Compare","lo":135,"hi":136,"n":2,"ex":"OpEqual, OpEqualVerify","names":["OpEqual","OpEqualVerify"]},{"label":"Arithmetic and number comparison","lo":139,"hi":165,"n":27,"ex":"OpAdd, OpSub, OpMin, OpMax, OpLessThan, OpWithin","names":["Op1Add","Op1Sub","Op2Mul","Op2Div","OpNegate","OpAbs","OpNot","Op0NotEqual","OpAdd","OpSub","OpMul","OpDiv","OpMod","OpLShift","OpRShift","OpBoolAnd","OpBoolOr","OpNumEqual","OpNumEqualVerify","OpNumNotEqual","OpLessThan","OpGreaterThan","OpLessThanOrEqual","OpGreaterThanOrEqual","OpMin","OpMax","OpWithin"]},{"label":"Hashes and signature checks","lo":166,"hi":175,"n":14,"ex":"OpBlake2b, OpSHA256, OpCheckSig, OpCheckMultiSig, OpZkPrecompile","names":["OpZkPrecompile","OpBlake2bWithKey","OpSHA256","OpCheckMultiSigECDSA","OpBlake2b","OpCheckSigECDSA","OpCheckSig","OpCheckSigVerify","OpCheckMultiSig","OpCheckMultiSigVerify"]},{"label":"Wait for a time or a height","lo":176,"hi":177,"n":2,"ex":"OpCheckLockTimeVerify, OpCheckSequenceVerify","names":["OpCheckLockTimeVerify","OpCheckSequenceVerify"]},{"label":"Read the transaction it is part of","lo":178,"hi":214,"n":34,"ex":"card 2.2","names":["OpTxVersion","OpTxInputCount","OpTxOutputCount","OpTxLockTime","OpTxSubnetId","OpTxGas","OpTxPayloadSubstr","OpTxInputIndex","OpOutpointTxId","OpOutpointIndex","OpTxInputScriptSigSubstr","OpTxInputSeq","OpTxInputAmount","OpTxInputSpk","OpTxInputDaaScore","OpTxInputIsCoinbase","OpTxOutputAmount","OpTxOutputSpk","OpTxPayloadLen","OpTxInputSpkLen","OpTxInputSpkSubstr","OpTxOutputSpkLen","OpTxOutputSpkSubstr","OpTxInputScriptSigLen","OpAuthOutputCount","OpAuthOutputIdx","OpInputCovenantId","OpCovInputCount","OpCovInputIdx","OpCovOutputCount","OpCovOutputIdx","OpChainblockSeqCommit","OpOutputCovenantId","OpOutputAuthorizingInput"],"forward":true}];
+var ri=0, vi=0, si=0, timer=null;
+var VIEWS=[["Run","v-run"],["What else it can say","v-vocab"],["Measured","v-meas"]];
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function shorten(h,a,b){h=String(h);return h.length<=a+b+1?h:h.slice(0,a)+"…"+h.slice(-b);}
+function isHex(s){return /^[0-9a-f]*$/i.test(s)&&s.length%2===0;}
+function bytelen(v){return isHex(v)?v.length/2:(new TextEncoder().encode(v)).length;}
+
+/* ---------- flatten a run into a list of instructions with their half ---------- */
+function flatten(run){
+  var out=[];
+  run.halves.forEach(function(h,hi){ h.ops.forEach(function(op,oi){
+    out.push({op:op,half:hi,cls:h.cls,idx:out.length});
+  });});
+  return out;
+}
+
+/* ---------- build every state of the machine, once ---------- */
+function build(run){
+  var flat=flatten(run), states=[], stack=[], saved=null, stop=false;
+  function snap(msg,now,extra){
+    states.push({stack:stack.map(function(x){return x;}),say:msg,now:now,
+                 verdict:extra&&extra.verdict||null, skipTo:extra&&extra.skipTo||null,
+                 depth:stack.length});
+  }
+  function push(it){stack.push(it);}
+  function pop(){return stack.pop();}
+
+  states.push({stack:[],say:"Nothing has run yet. The stack is empty, and the two halves of the program are above, in the order the node runs them.",now:-1,verdict:null,depth:0});
+
+  var i=0, deepest=0, ops=0, biggest=0;
+  /* for a p address spend this pass runs only the two halves, the revealed script comes after */
+  var last = run.p2sh ? (run.halves[0].ops.length + run.halves[1].ops.length) : flat.length;
+  function mark(){ if(stack.length>deepest)deepest=stack.length;
+    stack.forEach(function(it){ if(it.bytes>biggest)biggest=it.bytes; }); }
+
+  function doPush(op,now){
+    var v=op.data===null?"":op.data, b=v===""?0:bytelen(v);
+    push({label:op.note||op.op,val:v,bytes:b,truth:b>0});
+    ops++; mark();
+    snap("<b>"+op.op+"</b> put "+(b===0?"an empty value":(op.note||(b+" bytes")))+" on the stack. A push instruction does nothing else.",now);
+  }
+
+  for(i=0;i<last && !stop;i++){
+    var f=flat[i], op=f.op, now=i;
+
+    /* the node keeps a copy before the coin's half of a p address spend */
+    if(run.p2sh && f.half===1 && f.idx===run.halves[0].ops.length){
+      saved=stack.map(function(x){return x;});
+      snap("Before the coin's half runs, the node keeps a copy of the stack as it stands. It will come back to this copy.",now-1+0.5);
+    }
+
+    if(op.kind==="push"){ doPush(op,now); continue; }
+
+    if(op.op==="OpCheckSig"){
+      var key=pop(), sig=pop(); ops++;
+      push({label:"true",val:"",bytes:1,truth:true,flag:"yes"}); mark();
+      snap("<b>OpCheckSig</b> took the public key and the signature off the stack, checked that signature against this transaction, and put <b>true</b> back.",now);
+      continue;
+    }
+    if(op.op==="OpBlake2b"){
+      var v=pop(); ops++;
+      push({label:"blake2b-256 of those 187 bytes",val:run.fp_seen,bytes:32,truth:true}); mark();
+      snap("<b>OpBlake2b</b> took the script the spender brought off the stack and put its blake2b-256 hash back, 32 bytes.",now);
+      continue;
+    }
+    if(op.op==="OpEqual"){
+      var b2=pop(), a2=pop(), same=(b2.val===a2.val); ops++;
+      push({label:same?"true":"false",val:"",bytes:same?1:0,truth:same,flag:same?"yes":"no"}); mark();
+      snap("<b>OpEqual</b> took the two 32 byte values off the stack and compared them. They "+(same?"match":"do not match")+", so it put <b>"+(same?"true":"false")+"</b> back.",now);
+      continue;
+    }
+    if(op.op==="OpFalse"){ doPush(op,now); continue; }
+    if(op.op==="OpIf"){
+      var c=pop(); ops++; mark();
+      if(!c.truth){
+        var k=i; while(k<flat.length && flat[k].op.op!=="OpEndIf") k++;
+        snap("<b>OpIf</b> took the top value off the stack. It is false, so everything up to <b>OpEndIf</b> is skipped. Nothing in there ever runs.",now,{skipTo:k});
+        i=k;
+        continue;
+      }
+      snap("<b>OpIf</b> took the top value off the stack. It is true, so what follows runs.",now);
+      continue;
+    }
+    if(op.op==="OpEndIf"){ ops++; snap("<b>OpEndIf</b> closes the branch. The stack is untouched.",now); continue; }
+  }
+
+  if(!stop && run.p2sh){
+    /* the check between the two parts of a p address spend */
+    var top=stack[stack.length-1];
+    if(!top||!top.truth){
+      snap("The coin's half left <b>false</b>. The node stops here. The script the spender brought is never run, and the whole transaction is rejected.",flat.length-1,
+           {verdict:["bad","Refused. The fingerprint did not match, so the spend fails and every other input in the transaction fails with it."]});
+      return {states:states,flat:flat,deepest:deepest,ops:ops,biggest:biggest,stoppedAt:run.halves[0].ops.length+run.halves[1].ops.length};
+    }
+    stack.pop();
+    snap("The coin's half ended in true, so the fingerprint matched. The node now throws that result away, goes back to the copy it kept, and takes the top item off it.",flat.length-1);
+    stack=saved.slice(0,saved.length-1);
+    snap("The 187 bytes the spender brought are off the stack. They are not data any more, they are the script that runs next.",flat.length-1);
+  }
+  return {states:states,flat:flat,deepest:deepest,ops:ops,biggest:biggest,stoppedAt:-1};
+}
+
+/* the redeem script has to run after the restore, so build in two passes */
+function buildFull(run){
+  if(!run.p2sh) {
+    var r=build(run);
+    finish(r,run);
+    return r;
+  }
+  var r=build(run);
+  if(r.stoppedAt>=0){ return r; }
+  /* continue with the revealed script */
+  var flat=r.flat, start=run.halves[0].ops.length+run.halves[1].ops.length;
+  var stack=r.states[r.states.length-1].stack.map(function(x){return x;});
+  var ops=r.ops, deepest=r.deepest, biggest=r.biggest;
+  function mark(){ if(stack.length>deepest)deepest=stack.length;
+    stack.forEach(function(it){ if(it.bytes>biggest)biggest=it.bytes; }); }
+  function snap(msg,now,extra){ r.states.push({stack:stack.map(function(x){return x;}),say:msg,now:now,
+      verdict:extra&&extra.verdict||null,depth:stack.length}); }
+  var i;
+  for(i=start;i<flat.length;i++){
+    var op=flat[i].op;
+    if(op.kind==="push"||op.op==="OpFalse"){
+      var v=op.data===null?"":op.data, b=v===""?0:bytelen(v);
+      stack.push({label:op.note||op.op,val:v,bytes:b,truth:b>0}); ops++; mark();
+      snap("<b>"+op.op+"</b> put "+(b===0?"an empty value":(op.note||(b+" bytes")))+" on the stack.",i);
+      continue;
+    }
+    if(op.op==="OpCheckSig"){
+      stack.pop(); stack.pop(); ops++;
+      stack.push({label:"true",val:"",bytes:1,truth:true,flag:"yes"}); mark();
+      snap("<b>OpCheckSig</b> took the public key and the signature off the stack, checked that signature against this transaction, and put <b>true</b> back. This key is the same key the q address above is built from.",i);
+      continue;
+    }
+    if(op.op==="OpIf"){
+      var c=stack.pop(); ops++; mark();
+      var k=i; while(k<flat.length && flat[k].op.op!=="OpEndIf") k++;
+      snap("<b>OpIf</b> took the top value off the stack. It is false, so everything up to <b>OpEndIf</b> is skipped. The text in there is never read by the node, it is a note left for software that reads the chain.",i,{skip:[i+1,k-1]});
+      r.states[r.states.length-1].skipRange=[i+1,k-1];
+      i=k; ops++;
+      continue;
+    }
+    if(op.op==="OpEndIf"){ ops++; snap("<b>OpEndIf</b> closes the branch.",i); continue; }
+  }
+  r.ops=ops; r.deepest=deepest; r.biggest=biggest;
+  finishStack(r,stack,flat.length-1);
+  return r;
+}
+function finish(r,run){ var st=r.states[r.states.length-1].stack; finishStack(r,st.map(function(x){return x;}),r.flat.length-1); }
+function finishStack(r,stack,now){
+  var ok = stack.length===1 && stack[0].truth;
+  var why = stack.length===0 ? "The stack is empty."
+          : stack.length>1  ? "There is more than one item left on the stack."
+          : (stack[0].truth ? "One item is left and it is true." : "One item is left and it is false.");
+  r.states.push({stack:stack.map(function(x){return x;}),
+    say:"Both halves have finished. The node makes one last check: exactly one item must be left on the stack, and it must be true. "+why,
+    now:now, depth:stack.length,
+    verdict: ok ? ["ok","Good. This input is valid, and the node moves on to the next one."]
+                : ["bad","Refused. The spend fails and the whole transaction fails with it."]});
+}
+
+/* ---------- drawing ---------- */
+function tapeHTML(run,state,built){
+  var h="", n=0;
+  run.halves.forEach(function(half,hi){
+    h+='<div class="seg"><div class="seglab l'+half.cls+'">'+esc(half.label)+'</div><div class="tape">';
+    half.ops.forEach(function(op){
+      var cls="tile s"+half.cls, idx=n;
+      if(state){
+        if(built.stoppedAt>=0 && idx>=built.stoppedAt) cls+=" never";
+        else if(state.now===idx) cls+=" now";
+        else if(state.now>idx) cls+=" done";
+        if(state.skipRange && idx>=state.skipRange[0] && idx<=state.skipRange[1]) cls+=" skip";
+      }
+      var d="";
+      if(op.data!==null && op.data!==undefined && op.data!==""){
+        d=isHex(op.data)?shorten(op.data,10,6):shorten(op.data,18,4);
+      }
+      h+='<div class="'+cls+'"><div class="on">'+esc(op.op)+'</div><div class="ob">'+esc(op.code)+'</div>'
+        + (d?'<div class="od">'+esc(d)+'</div>':'')
+        + '</div>';
+      n++;
+    });
+    h+='</div></div>';
+  });
+  return h;
+}
+function stackHTML(st){
+  if(!st.length) return '<span class="empty">empty</span>';
+  return st.map(function(it){
+    var c="it"+(it.flag==="yes"?" yes":(it.flag==="no"?" no":""));
+    var v=it.val?('<span>'+esc(isHex(it.val)?shorten(it.val,16,8):shorten(it.val,26,4))+'</span>'):"";
+    return '<div class="'+c+'"><b>'+esc(it.label)+'</b>'+v+'</div>';
+  }).join("");
+}
+
+var built=null;
+function drawRun(){
+  var run=RUNS[ri], s=built.states[si];
+  document.getElementById('tape').innerHTML=tapeHTML(run,s,built);
+  document.getElementById('items').innerHTML=stackHTML(s.stack);
+  document.getElementById('say').innerHTML=s.say;
+  var v=document.getElementById('verdict');
+  v.className="verdict"+(s.verdict?" "+s.verdict[0]:"");
+  v.textContent=s.verdict?s.verdict[1]:"";
+  document.getElementById('count').textContent="step "+si+" of "+(built.states.length-1);
+  document.getElementById('back').disabled=(si===0);
+  document.getElementById('step').disabled=(si===built.states.length-1);
+}
+function drawVocab(){
+  var run=RUNS[ri];
+  var used={}; run.halves.forEach(function(h){h.ops.forEach(function(o){used[o.op]=1;});});
+  var html="";
+  html+='<div class="row"><span class="plab">Group</span><span class="plab">Examples</span><span class="plab">How many</span></div>';
+  GROUPS.forEach(function(g){
+    var hit=g.names.filter(function(n){return used[n];});
+    html+='<div class="row"><span class="gn'+(hit.length?' used':'')+'">'+esc(g.label)+'</span>'
+       +'<span class="gx">'+(hit.length?('on this tape: <strong>'+hit.map(esc).join(", ")+'</strong>. '):'')
+       +(g.forward?'These are what card 2.2 is about.':esc(g.ex))+'</span>'
+       +'<span class="gc">'+g.n+'</span></div>';
+  });
+  document.getElementById('grouptable').innerHTML=html;
+  document.getElementById('gfoot').innerHTML='220 of the 256 possible byte values have a name. The other 33 have no meaning, and a script that reaches one fails. Six of the named ones are disabled since Toccata, and a script carrying a disabled instruction fails even when that instruction sits in a branch that is never taken. Six more always fail when reached. Of the 96 in the first group, 75 are the same instruction once for each data length from 1 to 75 bytes.';
+}
+function drawMeas(){
+  var run=RUNS[ri];
+  var a=run.halves[0].ops, parts=[];
+  function halfBytes(ops){var t=0;ops.forEach(function(o){
+    t+=1; if(o.op==="OpPushData1")t+=1;
+    if(o.data!==null&&o.data!==undefined&&o.data!=="")t+=bytelen(o.data);});return t;}
+  var sb=halfBytes(run.halves[0]?run.halves[0].ops:[]), cb=halfBytes(run.halves[1]?run.halves[1].ops:[]);
+  var rows=[
+    ["What the spender brought", sb+" bytes", "1,000,000 since Toccata, 10,000 before"],
+    ["What the coin carried", cb+" bytes", "1,000,000 since Toccata, 10,000 before"],
+    ["Instructions the node ran", built.ops+"", "1,000,000 per script since Toccata, 201 before"],
+    ["Deepest the stack got", built.deepest+" items", "244, unchanged by Toccata"],
+    ["Biggest single item on the stack", built.biggest+" bytes", "1,000,000 since Toccata, 520 before"]
+  ];
+  var html='<span class="h">This spend</span><span class="h">Measured</span><span class="h">The ceiling</span>';
+  rows.forEach(function(r){
+    html+='<span>'+esc(r[0])+'</span><span class="v">'+esc(r[1])+'</span><span class="l">'+esc(r[2]||"—")+'</span>';
+  });
+  document.getElementById('meastable').innerHTML=html;
+}
+
+function render(){
+  var run=RUNS[ri];
+  document.getElementById('runsub').textContent=run.sub;
+  VIEWS.forEach(function(v,k){document.getElementById(v[1]).className=(k===vi?"":"hide");});
+  if(vi===0){drawRun();}
+  else{ document.getElementById('tape').innerHTML=tapeHTML(run,null,built);
+        if(vi===1)drawVocab(); else drawMeas(); }
+  [['runpick',ri],['viewpick',vi]].forEach(function(p){
+    var box=document.getElementById(p[0]);
+    Array.prototype.forEach.call(box.children,function(b,k){b.setAttribute('aria-pressed',k===p[1]?'true':'false');});
+  });
+}
+function stop(){ if(timer){clearInterval(timer);timer=null;document.getElementById('play').textContent="Run it";} }
+function setRun(k){ stop(); ri=k; si=0; built=buildFull(RUNS[ri]); render(); }
+
+function init(){
+  var rp=document.getElementById('runpick');
+  RUNS.forEach(function(r,k){var b=document.createElement('button');b.type="button";b.textContent=r.title;
+    b.onclick=function(){setRun(k);};rp.appendChild(b);});
+  var vp=document.getElementById('viewpick');
+  VIEWS.forEach(function(v,k){var b=document.createElement('button');b.type="button";b.textContent=v[0];
+    b.onclick=function(){stop();vi=k;render();};vp.appendChild(b);});
+  document.getElementById('step').onclick=function(){stop();if(si<built.states.length-1){si++;drawRun();}};
+  document.getElementById('back').onclick=function(){stop();if(si>0){si--;drawRun();}};
+  document.getElementById('reset').onclick=function(){stop();si=0;drawRun();};
+  document.getElementById('play').onclick=function(){
+    if(timer){stop();return;}
+    if(si>=built.states.length-1)si=0;
+    document.getElementById('play').textContent="Pause";
+    timer=setInterval(function(){ if(si>=built.states.length-1){stop();return;} si++; drawRun(); },1100);
+  };
+  setRun(0);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+
+</script>
+</body>
+</html>
