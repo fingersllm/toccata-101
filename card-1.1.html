@@ -48,9 +48,9 @@
   h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
   h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
   .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
-  .terms{margin:0 0 1.6rem;padding:.6rem 1.1rem .7rem;border-left:4px solid var(--line);font-size:.93rem;color:var(--muted)}
-  .terms div{margin:.2rem 0}
-  .terms b{color:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;margin-right:.5rem}
+  .terms{margin:0 0 1.6rem;padding:.8rem 1rem .85rem;background:var(--surface);border:1px solid var(--line);border-radius:10px;font-size:.92rem;color:var(--text);display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:.45rem .6rem;align-items:baseline}
+  .terms b{color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;font-size:.72rem;white-space:nowrap}
+  .terms .eq{font-style:normal;color:var(--muted)}
   p{margin:0 0 1rem}
   strong{color:var(--head)}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
@@ -110,11 +110,12 @@
 
 <p class="one">Kaspa does not keep your balance as a number. It keeps pieces, each with its own amount and its own lock. Your balance is their sum.</p>
 <div class="terms">
-  <div><b><a class="t" target="_blank" rel="noopener" href="glossary.html#piece">pieces</a></b><a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXOs</a>.</div>
-  <div><b><a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a></b>the <a class="t" target="_blank" rel="noopener" href="glossary.html#output">output</a>'s <a class="t" target="_blank" rel="noopener" href="glossary.html#script-public-key">script public key</a>, a small program attached to the UTXO that determines what a <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spending</a> <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> must show, for a normal <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> its the <a class="t" target="_blank" rel="noopener" href="glossary.html#signature">signature</a> of a key.</div>
+  <b>pieces</b><i class="eq">=</i><span>UTXOs.</span>
+  <b>lock</b><i class="eq">=</i><span>the output's script public key, a small program attached to the UTXO that determines what a spending transaction must show. For a normal wallet it is the signature of a key.</span>
+</div>
 </div>
 
-<p>A Kaspa transaction creates outputs: pieces of KAS, each with an amount and a lock. A piece that no later transaction has spent is an <strong>unspent transaction output</strong>, a UTXO. This is what the network stores, not balances, UTXOs. The amounts a wallet sums are counted in <a class="t" target="_blank" rel="noopener" href="glossary.html#sompi">sompi</a>: 1 KAS is 100,000,000 sompi.</p>
+<p>A Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> creates <a class="t" target="_blank" rel="noopener" href="glossary.html#output">outputs</a>: <a class="t" target="_blank" rel="noopener" href="glossary.html#piece">pieces</a> of KAS, each with an amount and a <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a>. A piece that no later transaction has <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spent</a> is an <strong><a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">unspent transaction output</a></strong>, a UTXO. This is what the network stores, not balances, UTXOs. The amounts a <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> sums are counted in <a class="t" target="_blank" rel="noopener" href="glossary.html#sompi">sompi</a>: 1 KAS is 100,000,000 sompi.</p>
 
 <p>When you pay, the transaction consumes whole pieces and creates new ones: one for the receiver, and one back to you with what is left after the <a class="t" target="_blank" rel="noopener" href="glossary.html#fee">fee</a>, that's your <a class="t" target="_blank" rel="noopener" href="glossary.html#change">change</a>. Your wallet shows one number because it adds up every piece your keys can unlock. A <a class="t" target="_blank" rel="noopener" href="glossary.html#covenant">covenant</a> is a lock on one piece. The other pieces in the same wallet stay ordinary, or live in their own covenants.</p>
 

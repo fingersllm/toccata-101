@@ -57,6 +57,12 @@
   th,td{text-align:left;vertical-align:top;padding:.55rem .7rem;border-bottom:1px solid var(--line)}
   th{color:var(--muted);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;background:var(--surface)}
   td:first-child{width:38%;color:var(--head);font-weight:600}
+  .tw{overflow-x:auto;margin:0 0 .2rem}
+  .lad{min-width:430px}
+  .lad th:not(:first-child),.lad td:not(:first-child){text-align:center;width:auto;white-space:nowrap}
+  .lad .y{color:var(--head);font-weight:600}
+  .lad .n{color:var(--soon)}
+  .lad .p{color:var(--muted)}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
@@ -88,11 +94,11 @@
 </div>
 <h1>What Toccata changed for someone who holds KAS</h1>
 
-<p class="one">Since 30 June 2026, a Kaspa transaction can carry rules that the network itself enforces. Money can be locked, released, split or handed over under conditions.</p>
+<p class="one">Since 30 June 2026, the program on a Kaspa output can read the whole transaction spending it and refuse. Money can be locked, released, split or handed over under conditions.</p>
 
-<p>Before <a class="t" target="_blank" rel="noopener" href="glossary.html#toccata">Toccata</a>, the rules a Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> could carry were narrow. Mostly just moving coins from one <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> to another using the <a class="t" target="_blank" rel="noopener" href="glossary.html#proof-of-work">PoW</a>, <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> model. The <a class="t" target="_blank" rel="noopener" href="glossary.html#crescendo">Crescendo</a> <a class="t" target="_blank" rel="noopener" href="glossary.html#hardfork">hardfork</a> let a rule look inside its own transaction: count the <a class="t" target="_blank" rel="noopener" href="glossary.html#input">inputs</a> and <a class="t" target="_blank" rel="noopener" href="glossary.html#output">outputs</a>, check the amount and the <a class="t" target="_blank" rel="noopener" href="glossary.html#address">address</a> of each. Still, a rule couldn't keep memory from one <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spend</a> to the next, or carry an identity across spends.</p>
+<p>Every <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> carries a <a class="t" target="_blank" rel="noopener" href="glossary.html#script-public-key">script public key</a>, a small program that decides what a <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spending</a> <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> must show. Before <a class="t" target="_blank" rel="noopener" href="glossary.html#toccata">Toccata</a> that program could check a <a class="t" target="_blank" rel="noopener" href="glossary.html#signature">signature</a> or a <a class="t" target="_blank" rel="noopener" href="glossary.html#hash">hash</a>, so almost everything on Kaspa was one <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> paying another. <a class="t" target="_blank" rel="noopener" href="glossary.html#crescendo">Crescendo</a> let it read its own transaction: the <a class="t" target="_blank" rel="noopener" href="glossary.html#input">inputs</a> and <a class="t" target="_blank" rel="noopener" href="glossary.html#output">outputs</a>, their amounts and their <a class="t" target="_blank" rel="noopener" href="glossary.html#address">addresses</a>. It still could not keep anything from one spend to the next, and it could not carry an identity across spends.</p>
 
-<p>Toccata made the rules general. A program next to the coins can read the whole transaction, keep memory between spends, carry an identity across its life, and refuse the transaction if its rules are not met. The network <a class="t" target="_blank" rel="noopener" href="glossary.html#node">nodes</a> verify all of this. A <a class="t" target="_blank" rel="noopener" href="glossary.html#piece">piece</a> of KAS locked this way is a <strong><a class="t" target="_blank" rel="noopener" href="glossary.html#covenant">covenant</a></strong>. This opens interesting options for what you can do with <a class="t" target="_blank" rel="noopener" href="glossary.html#layer-1">Layer 1</a> coins and assets.</p>
+<p>Toccata made that program general. It can read the whole transaction, keep state from one spend to the next, carry an identity across its whole life, and refuse the spend when its conditions are not met. Every <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> runs it before the transaction is accepted. A UTXO locked this way is a <strong><a class="t" target="_blank" rel="noopener" href="glossary.html#covenant">covenant</a></strong>. That opens options for what <a class="t" target="_blank" rel="noopener" href="glossary.html#layer-1">Layer 1</a> coins and assets can do.</p>
 
 <figure>
 <svg viewBox="0 0 720 260" width="100%" role="img" aria-label="Before Toccata: coins, a signature, coins. After Toccata: coins plus rules, checked by every node, then coins, or refused.">
@@ -129,18 +135,19 @@
 </figure>
 
 <h2>Long story short</h2>
-<p>On Toccata, its possible to have rules travel with money: KAS coins and L1 assets. The rules enforce themself or refuses by the network nodes.</p>
+<p>Since Toccata, a program travels with the money, KAS coins and L1 assets alike. Every node runs it and refuses the spend if its conditions are not met.</p>
 
-<h2>Misconceptions</h2>
-<table>
-<tr><th>Appears</th><th>The truth</th></tr>
-<tr><td>Kaspa now has smart contracts</td><td>There are no accounts and no program holding a balance. There are coins with rules attached.</td></tr>
-<tr><td>The network runs programs</td><td>The network only checks a program when someone submits a transaction</td></tr>
-<tr><td>A covenant on Kaspa is a one trick pony</td><td>A covenant can decide who may spend, when spending is allowed, where the coins go and in what amounts, what the next output must look like, and what else must be in the same transaction. Put together, that is enough for savings <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">locks</a>, trades and tokens.</td></tr>
-</table>
+<h2>What Toccata added</h2>
+<div class="tw"><table class="lad">
+<tr><th>What the program can do</th><th>Before Crescendo</th><th>Crescendo</th><th>Toccata</th></tr>
+<tr><td>Check a signature</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td></tr>
+<tr><td>Read its own transaction</td><td class="n">no</td><td class="p">part</td><td class="y">yes</td></tr>
+<tr><td>Keep state between spends</td><td class="n">no</td><td class="n">no</td><td class="y">yes</td></tr>
+<tr><td>Carry an identity across spends</td><td class="n">no</td><td class="n">no</td><td class="y">yes</td></tr>
+</table></div>
 
 <h2>New possibilities</h2>
-<p>Things you could only do through an exchange or a custodian, like lock savings until a date, leave coins to someone if you disappear, trade one asset for another with a stranger and much more, can now be done with your own keys and a transaction <a class="t" target="_blank" rel="noopener" href="glossary.html#fee">fee</a>.</p>
+<p>Things you could only do through an exchange or a custodian, like <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a> savings until a date, leave coins to someone if you disappear, trade one asset for another with a stranger and much more, can now be done with your own keys and a transaction <a class="t" target="_blank" rel="noopener" href="glossary.html#fee">fee</a>.</p>
 
 <h2>Look at it on chain</h2>
 <p>Open this transaction in an <a class="t" target="_blank" rel="noopener" href="glossary.html#explorer">explorer</a>: <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063fa"><code>f378111b…a063fa</code></a>, from 8 September 2026. Its first input is not an ordinary address but a <a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a> of 2,732 <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a>, and the explorer marks the transaction as a covenant carrying on, one output in, one output out.</p>
