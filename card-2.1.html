@@ -140,6 +140,49 @@
   .modes.rl{margin-bottom:.25rem;justify-content:space-between}
   .cnt{font-size:.74rem;color:var(--muted)}
   .try .out{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem;line-height:1.5;min-height:2.2rem;padding:.38rem .55rem;background:var(--bg);border:1px dashed var(--line);border-radius:8px;color:var(--head);white-space:pre-wrap;overflow-wrap:anywhere}
+  /* section 3, the stack and the run box */
+  .run{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem 1.1rem;margin:1.2rem 0 1.4rem}
+  .rtop{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem .9rem;margin:0 0 .8rem}
+  .rk{font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600;white-space:nowrap}
+  .txin{display:flex;flex:1 1 18rem;flex-wrap:wrap;gap:.4rem;align-items:center;min-width:0}
+  .txin input{flex:1 1 12rem;min-width:0;font:inherit;font-size:.9rem;padding:.38rem .65rem;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--head)}
+  .txin input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--tint)}
+  .txin button{font:inherit;font-size:.82rem;border-radius:999px;padding:.34rem .8rem;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--head)}
+  .txin button:hover{border-color:var(--accent);background:var(--tint)}
+  .txin button:disabled{opacity:.4;cursor:default;border-color:var(--line);background:var(--bg)}
+  .txin .chip2{font-family:inherit;color:var(--link)}
+  .rnote{font-size:.88rem;color:var(--muted);margin:0 0 .7rem}
+  .rnote.bad{color:var(--refused)}
+  .rnote a{color:var(--ext)}
+  .rins{display:flex;flex-wrap:wrap;gap:.35rem;margin:0 0 .8rem}
+  .rins button{font:inherit;font-size:.8rem;border-radius:999px;padding:.22rem .7rem;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+  .rins button small{color:var(--muted);margin-left:.35rem}
+  .rins button.sel{background:var(--tint);border-color:var(--accent);color:var(--head);font-weight:600}
+  .run .full{margin:.2rem 0 .9rem}
+  .run .full .bytes{font-size:.82rem}
+  .run .full .bytes span{transition:outline-color .2s,opacity .2s;outline:2px solid transparent;outline-offset:1px}
+  .run .full .bytes span.on{outline-color:var(--accent);font-weight:700;color:var(--head)}
+  .run .full .bytes span.mv{outline:2px dashed var(--accent);outline-offset:1px}
+  .stage{display:grid;grid-template-columns:1fr 11.5rem;gap:1rem 1.4rem;align-items:end;margin:.4rem 0 .2rem}
+  .stage[hidden],.rins[hidden],.rnote[hidden]{display:none}
+  .cap{font-size:1rem;line-height:1.55;color:var(--text);min-height:3.2em;align-self:center}
+  .cap .ok{color:var(--link);font-weight:700}
+  .cap .no{color:var(--refused);font-weight:700}
+  .stackwrap{display:flex;flex-direction:column;align-items:stretch}
+  .slab{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);text-align:center;margin-bottom:.25rem}
+  .stack{display:flex;flex-direction:column-reverse;gap:.35rem;min-height:7rem;padding:.45rem;border:1px solid var(--line);border-top:0;border-radius:0 0 10px 10px;background:var(--bg)}
+  .stack .it{border:1px solid;border-radius:7px;padding:.32rem .5rem;text-align:center;line-height:1.25;animation:t101-drop .25s ease-out 1}
+  .stack .it b{display:block;font-size:.92rem;color:var(--head);font-weight:600}
+  .stack .it small{font-size:.72rem;color:var(--muted)}
+  .stack .it.f{border-style:dashed;background:transparent;border-color:var(--refused)}
+  @keyframes t101-drop{from{transform:translateY(-.5rem);opacity:0}to{transform:none;opacity:1}}
+  .rbtns{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;margin:.9rem 0 0}
+  .go{font:inherit;font-size:.9rem;font-weight:600;color:#0F2926;background:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:.45rem 1.15rem;cursor:pointer}
+  .go:hover{filter:brightness(1.06)}
+  .lnk{font:inherit;font-size:.88rem;color:var(--link);background:transparent;border:0;border-bottom:1px solid var(--accent);padding:0 0 .05rem;cursor:pointer}
+  .lnk:hover{color:var(--head);border-bottom-color:var(--head)}
+  .speed{font-size:.92rem;color:var(--muted);margin:.7rem 0 0}
+  @media (max-width:560px){.stage{grid-template-columns:1fr}.stackwrap{max-width:14rem}}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
@@ -232,8 +275,29 @@ For this we have 66 bytes:</p>
   </div></div>
 </dialog>
 
+<h2>The stack</h2>
+
+<p>A Kaspa script relies entirely on a stack, a single-ended memory list where instructions pull data from the top and push results back to the top.<br>
+It's a nameless system. An instruction cannot call the signature or the public key by name, it can only work with what sits on top of the stack.<br>
+The stack starts completely empty for every transaction input, holds a maximum of 244 items, and is instantly destroyed by the node once the input is validated or invalidated.</p>
+
+<div class="run" id="run">
+  <div class="rtop"><span class="rk">Run it</span>
+    <div class="txin"><input id="rtx" type="text" placeholder="Paste any transaction id, or take the example" autocomplete="off" spellcheck="false" aria-label="transaction id"><button type="button" id="rload" disabled>Load</button><button type="button" class="chip2" id="rex">the example</button></div>
+  </div>
+  <p class="rnote" id="rnote" hidden></p>
+  <div class="rins" id="rins" hidden></div>
+  <div id="rscripts"></div>
+  <div class="stage" id="stage" hidden>
+    <div class="cap" id="rcap">Empty stack.</div>
+    <div class="stackwrap"><div class="slab">the stack</div><div class="stack" id="rstack"></div></div>
+  </div>
+  <p class="speed" id="rspeed" hidden>The node did these four steps in about 46 microseconds.</p>
+  <div class="rbtns"><button type="button" class="go" id="rnext" hidden>Next instruction</button><button type="button" class="lnk" id="rwrong" hidden>Run it with a wrong signature</button></div>
+</div>
+
 <h2>Sources</h2>
-<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack that is created for that input and discarded after it: the input's signature script, then the script public key of the UTXO it spends. The signature script may hold only push instructions (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>from_transaction_input</code>, <code>execute_inner</code>, <code>execute_script</code>). A push instruction is the number of bytes that follow it, for every length from 1 to 75, and <code>OpCheckSig</code> is <code>0xac</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). The standard key lock is <code>OpData32</code> key <code>OpCheckSig</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). Read at release v2.0.1. The bytes on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a>, read from api.kaspa.org on 12 September 2026. The letters and symbols a byte stands for in the hexadecimal window, Hey! and the phrase to decode, follow the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ASCII">ASCII table</a>, one byte per character.</p>
+<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack that is created for that input and discarded after it: the input's signature script, then the script public key of the UTXO it spends. The signature script may hold only push instructions (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>from_transaction_input</code>, <code>execute_inner</code>, <code>execute_script</code>). A push instruction is the number of bytes that follow it, for every length from 1 to 75, and <code>OpCheckSig</code> is <code>0xac</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). The standard key lock is <code>OpData32</code> key <code>OpCheckSig</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). <code>OpCheckSig</code> takes the key and the signature off the stack, reads the last byte of the signature as the hash type, checks the Schnorr signature against the transaction's signature hash and puts true or false back (<code>opcodes/mod.rs</code>, <code>OpCheckSig</code>, and <code>lib.rs</code>, <code>check_schnorr_signature</code>). True on the stack is the byte <code>01</code>, false is an empty item (<code>data_stack.rs</code>). The run ends in <code>check_error_condition</code>: one item left, and it must be true. At most 244 items on the stack (<code>MAX_STACK_SIZE</code>). Read at release v2.0.1. The 46 microseconds were measured with a small program against the v2.0.1 engine: 20,000 runs of the standard key spend, one input, on one Intel Xeon 2.8 GHz core, 38 of them the Schnorr check, and about 8 when the signature is already in the node's cache. A transaction pasted into the box is read from api.kaspa.org. The bytes on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a>, read from api.kaspa.org on 12 September 2026. The letters and symbols a byte stands for in the hexadecimal window, Hey! and the phrase to decode, follow the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ASCII">ASCII table</a>, one byte per character.</p>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.7.html">Last card</a> · <span>Next: <span class="soon">What Toccata added to script</span></span></div>
@@ -246,6 +310,124 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
+
+/* section 3: run the two scripts of one input by hand, on the example or on any key spend from api.kaspa.org */
+(function(){
+"use strict";
+var EX={id:'60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914',
+        sig:'417cb79c11bfdda0776db020638c10d5a997b273b2a5c2e2ae9c00a0de442334cbe2edebc2cc7836f649e67cb7ac7a92c7f4ce990e130844b5f952a1465f868c9301',
+        spk:'2071ad52824cc1fd78c096dfadfa3482d57a4d33a8015b80c8dfcf2946dabfd9b3ac'};
+var API='https://api.kaspa.org/transactions/';
+var $=function(id){return document.getElementById(id);};
+var rtx=$('rtx'), rload=$('rload'), rex=$('rex'), rnote=$('rnote'), rins=$('rins'), rscripts=$('rscripts'),
+    stage=$('stage'), rcap=$('rcap'), rstack=$('rstack'), rspeed=$('rspeed'), rnext=$('rnext'), rwrong=$('rwrong');
+if(!rtx||!rnext) return;
+var cur=null, step=0, wrong=false, isExample=true, tx=null;
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function note(txt,bad){ if(!txt){rnote.hidden=true;rnote.textContent='';return;} rnote.hidden=false; rnote.className='rnote'+(bad?' bad':''); rnote.innerHTML=txt; }
+function pairs(h){var o=[];for(var i=0;i<h.length;i+=2)o.push(h.slice(i,i+2));return o.join('<wbr>');}
+/* the standard key spend: a 66 byte signature script (one push of 65) against a 34 byte lock (20 key ac) */
+function shape(sig,spk){
+  sig=(sig||'').toLowerCase(); spk=(spk||'').toLowerCase();
+  if(spk.length===68&&spk.slice(0,2)==='20'&&spk.slice(-2)==='ac'){
+    var n=parseInt(sig.slice(0,2),16);
+    if(n>=1&&n<=75&&sig.length===2+n*2) return {kind:'key',sig:sig,spk:spk,n:n};
+    return {kind:'odd'};
+  }
+  if(spk.length===70&&spk.slice(0,4)==='aa20'&&spk.slice(-2)==='87') return {kind:'p'};
+  return {kind:'odd'};
+}
+function full(name,a,b,c,nb,pre){
+  return '<div class="full"><p class="hl"><span class="nm">'+name+'</span><span class="lg"><span><i class="sA"></i>1 byte</span><span><i class="sB"></i>'+nb+' bytes</span><span><i class="sC"></i>1 byte</span></span></p>'+
+         '<p class="bytes"><span class="sA" id="'+pre+'a">'+a+'</span><span class="sB" id="'+pre+'b">'+pairs(b)+'</span><span class="sC" id="'+pre+'c">'+c+'</span></p></div>';
+}
+function drawScripts(){
+  var s=cur.sig, k=cur.spk;
+  rscripts.innerHTML=full('signature_script',s.slice(0,2),s.slice(2,-2),s.slice(-2),cur.n-1,'ss')+full('script_public_key',k.slice(0,2),k.slice(2,-2),k.slice(-2),32,'pk');
+}
+function light(){
+  var ids=['ssa','ssb','ssc','pka','pkb','pkc'],i,e;
+  for(i=0;i<ids.length;i++){e=$(ids[i]);if(e)e.className=e.className.replace(/ (on|mv)/g,'');}
+  function on(id,c){var e=$(id);if(e)e.className+=' '+c;}
+  if(step===1){on('ssa','on');on('ssb','mv');on('ssc','mv');}
+  if(step===2){on('pka','on');on('pkb','mv');}
+  if(step>=3){on('pkc','on');}
+}
+function item(big,small,cls){return '<div class="it '+cls+'"><b>'+big+'</b><small>'+small+'</small></div>';}
+function draw(){
+  var n=cur.n, items='';
+  if(step>=1&&step<=2) items+=item('signature',n+' bytes','sB');
+  if(step===2) items+=item('public key','32 bytes','sB');
+  if(step>=3) items+= wrong ? item('empty','false','f') : item('01','true','sA');
+  rstack.innerHTML=items;
+  var cap='';
+  if(step===0) cap='Empty stack.';
+  if(step===1) cap='0x'+cur.sig.slice(0,2)+': the next '+n+' bytes go on the stack.';
+  if(step===2) cap='0x20: the next 32 bytes go on the stack.';
+  if(step===3) cap= wrong ? '0xac: the signature does not match the key. The answer is false.'
+                          : '0xac: the key and the signature come off, the signature is checked against the key, the answer goes on.';
+  if(step===4) cap= wrong ? 'End of the scripts. The stack holds one item, false. <span class="no">The input fails.</span>'
+                          : 'End of the scripts. The stack holds one item, true. <span class="ok">The input passes.</span>';
+  rcap.innerHTML=cap;
+  rspeed.hidden=step!==4;
+  rnext.textContent= step===4 ? 'Run again' : 'Next instruction';
+  rwrong.hidden=!(step===4&&isExample);
+  rwrong.textContent= wrong ? 'Run it with the real signature' : 'Run it with a wrong signature';
+  light();
+}
+function start(sh,example){
+  cur=sh; isExample=example; step=0; wrong=false;
+  stage.hidden=false; rnext.hidden=false; rspeed.hidden=true;
+  drawScripts(); draw();
+}
+function boundary(txt){
+  rscripts.innerHTML=''; stage.hidden=true; rnext.hidden=true; rwrong.hidden=true; rspeed.hidden=true; cur=null;
+  note(txt,false);
+}
+function pickInput(i){
+  var bs=rins.querySelectorAll('button'),j;
+  for(j=0;j<bs.length;j++)bs[j].classList.toggle('sel',j===i);
+  var inp=tx.inputs[i], sh=shape(inp.signature_script,(inp.previous_outpoint_resolved||{}).script_public_key);
+  if(sh.kind==='key'){note('');start(sh,false);}
+  else if(sh.kind==='p') boundary('Input '+i+' spends a p address, it reveals a script. That run comes later on this card.');
+  else boundary('Input '+i+' is not the standard key spend this box runs.');
+}
+function loadTx(data){
+  tx=data;
+  var ins=data.inputs||[], html='', i, sh, first=-1, lab;
+  for(i=0;i<ins.length;i++){
+    sh=shape(ins[i].signature_script,(ins[i].previous_outpoint_resolved||{}).script_public_key);
+    lab= sh.kind==='key' ? 'key spend' : sh.kind==='p' ? 'script lock' : 'other';
+    if(sh.kind==='key'&&first<0) first=i;
+    html+='<button type="button" data-i="'+i+'">input '+i+'<small>'+lab+'</small></button>';
+  }
+  rins.innerHTML=html; rins.hidden=ins.length<2;
+  Array.prototype.forEach.call(rins.querySelectorAll('button'),function(b){b.onclick=function(){pickInput(parseInt(b.getAttribute('data-i'),10));};});
+  if(!ins.length){boundary('That transaction has no inputs to run.');return;}
+  pickInput(first<0?0:first);
+}
+function load(){
+  var id=rtx.value.trim().toLowerCase();
+  if(!/^[0-9a-f]{64}$/.test(id)){note('A transaction id is 64 hexadecimal characters.',true);return;}
+  if(id===EX.id){example();return;}
+  note('Reading api.kaspa.org…',false);
+  fetch(API+id+'?inputs=true&outputs=true&resolve_previous_outpoints=full').then(function(r){
+    if(r.status===404) throw new Error('nf'); if(!r.ok) throw new Error('bad'); return r.json();
+  }).then(loadTx).catch(function(e){
+    note(e&&e.message==='nf' ? 'No transaction with that id on api.kaspa.org.' : 'Could not reach api.kaspa.org.',true);
+  });
+}
+function example(){ rins.hidden=true; rins.innerHTML=''; tx=null; note(''); start(shape(EX.sig,EX.spk),true); }
+function buttons(){ var has=!!rtx.value.trim(); rload.disabled=!has; rex.disabled=has; }
+rnext.onclick=function(){ if(!cur)return; step = step===4 ? 0 : step+1; draw(); };
+rwrong.onclick=function(){ if(!cur)return; wrong=!wrong; step=0; draw(); };
+rload.onclick=function(){ if(!rload.disabled) load(); };
+rtx.addEventListener('input',buttons);
+rtx.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(!rload.disabled)load();}});
+rex.onclick=function(){ if(rex.disabled)return; rtx.value=EX.id; buttons(); example(); };
+buttons();
+})();
 
 /* the converter: from and to, binary, decimal, hexadecimal or text. Type in any, read in any.
    No limit on the box. It runs in the page and nothing leaves it. */
