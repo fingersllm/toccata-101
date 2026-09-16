@@ -150,6 +150,9 @@
   .txin button{font:inherit;font-size:.82rem;border-radius:999px;padding:.34rem .8rem;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--head)}
   .txin button:hover{border-color:var(--accent);background:var(--tint)}
   .txin button:disabled{opacity:.4;cursor:default;border-color:var(--line);background:var(--bg)}
+  .txin button[hidden]{display:none}
+  .txin input:read-only{color:var(--muted);background:var(--surface)}
+  .txin .rclr{font-size:1rem;line-height:1;padding:.22rem .55rem;color:var(--muted)}
   .txin .chip2{font-family:inherit;color:var(--link)}
   .rnote{font-size:.88rem;color:var(--muted);margin:0 0 .7rem}
   .rnote.bad{color:var(--refused)}
@@ -283,7 +286,7 @@ The stack starts completely empty for every transaction input, holds a maximum o
 
 <div class="run" id="run">
   <div class="rtop"><span class="rk">Run it</span>
-    <div class="txin"><input id="rtx" type="text" placeholder="Paste any transaction id, or take the example" autocomplete="off" spellcheck="false" aria-label="transaction id"><button type="button" id="rload" disabled>Load</button><button type="button" class="chip2" id="rex">the example</button></div>
+    <div class="txin"><input id="rtx" type="text" placeholder="Paste any transaction id, or take the example" autocomplete="off" spellcheck="false" aria-label="transaction id"><button type="button" id="rload" hidden>Load</button><button type="button" class="chip2" id="rex">the example</button><button type="button" class="rclr" id="rclr" hidden aria-label="clear">&times;</button></div>
   </div>
   <p class="rnote" id="rnote" hidden></p>
   <div class="rins" id="rins" hidden></div>
@@ -404,29 +407,45 @@ function loadTx(data){
   }
   rins.innerHTML=html; rins.hidden=ins.length<2;
   Array.prototype.forEach.call(rins.querySelectorAll('button'),function(b){b.onclick=function(){pickInput(parseInt(b.getAttribute('data-i'),10));};});
-  if(!ins.length){boundary('That transaction has no inputs to run.');return;}
-  pickInput(first<0?0:first);
+  if(!ins.length){note('Invalid TxID',true);return;}
+  opened(); pickInput(first<0?0:first);
+}
+/* the box has two states: closed (nothing loaded, the reader types or takes the example) and open (one
+   transaction loaded, the id fixed in the field, the two buttons gone until Run again closes it) */
+var loaded=false;
+function buttons(){
+  var v=rtx.value.trim(), valid=/^[0-9a-f]{64}$/i.test(v);
+  rload.hidden = loaded || !valid;
+  rex.hidden = loaded; rex.disabled = !!v;
+  rclr.hidden = !loaded;
+}
+function opened(){ loaded=true; rtx.readOnly=true; buttons(); }
+function closed(){
+  loaded=false; cur=null; tx=null; wrong=false; step=0;
+  rtx.value=''; rtx.readOnly=false; note(''); rins.hidden=true; rins.innerHTML=''; rscripts.innerHTML='';
+  stage.hidden=true; rnext.hidden=true; rwrong.hidden=true; rspeed.hidden=true; buttons();
 }
 function load(){
+  if(loaded) return;
   var id=rtx.value.trim().toLowerCase();
-  if(!/^[0-9a-f]{64}$/.test(id)){note('A transaction id is 64 hexadecimal characters.',true);return;}
+  if(!/^[0-9a-f]{64}$/.test(id)){note('Invalid TxID',true);return;}
   if(id===EX.id){example();return;}
   note('Reading api.kaspa.org…',false);
   fetch(API+id+'?inputs=true&outputs=true&resolve_previous_outpoints=full').then(function(r){
     if(r.status===404) throw new Error('nf'); if(!r.ok) throw new Error('bad'); return r.json();
   }).then(loadTx).catch(function(e){
-    note(e&&e.message==='nf' ? 'No transaction with that id on api.kaspa.org.' : 'Could not reach api.kaspa.org.',true);
+    note(e&&e.message==='nf' ? 'Invalid TxID' : 'Could not reach api.kaspa.org.',true);
   });
 }
-function example(){ rins.hidden=true; rins.innerHTML=''; tx=null; note(''); start(shape(EX.sig,EX.spk),true); }
-function buttons(){ var has=!!rtx.value.trim(); rload.disabled=!has; rex.disabled=has; }
-rnext.onclick=function(){ if(!cur)return; step = step===4 ? 0 : step+1; draw(); };
+function example(){ rtx.value=EX.id; rins.hidden=true; rins.innerHTML=''; tx=null; note(''); opened(); start(shape(EX.sig,EX.spk),true); }
+rnext.onclick=function(){ if(!cur)return; if(step===4){closed();return;} step++; draw(); };
 rwrong.onclick=function(){ if(!cur)return; wrong=!wrong; step=0; draw(); };
-rload.onclick=function(){ if(!rload.disabled) load(); };
+rload.onclick=function(){ if(!rload.hidden) load(); };
 rtx.addEventListener('input',buttons);
-rtx.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(!rload.disabled)load();}});
-rex.onclick=function(){ if(rex.disabled)return; rtx.value=EX.id; buttons(); example(); };
-buttons();
+rtx.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(!loaded)load();}});
+rex.onclick=function(){ if(rex.disabled||rex.hidden)return; example(); };
+rclr.onclick=closed;
+closed();
 })();
 
 /* the converter: from and to, binary, decimal, hexadecimal or text. Type in any, read in any.
