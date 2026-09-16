@@ -313,7 +313,8 @@ The stack starts completely empty for every transaction input, holds a maximum o
 <h2>The script way forward</h2>
 
 <p>Scripts on outputs are designed to do their instructions from start to finish, with an option to skip part/s. A script cannot rerun itself, adjust, fix or retry a failed attempt. The end result can only be pass or fail, as written.</p>
-<p>Transactions on Kaspa are capped. First, every transaction can hold up to 1,000 inputs and 1,000 outputs.<br>
+<p>Transactions on Kaspa are capped.<br>
+First, every transaction can hold up to 1,000 inputs and 1,000 outputs.<br>
 A <a class="t" target="_blank" rel="noopener" href="glossary.html#signature-script">signature script</a> is capped at 250,000 bytes, a public key script at 10,000 bytes.<br>
 Scripts on outputs have a ceiling as well, up to 1,000,000 bytes and 1,000,000 instructions.<br>
 The stack limits are up to 1,000,000 bytes for each item, where every stack can hold 244 items.<br>
@@ -322,7 +323,7 @@ It goes without saying, cross any of these limits and the input fails, and the w
 
 <div class="gk" id="gk">
   <div class="gkk">Grams price per KAS</div>
-  <div class="gkrow"><input id="gk-in" type="text" inputmode="decimal" value="1000" autocomplete="off" spellcheck="false" aria-label="grams"><span class="gkeq" id="gk-out"></span></div>
+  <div class="gkrow"><input id="gk-in" type="text" inputmode="decimal" value="1000" autocomplete="off" spellcheck="false" aria-label="grams"><span class="gkeq">grams</span><span class="gkeq" id="gk-out"></span></div>
   <div class="gkchips"><button type="button" data-g="1000">1,000 - a signature check</button><button type="button" data-g="0.01">0.01 - one byte pushed</button></div>
 </div>
 
@@ -482,7 +483,7 @@ closed();
 "use strict";
 var inp=document.getElementById('gk-in'), out=document.getElementById('gk-out');
 if(!inp||!out) return;
-var RATE=100, SOMPI=100000000;
+var RATE=100, SOMPI=100000000, MAXG=29000000000*SOMPI/RATE;   /* MAX_SOMPI, the most any amount can be */
 function fmtInt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
 function fmtKas(sompi){
   var whole=Math.floor(sompi/SOMPI), frac=Math.round(sompi-whole*SOMPI);
@@ -493,6 +494,7 @@ function fmtKas(sompi){
 function run(){
   var v=parseFloat(inp.value.replace(/,/g,''));
   if(!(v>=0)||!isFinite(v)){out.textContent='';return;}
+  if(v>MAXG){v=MAXG;inp.value=String(MAXG);}
   var sompi=Math.round(v*RATE*100)/100;
   out.innerHTML='= <b>'+(Number.isInteger(sompi)?fmtInt(sompi):sompi)+'</b> sompi = <b>'+fmtKas(sompi)+'</b> KAS';
 }
