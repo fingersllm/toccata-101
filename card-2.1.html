@@ -186,6 +186,17 @@
   .lnk:hover{color:var(--head);border-bottom-color:var(--head)}
   .speed{font-size:.92rem;color:var(--muted);margin:.7rem 0 0}
   @media (max-width:560px){.stage{grid-template-columns:1fr}.stackwrap{max-width:14rem}}
+  /* section 4, grams to KAS */
+  .gk{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.7rem .9rem .65rem;margin:0 0 1.2rem}
+  .gkrow{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .6rem}
+  .gkk{font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600;margin:0 0 .55rem}
+  .gkrow input{width:7.5rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem;padding:.3rem .55rem;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--head)}
+  .gkrow input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--tint)}
+  .gkeq{font-size:.95rem;color:var(--head)}
+  .gkeq b{font-weight:600}
+  .gkchips{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem}
+  .gkchips button{font:inherit;font-size:.78rem;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:.18rem .6rem;color:var(--text);cursor:pointer}
+  .gkchips button:hover{border-color:var(--accent);color:var(--head)}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
@@ -299,8 +310,26 @@ The stack starts completely empty for every transaction input, holds a maximum o
   <div class="rbtns"><button type="button" class="go" id="rnext" hidden>Next instruction</button><button type="button" class="lnk" id="rwrong" hidden>Run it with a wrong signature</button></div>
 </div>
 
+<h2>The script way forward</h2>
+
+<p>Scripts on outputs are designed to do their instructions from start to finish, with an option to skip part/s. A script cannot rerun itself, adjust, fix or retry a failed attempt. The end result can only be pass or fail, as written.</p>
+<p>Transactions on Kaspa are capped. First, every transaction can hold up to 1,000 inputs and 1,000 outputs.<br>
+A <a class="t" target="_blank" rel="noopener" href="glossary.html#signature-script">signature script</a> is capped at 250,000 bytes, a public key script at 10,000 bytes.<br>
+Scripts on outputs have a ceiling as well, up to 1,000,000 bytes and 1,000,000 instructions.<br>
+The stack limits are up to 1,000,000 bytes for each item, where every stack can hold 244 items.<br>
+It goes without saying, cross any of these limits and the input fails, and the whole transaction with it.</p>
+<p>Since <a class="t" target="_blank" rel="noopener" href="glossary.html#toccata">Toccata</a>, this process costs, paid in <a class="t" target="_blank" rel="noopener" href="glossary.html#mass">mass</a>: every byte pushed onto the stack costs one hundredth of a <a class="t" target="_blank" rel="noopener" href="glossary.html#gram">gram</a>, and a signature check costs 1,000 grams.</p>
+
+<div class="gk" id="gk">
+  <div class="gkk">Grams price per KAS</div>
+  <div class="gkrow"><input id="gk-in" type="text" inputmode="decimal" value="1000" autocomplete="off" spellcheck="false" aria-label="grams"><span class="gkeq" id="gk-out"></span></div>
+  <div class="gkchips"><button type="button" data-g="1000">1,000 - a signature check</button><button type="button" data-g="0.01">0.01 - one byte pushed</button></div>
+</div>
+
+<p>Nodes won't take another node's word for validation, each will run every transaction with its own stack. Honest nodes will get the same results.</p>
+
 <h2>Sources</h2>
-<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack that is created for that input and discarded after it: the input's signature script, then the script public key of the UTXO it spends. The signature script may hold only push instructions (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>from_transaction_input</code>, <code>execute_inner</code>, <code>execute_script</code>). A push instruction is the number of bytes that follow it, for every length from 1 to 75, and <code>OpCheckSig</code> is <code>0xac</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). The standard key lock is <code>OpData32</code> key <code>OpCheckSig</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). <code>OpCheckSig</code> takes the key and the signature off the stack, reads the last byte of the signature as the hash type, checks the Schnorr signature against the transaction's signature hash and puts true or false back (<code>opcodes/mod.rs</code>, <code>OpCheckSig</code>, and <code>lib.rs</code>, <code>check_schnorr_signature</code>). True on the stack is the byte <code>01</code>, false is an empty item (<code>data_stack.rs</code>). The run ends in <code>check_error_condition</code>: one item left, and it must be true. At most 244 items on the stack (<code>MAX_STACK_SIZE</code>). Read at release v2.0.1. The 46 microseconds were measured with a small program against the v2.0.1 engine: 20,000 runs of the standard key spend, one input, on one Intel Xeon 2.8 GHz core, 38 of them the Schnorr check, and about 8 when the signature is already in the node's cache. A transaction pasted into the box is read from api.kaspa.org. The bytes on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a>, read from api.kaspa.org on 12 September 2026. The letters and symbols a byte stands for in the hexadecimal window, Hey! and the phrase to decode, follow the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ASCII">ASCII table</a>, one byte per character.</p>
+<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack that is created for that input and discarded after it: the input's signature script, then the script public key of the UTXO it spends. The signature script may hold only push instructions (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>from_transaction_input</code>, <code>execute_inner</code>, <code>execute_script</code>). A push instruction is the number of bytes that follow it, for every length from 1 to 75, and <code>OpCheckSig</code> is <code>0xac</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). The standard key lock is <code>OpData32</code> key <code>OpCheckSig</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). <code>OpCheckSig</code> takes the key and the signature off the stack, reads the last byte of the signature as the hash type, checks the Schnorr signature against the transaction's signature hash and puts true or false back (<code>opcodes/mod.rs</code>, <code>OpCheckSig</code>, and <code>lib.rs</code>, <code>check_schnorr_signature</code>). True on the stack is the byte <code>01</code>, false is an empty item (<code>data_stack.rs</code>). The run ends in <code>check_error_condition</code>: one item left, and it must be true. At most 244 items on the stack (<code>MAX_STACK_SIZE</code>). Read at release v2.0.1. The 46 microseconds were measured with a small program against the v2.0.1 engine: 20,000 runs of the standard key spend, one input, on one Intel Xeon 2.8 GHz core, 38 of them the Schnorr check, and about 8 when the signature is already in the node's cache. A transaction pasted into the box is read from api.kaspa.org. The ceilings are <code>MAX_SCRIPTS_SIZE_POST_TOCCATA</code>, <code>MAX_OPS_PER_SCRIPT_POST_TOCCATA</code>, <code>MAX_SCRIPT_ELEMENT_SIZE_POST_TOCCATA</code> and <code>MAX_STACK_SIZE</code> (<code>lib.rs</code>), the transaction caps <code>NEW_MAX_SIGNATURE_SCRIPT_LEN</code>, <code>max_script_public_key_len</code>, <code>max_tx_inputs</code> and <code>max_tx_outputs</code> for mainnet (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/params.rs">consensus/core/src/config/params.rs</a>). The budget: one script unit per byte pushed, 100 units to a gram, a signature check <code>mass_per_sig_op</code> of 1,000 grams (<code>consensus/core/src/mass/units.rs</code>, <code>crypto/txscript/src/runtime_resource_meter.rs</code>). The floor a node accepts is <code>DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE</code>, 100,000 sompi per kilogram (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/config.rs">mining/src/mempool/config.rs</a>), and 100,000,000 sompi are one KAS. The bytes on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a>, read from api.kaspa.org on 12 September 2026. The letters and symbols a byte stands for in the hexadecimal window, Hey! and the phrase to decode, follow the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ASCII">ASCII table</a>, one byte per character.</p>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.7.html">Last card</a> · <span>Next: <span class="soon">What Toccata added to script</span></span></div>
@@ -446,6 +475,32 @@ rtx.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault(
 rex.onclick=function(){ if(rex.disabled||rex.hidden)return; example(); };
 rclr.onclick=closed;
 closed();
+})();
+
+/* section 4: grams to KAS at the floor a node accepts, 100 sompi per gram */
+(function(){
+"use strict";
+var inp=document.getElementById('gk-in'), out=document.getElementById('gk-out');
+if(!inp||!out) return;
+var RATE=100, SOMPI=100000000;
+function fmtInt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function fmtKas(sompi){
+  var whole=Math.floor(sompi/SOMPI), frac=Math.round(sompi-whole*SOMPI);
+  if(frac===0) return fmtInt(whole);
+  var f=String(frac); while(f.length<8)f='0'+f; f=f.replace(/0+$/,'');
+  return fmtInt(whole)+'.'+f;
+}
+function run(){
+  var v=parseFloat(inp.value.replace(/,/g,''));
+  if(!(v>=0)||!isFinite(v)){out.textContent='';return;}
+  var sompi=Math.round(v*RATE*100)/100;
+  out.innerHTML='= <b>'+(Number.isInteger(sompi)?fmtInt(sompi):sompi)+'</b> sompi = <b>'+fmtKas(sompi)+'</b> KAS';
+}
+inp.addEventListener('input',run);
+Array.prototype.forEach.call(document.querySelectorAll('.gkchips button'),function(b){
+  b.onclick=function(){inp.value=b.getAttribute('data-g');run();};
+});
+run();
 })();
 
 /* the converter: from and to, binary, decimal, hexadecimal or text. Type in any, read in any.
