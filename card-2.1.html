@@ -54,7 +54,7 @@
   .theme:hover{color:#0F2926;background:var(--accent);border-color:var(--accent)}
   .theme .ico{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
-  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.4rem;color:var(--head);letter-spacing:-.01em}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.4rem;color:var(--head);letter-spacing:-.01em;text-align:center}
   h2{font-size:.86rem;margin:2.8rem 0 1rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);text-align:center}
   h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin:.4rem auto 0}
   p{margin:0 0 1rem}
@@ -62,13 +62,16 @@
   code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.93em}
   .hx{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:var(--tint);border:1px solid var(--line);border-radius:7px;padding:.06em .42em;color:var(--head)}
   /* section 1, the file shaped box */
-  .file{position:relative;margin:1.1rem 0 .9rem;background:var(--surface);border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:1.15rem 1.15rem 1.2rem}
+  .file{position:relative;margin:1.7rem 0 .9rem;background:var(--surface);border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:1.15rem 1.15rem 1.2rem}
   .file::before{content:"";position:absolute;left:-1px;top:-15px;width:8rem;height:16px;background:var(--surface);border:1px solid var(--line);border-bottom:none;border-radius:9px 9px 0 0}
   .file .tab{position:absolute;left:.8rem;top:-13px;font-size:.66rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);z-index:2}
-  .file p{margin:0 0 .9rem}
-  .wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem .5rem;margin-top:1rem}
-  .wgrid span{text-align:center;padding:.4rem .3rem;border-radius:7px;font-size:.92rem;border:1px solid transparent;color:var(--muted);opacity:.42}
-  .wgrid span.on{color:var(--head);font-weight:600;opacity:1;background:var(--t1);border-color:var(--t1b)}
+  .wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem .5rem}
+  .wgrid span{text-align:center;padding:.4rem .3rem;border-radius:7px;font-size:.95rem;border:1px solid transparent;color:var(--text);transition:opacity .25s,background-color .25s}
+  .wgrid.lit span:not(.k){color:var(--muted);opacity:.38}
+  .wgrid.lit span.k{color:var(--head);font-weight:600;background:var(--t1);border-color:var(--t1b)}
+  .fourwrap{margin:.2rem 0 1rem}
+  .four{font:inherit;color:var(--link);background:transparent;border:0;border-bottom:1px solid var(--accent);padding:0 0 .05rem;cursor:pointer}
+  .four:hover,.four[aria-pressed="true"]{color:var(--head);border-bottom-color:var(--head)}
   /* section 2, the byte lists and the full scripts, coloured by part */
   .bl{list-style:none;margin:.2rem 0 1.1rem;padding:0}
   .bl li{display:grid;grid-template-columns:5.4rem 1fr;gap:.2rem .7rem;align-items:baseline;padding:.24rem 0;border-bottom:1px solid var(--line)}
@@ -107,20 +110,20 @@
   .scroll::-webkit-scrollbar-track{background:var(--tint);border-radius:8px}
   .scroll::-webkit-scrollbar-thumb{background:var(--bar);border-radius:8px;border:2px solid var(--tint)}
   .scroll::-webkit-scrollbar-thumb:hover{background:var(--accent)}
-  dialog p{font:1.02rem/1.68 Georgia,"Iowan Old Style","Times New Roman",serif;margin:0 0 1.05rem;color:var(--text)}
+  dialog p{font:1rem/1.62 system-ui,"Segoe UI",Roboto,sans-serif;margin:0 0 1rem;color:var(--text)}
   dialog p:last-of-type{margin-bottom:0}
-  dialog .wt{font-weight:700;font-size:1.1rem;color:var(--head);margin:0 0 .6rem}
-  dialog .wt:not(:first-child){margin-top:1.4rem}
-  .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;color:var(--head)}
+  dialog .wt{font-weight:700;font-size:1.06rem;color:var(--head);margin:0 0 .55rem}
+  dialog .wt:not(:first-child){margin-top:1.35rem}
+  .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;color:var(--head);white-space:nowrap}
+  .par{white-space:nowrap}
+  @media (max-width:560px){.par{white-space:normal}.mono{font-size:.82em}}
   .on1{color:var(--refused);font-weight:700}
   .off0{color:var(--blue);font-weight:700}
   .mk{background:var(--t1);box-shadow:inset 0 -2px 0 var(--t1b);padding:.04em .22em;margin:0 -.04em;border-radius:3px;color:var(--head)}
-  .chip{font:inherit;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;line-height:1.3;background:var(--tint);border:1px solid var(--line);border-radius:7px;padding:.06em .42em;margin:0;color:var(--head);cursor:pointer;vertical-align:baseline}
-  .chip:hover,.chip[aria-expanded="true"]{border-color:var(--accent)}
   .digits{display:flex;flex-wrap:wrap;gap:.35rem;margin:0 0 1.05rem}
   .digits span{display:inline-flex;flex-direction:column;align-items:center;min-width:2.2rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92rem;background:var(--tint);border:1px solid var(--line);border-radius:7px;padding:.25rem .4rem .2rem;color:var(--head);line-height:1.2}
   .digits small{font-family:system-ui,"Segoe UI",Roboto,sans-serif;font-size:.68rem;color:var(--muted);margin-top:.15rem}
-  .ways{margin:-.4rem 0 1.05rem}
+  .ways{margin:-.3rem 0 1rem}
   .phrase{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem;line-height:1.8;color:var(--head);overflow-wrap:anywhere}
   dialog p.phrase{font-family:ui-monospace,Menlo,Consolas,monospace}
   /* the converter: from and to, one box in, the result under it */
@@ -137,8 +140,6 @@
   .modes.rl{margin-bottom:.25rem;justify-content:space-between}
   .cnt{font-size:.74rem;color:var(--muted)}
   .try .out{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem;line-height:1.5;min-height:2.2rem;padding:.38rem .55rem;background:var(--bg);border:1px dashed var(--line);border-radius:8px;color:var(--head);white-space:pre-wrap;overflow-wrap:anywhere}
-  .try .note{font:inherit;font-size:.82rem;color:var(--muted);margin:.5rem 0 0;min-height:1.3em}
-  .try .note.bad{color:var(--refused)}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
@@ -161,26 +162,26 @@
 
 <h1>Kaspa script: Programs carried by outputs</h1>
 
-<h2>What a script is made of</h2>
+<h2>Common script vs Output script</h2>
+
+<p>A common script is a text file, a list of instructions a computer runs from top to bottom to complete tasks. Programs in general are usually built from these 12:</p>
 
 <div class="file"><span class="tab"><a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a></span>
-<p>A script is a list of instructions that a computer runs from top to bottom to complete a task. Most of them are text files. A Kaspa script is not, it is a string of <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a> sitting inside a <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a>.</p>
-<p>Programs in general are built from these. A Kaspa script uses four of them.</p>
-<div class="wgrid">
-<span class="on">bits</span><span class="on">bytes</span><span>characters</span>
-<span class="on">strings</span><span>lines</span><span>tokens</span>
-<span>names</span><span class="on">numbers</span><span>symbols</span>
+<div class="wgrid" id="wgrid">
+<span class="k">bits</span><span class="k">bytes</span><span>characters</span>
+<span class="k">strings</span><span>lines</span><span>tokens</span>
+<span>names</span><span class="k">numbers</span><span>symbols</span>
 <span>expressions</span><span>statements</span><span>blocks</span>
 </div></div>
 
-<p>A valid Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a> can be a single byte, <span class="hx">0x51</span>, one instruction that is enough to let a <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> be <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spent</a>.</p>
+<p class="fourwrap"><button class="four" id="four" type="button" aria-pressed="false">Kaspa scripts use four of them.</button></p>
 
 <h2>Basic transaction scripts</h2>
 
 <p>For every <a class="t" target="_blank" rel="noopener" href="glossary.html#input">input</a> a <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> gets, it creates a fresh new <a class="t" target="_blank" rel="noopener" href="glossary.html#stack">stack</a>. In this stack the node verifies the input is valid.</p>
 <p>How?</p>
-<p>A UTXO carries a lock, the <code>script_public_key</code>. It was written by the <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> when the <a class="t" target="_blank" rel="noopener" href="glossary.html#output">output</a> was created.<br>
-On a normal wallet coin it's 34 bytes:</p>
+<p>A <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> carries a <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a>, the <code>script_public_key</code>. It was written by the <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> when the <a class="t" target="_blank" rel="noopener" href="glossary.html#output">output</a> was created.<br>
+On a normal wallet coin it's 34 <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a>:</p>
 <ul class="bl">
 <li><span class="n">1 byte</span><span><span class="hx">0x20</span> simply says: "the next 32 bytes are data"</span></li>
 <li><span class="n">32 bytes</span><span>the <a class="t" target="_blank" rel="noopener" href="glossary.html#public-key">public key</a></span></li>
@@ -191,12 +192,12 @@ On a normal wallet coin it's 34 bytes:</p>
 <p class="bytes"><span class="sA">20</span><span class="sB">71<wbr>ad<wbr>52<wbr>82<wbr>4c<wbr>c1<wbr>fd<wbr>78<wbr>c0<wbr>96<wbr>df<wbr>ad<wbr>fa<wbr>34<wbr>82<wbr>d5<wbr>7a<wbr>4d<wbr>33<wbr>a8<wbr>01<wbr>5b<wbr>80<wbr>c8<wbr>df<wbr>cf<wbr>29<wbr>46<wbr>da<wbr>bf<wbr>d9<wbr>b3</span><span class="sC">ac</span></p>
 </div>
 <p class="hexnote">Written as it really is. The <code>0x</code> in the list above is only a way of writing that says "this is hexadecimal". The script itself carries the bytes without it.</p>
-<p>The spend carries an unlock, the <code>signature_script</code>. The spender writes it on that input.<br>
+<p>The <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spend</a> carries an unlock, the <code>signature_script</code>. The spender writes it on that input.<br>
 For this we have 66 bytes:</p>
 <ul class="bl">
 <li><span class="n">1 byte</span><span><span class="hx">0x41</span> simply says: "the next 65 bytes are data"</span></li>
 <li><span class="n">64 bytes</span><span>the signature</span></li>
-<li><span class="n">1 byte</span><span><span class="hx">0x01</span> saying: "the signature covers the whole transaction"</span></li>
+<li><span class="n">1 byte</span><span><span class="hx">0x01</span> saying: "the signature covers the whole <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a>"</span></li>
 </ul>
 <div class="full">
 <p class="hl"><span class="nm">signature_script</span><span class="lg"><span><i class="sA"></i>1 byte</span><span><i class="sB"></i>64 bytes</span><span><i class="sC"></i>1 byte</span></span></p>
@@ -211,11 +212,11 @@ For this we have 66 bytes:</p>
   <div class="winbody"><div class="scroll">
   <p class="wt">Quick crash course on how computers hold information</p>
   <p>Computer chips contain billions of transistors. Transistors are tiny switches, a few of them together hold one bit of data.<br>A bit is a digit, a 1 or a 0, where 1 means <span class="on1">ON</span> and 0 means <span class="off0">OFF</span>. For the sake of this simplification, let's say transistors move information on 1 and halt it on 0.</p>
-  <p>A byte is 8 bits. <span class="mono">11111111</span> and <span class="mono">00000000</span> both represent one byte. It can be any combination of eight 0s and 1s.<br>A byte can be used to represent a letter or a symbol. So you can actually write and talk using zeros and ones! But to type a simple "Hey!", you would need a whopping 32 bits (<span class="mono">01001000 01100101 01111001 00100001</span> translates to Hey!), not something anything but a computer can work with. Humans did human things, and compressed these bytes into a 16 digit system they can work with.</p>
+  <p>A byte is 8 bits. <span class="mono">11111111</span> and <span class="mono">00000000</span> both represent one byte. It can be any combination of eight 0s and 1s.<br>A byte can be used to represent a letter or a symbol. So you can actually write and talk using zeros and ones! But to type a simple "Hey!", you would need a whopping 32 bits <span class="par">(<span class="mono">01001000 01100101 01111001 00100001</span> translates to Hey!)</span>, not something anything but a computer can work with. Humans did human things, and compressed these bytes into a 16 digit system they can work with.</p>
   <p class="wt">Why 16? A power of 2</p>
-  <p>It's a math thing: a bit has 2 modes (0, 1). Take half a byte, 4 bits, and there are exactly 16 (2 × 2 × 2 × 2) different ways to order them <button class="chip" id="sixteen" type="button" aria-expanded="false" aria-controls="ways">0000</button>.</p>
-  <div class="digits ways" id="ways" hidden><span>0000<small>0</small></span><span>0001<small>1</small></span><span>0010<small>2</small></span><span>0011<small>3</small></span><span>0100<small>4</small></span><span>0101<small>5</small></span><span>0110<small>6</small></span><span>0111<small>7</small></span><span>1000<small>8</small></span><span>1001<small>9</small></span><span>1010<small>A</small></span><span>1011<small>B</small></span><span>1100<small>C</small></span><span>1101<small>D</small></span><span>1110<small>E</small></span><span>1111<small>F</small></span></div>
-  <p>To represent each way, humans picked 16 digits. The most comfortable digits were: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F. Now you can write "Hey!" using only 8 characters (<span class="mono">48 65 79 21</span> translates to Hey!) instead of 32, and you can shrink every huge string of bits like this.</p>
+  <p>It's a math thing: a bit has 2 modes (0, 1). Take half a byte, 4 bits, and there are exactly 16 (2 × 2 × 2 × 2) different ways to order them:</p>
+  <div class="digits ways" id="ways"><span>0000<small>0</small></span><span>0001<small>1</small></span><span>0010<small>2</small></span><span>0011<small>3</small></span><span>0100<small>4</small></span><span>0101<small>5</small></span><span>0110<small>6</small></span><span>0111<small>7</small></span><span>1000<small>8</small></span><span>1001<small>9</small></span><span>1010<small>A</small></span><span>1011<small>B</small></span><span>1100<small>C</small></span><span>1101<small>D</small></span><span>1110<small>E</small></span><span>1111<small>F</small></span></div>
+  <p>To represent each way, humans picked 16 digits. The most comfortable digits were: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F. Now you can write "Hey!" using only 8 characters <span class="par">(<span class="mono">48 65 79 21</span> translates to Hey!)</span> instead of 32, and you can shrink every huge string of bits like this.</p>
   <p class="wt">In our case</p>
   <p><span class="mono">0x</span> is a flag that tells whoever reads the bytes: "the characters coming next are in hexadecimal format." Meaning:</p>
   <p class="bl2"><span class="mono">0x20</span> - 0x <span class="mk">read in hex</span>: 2, 0 <span class="mk">Two halves of one byte - 0010, 0000</span>.<br><span class="mono">0xac</span> is one byte, <span class="mono">1010 1100</span>.<br><span class="mono">0x41</span> is one byte, <span class="mono">0100 0001</span>.<br><span class="mono">0x01</span> is one byte, <span class="mono">0000 0001</span>.<br><span class="mono">0x51</span> is one byte, <span class="mono">0101 0001</span>.</p>
@@ -227,13 +228,12 @@ For this we have 66 bytes:</p>
     <div class="fld"><textarea id="c-in" rows="1" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="type here"></textarea></div>
     <div class="modes rl"><span class="ml">result</span><span class="cnt" id="c-cnt"></span></div>
     <div class="out" id="c-out"></div>
-    <p class="note" id="c-note">KISS: Keep It Short, Stupid</p>
   </div>
   </div></div>
 </dialog>
 
 <h2>Sources</h2>
-<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack that is created for that input and discarded after it: the input's signature script, then the script public key of the UTXO it spends. The signature script may hold only push instructions (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>from_transaction_input</code>, <code>execute_inner</code>, <code>execute_script</code>). A push instruction is the number of bytes that follow it, for every length from 1 to 75, and <code>OpCheckSig</code> is <code>0xac</code>, <code>OpTrue</code> is <code>0x51</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). The standard key lock is <code>OpData32</code> key <code>OpCheckSig</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). A single <code>0x51</code> lock is valid for consensus and non standard for a node's mempool, which refuses both the transaction that creates such an output and the one that spends it (<code>mining/src/mempool/check_transaction_standard.rs</code>). Read at release v2.0.1. The bytes on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a>, read from api.kaspa.org on 12 September 2026. The letters and symbols a byte stands for in the hexadecimal window, Hey! and the phrase to decode, follow the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ASCII">ASCII table</a>, one byte per character.</p>
+<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack that is created for that input and discarded after it: the input's signature script, then the script public key of the UTXO it spends. The signature script may hold only push instructions (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>from_transaction_input</code>, <code>execute_inner</code>, <code>execute_script</code>). A push instruction is the number of bytes that follow it, for every length from 1 to 75, and <code>OpCheckSig</code> is <code>0xac</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). The standard key lock is <code>OpData32</code> key <code>OpCheckSig</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). Read at release v2.0.1. The bytes on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a>, read from api.kaspa.org on 12 September 2026. The letters and symbols a byte stands for in the hexadecimal window, Hey! and the phrase to decode, follow the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ASCII">ASCII table</a>, one byte per character.</p>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.7.html">Last card</a> · <span>Next: <span class="soon">What Toccata added to script</span></span></div>
@@ -248,53 +248,50 @@ function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElem
 t101Label();
 
 /* the converter: from and to, binary, decimal, hexadecimal or text. Type in any, read in any.
-   Up to 32 bytes, 4 when decimal is on either side. It runs in the page and nothing leaves it. */
+   No limit on the box. It runs in the page and nothing leaves it. */
 (function(){
 "use strict";
-var from='txt', to='txt', CAP=32, CAPDEC=4;
-var inp=document.getElementById('c-in'), out=document.getElementById('c-out'), cnt=document.getElementById('c-cnt'), note=document.getElementById('c-note');
+var from='txt', to='txt';
+var inp=document.getElementById('c-in'), out=document.getElementById('c-out'), cnt=document.getElementById('c-cnt');
 if(!inp||!out) return;
-var KISS='KISS: Keep It Short, Stupid';
-var TAKES={bin:'Binary takes 0 and 1 only.',dec:'Decimal takes 0 to 9 only.',hex:'Hexadecimal takes 0 to 9 and a to f only.',txt:'Text takes English letters, digits and punctuation only.'};
-function cap(){return (from==='dec'||to==='dec')?CAPDEC:CAP;}
 function pad(s,n){while(s.length<n)s='0'+s;return s;}
 function grow(){inp.style.height='auto';inp.style.height=inp.scrollHeight+'px';}
+function decToBytes(s){
+  var bytes=[];
+  try{ var v=BigInt(s), B=BigInt(256), Z=BigInt(0);
+    if(v===Z) return [0];
+    while(v>Z){bytes.unshift(Number(v%B));v=v/B;} return bytes; }
+  catch(e){ var n=parseInt(s,10); if(!(n>=0)) return []; do{bytes.unshift(n%256);n=Math.floor(n/256);}while(n>0); return bytes; }
+}
+function bytesToDec(bytes){
+  try{ var v=BigInt(0), B=BigInt(256); for(var i=0;i<bytes.length;i++)v=v*B+BigInt(bytes[i]); return v.toString(); }
+  catch(e){ var n=0; for(var j=0;j<bytes.length;j++)n=n*256+bytes[j]; return String(n); }
+}
 function parse(){
-  var raw=inp.value, c=cap(), bytes=[], bad=false, over=false, s, i;
+  var raw=inp.value, bytes=[], s, i;
   if(from==='bin'){
-    s=raw.replace(/[^01]/g,''); bad=/[^01\s]/.test(raw);
-    if(s.length>c*8){over=true;s=s.slice(0,c*8);}
-    while(s.length%8)s='0'+s;
+    s=raw.replace(/[^01]/g,''); while(s.length%8)s='0'+s;
     for(i=0;i<s.length;i+=8)bytes.push(parseInt(s.slice(i,i+8),2));
   }else if(from==='hex'){
-    var t=raw.replace(/0x/gi,''); s=t.replace(/[^0-9a-f]/gi,''); bad=/[^0-9a-f\s]/i.test(t);
-    if(s.length>c*2){over=true;s=s.slice(0,c*2);}
-    if(s.length%2)s='0'+s;
+    s=raw.replace(/0x/gi,'').replace(/[^0-9a-f]/gi,''); if(s.length%2)s='0'+s;
     for(i=0;i<s.length;i+=2)bytes.push(parseInt(s.slice(i,i+2),16));
   }else if(from==='dec'){
-    s=raw.replace(/[^0-9]/g,''); bad=/[^0-9\s,]/.test(raw);
-    if(s){var v=parseInt(s,10); if(v>4294967295){over=true;v=4294967295;}
-      do{bytes.unshift(v%256);v=Math.floor(v/256);}while(v>0);}
+    s=raw.replace(/[^0-9]/g,''); if(s)bytes=decToBytes(s);
   }else{
-    for(i=0;i<raw.length;i++){var k=raw.charCodeAt(i); if(k>=32&&k<=126)bytes.push(k); else if(k!==10&&k!==13)bad=true;}
-    if(bytes.length>c){over=true;bytes=bytes.slice(0,c);}
+    for(i=0;i<raw.length;i++){var k=raw.charCodeAt(i); if(k>=32&&k<=126)bytes.push(k);}
   }
-  return {bytes:bytes,bad:bad,over:over};
+  return bytes;
 }
 function fmt(bytes){
   if(to==='bin')return bytes.map(function(b){return pad(b.toString(2),8);}).join(' ');
   if(to==='hex')return bytes.map(function(b){return pad(b.toString(16),2);}).join(' ');
-  if(to==='dec'){var v=0;for(var i=0;i<bytes.length;i++)v=v*256+bytes[i];return String(v);}
+  if(to==='dec')return bytesToDec(bytes);
   return bytes.map(function(b){return (b>=32&&b<=126)?String.fromCharCode(b):'·';}).join('');
 }
 function run(){
-  var r=parse(), text=r.bytes.length?fmt(r.bytes):'';
-  out.textContent=text;
-  cnt.textContent=r.bytes.length?(r.bytes.length+(r.bytes.length===1?' byte':' bytes')):'';
-  if(r.over){note.className='note bad';note.textContent=KISS;}
-  else if(r.bad){note.className='note bad';note.textContent=TAKES[from];}
-  else if(to==='txt'&&text.indexOf('·')>=0){note.className='note';note.textContent='· is a byte with no letter or symbol.';}
-  else{note.className='note';note.textContent=KISS;}
+  var bytes=parse();
+  out.textContent=bytes.length?fmt(bytes):'';
+  cnt.textContent=bytes.length?(bytes.length+(bytes.length===1?' byte':' bytes')):'';
 }
 function setMode(role,m){
   if(role==='from')from=m;else to=m;
@@ -311,9 +308,9 @@ inp.addEventListener('input',function(){
   run();
 });
 inp.addEventListener('keydown',function(e){if(e.key==='Enter')e.preventDefault();});
-/* the sixteen ways to order half a byte */
-var six=document.getElementById('sixteen'), ways=document.getElementById('ways');
-if(six&&ways)six.onclick=function(){var open=ways.hasAttribute('hidden');if(open)ways.removeAttribute('hidden');else ways.setAttribute('hidden','');six.setAttribute('aria-expanded',open?'true':'false');};
+/* section 1: the line under the box lights the four words a Kaspa script uses */
+var four=document.getElementById('four'), grid=document.getElementById('wgrid');
+if(four&&grid)four.onclick=function(){var on=!grid.classList.contains('lit');grid.classList.toggle('lit',on);four.setAttribute('aria-pressed',on?'true':'false');};
 var open=document.getElementById('askhex'), dlg=document.getElementById('hex');
 open.onclick=function(){dlg.showModal();grow();};
 document.getElementById('hexclose').onclick=function(){dlg.close();};
