@@ -60,7 +60,8 @@
   p{margin:0 0 1rem}
   strong{color:var(--head)}
   code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.93em}
-  .hx{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:var(--tint);border:1px solid var(--line);border-radius:7px;padding:.06em .42em;color:var(--head)}
+  .hx{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:var(--sa);border:1px solid var(--sab);border-radius:7px;padding:.06em .42em;color:var(--head)}
+  .hx.d{background:var(--sb);border-color:var(--sbb)}
   /* section 1, the file shaped box */
   .file{position:relative;margin:1.7rem 0 .9rem;background:var(--surface);border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:1.15rem 1.15rem 1.2rem}
   .file::before{content:"";position:absolute;left:-1px;top:-15px;width:8rem;height:16px;background:var(--surface);border:1px solid var(--line);border-bottom:none;border-radius:9px 9px 0 0}
@@ -84,13 +85,18 @@
   .full .lg i{display:inline-block;width:.68rem;height:.68rem;border-radius:3px;vertical-align:-.06rem;margin-right:.32rem;border:1px solid}
   .full .bytes{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86rem;line-height:2;color:var(--head);margin:0;overflow-wrap:normal;word-break:normal}
   .full .bytes span{padding:.14em .12em;border-radius:4px;border:1px solid;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-  :root{--sa:#C4EBE1;--sab:#7FCBB9;--sb:#F4E2B4;--sbb:#D3B96E;--sc:#CFE0FA;--scb:#8FB4EA}
-  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sa:#1D4C43;--sab:#35907E;--sb:#4B4020;--sbb:#8C7638;--sc:#20395C;--scb:#4577BE}}
-  :root[data-theme="dark"]{--sa:#1D4C43;--sab:#35907E;--sb:#4B4020;--sbb:#8C7638;--sc:#20395C;--scb:#4577BE}
+  :root{--sa:#C4EBE1;--sab:#7FCBB9;--sb:#F4E2B4;--sbb:#D3B96E}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sa:#1D4C43;--sab:#35907E;--sb:#4B4020;--sbb:#8C7638}}
+  :root[data-theme="dark"]{--sa:#1D4C43;--sab:#35907E;--sb:#4B4020;--sbb:#8C7638}
   .sA{background:var(--sa);border-color:var(--sab)}
   .sB{background:var(--sb);border-color:var(--sbb)}
-  .sC{background:var(--sc);border-color:var(--scb)}
   .hexnote{font-size:.92rem;color:var(--muted);margin:-.4rem 0 1.3rem}
+  .fn{font-size:.82rem;color:var(--muted);margin:-.5rem 0 1.4rem}
+  .nb{list-style:none;margin:.2rem 0 1.3rem;padding:0}
+  .nb li{display:grid;grid-template-columns:4.2rem 1fr;gap:.2rem .7rem;align-items:baseline;padding:.3rem 0;border-bottom:1px solid var(--line)}
+  .nb li:last-child{border-bottom:0}
+  .nb li.pair{display:block}
+  .blk{border-style:dashed !important;opacity:.92;white-space:nowrap}
   /* the button that opens the window */
   .askwrap{text-align:center;margin:1.5rem 0 0}
   .ask{font:inherit;font-size:.88rem;color:var(--head);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:.42rem 1.05rem .42rem .55rem;cursor:pointer;display:inline-flex;align-items:center;gap:.55rem}
@@ -226,7 +232,7 @@
 <div class="file"><span class="tab"><a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a></span>
 <div class="wgrid" id="wgrid">
 <span class="k">bits</span><span class="k">bytes</span><span>characters</span>
-<span class="k">strings</span><span>lines</span><span>tokens</span>
+<span class="k">strings</span><span>lines</span><span>loops</span>
 <span>names</span><span class="k">numbers</span><span>symbols</span>
 <span>expressions</span><span>statements</span><span>blocks</span>
 </div></div>
@@ -245,8 +251,8 @@ On a normal wallet coin it's 34 <a class="t" target="_blank" rel="noopener" href
 <li><span class="n">1 byte</span><span><span class="hx">0xac</span> instructs: "check a <a class="t" target="_blank" rel="noopener" href="glossary.html#signature">signature</a> against that key"</span></li>
 </ul>
 <div class="full">
-<p class="hl"><span class="nm">script_public_key</span><span class="lg"><span><i class="sA"></i>1 byte</span><span><i class="sB"></i>32 bytes</span><span><i class="sC"></i>1 byte</span></span></p>
-<p class="bytes"><span class="sA">20</span><span class="sB">71<wbr>ad<wbr>52<wbr>82<wbr>4c<wbr>c1<wbr>fd<wbr>78<wbr>c0<wbr>96<wbr>df<wbr>ad<wbr>fa<wbr>34<wbr>82<wbr>d5<wbr>7a<wbr>4d<wbr>33<wbr>a8<wbr>01<wbr>5b<wbr>80<wbr>c8<wbr>df<wbr>cf<wbr>29<wbr>46<wbr>da<wbr>bf<wbr>d9<wbr>b3</span><span class="sC">ac</span></p>
+<p class="hl"><span class="nm">script_public_key</span><span class="lg"><span><i class="sA"></i>instruction</span><span><i class="sB"></i>data</span></span></p>
+<p class="bytes"><span class="sA">20</span><span class="sB">71<wbr>ad<wbr>52<wbr>82<wbr>4c<wbr>c1<wbr>fd<wbr>78<wbr>c0<wbr>96<wbr>df<wbr>ad<wbr>fa<wbr>34<wbr>82<wbr>d5<wbr>7a<wbr>4d<wbr>33<wbr>a8<wbr>01<wbr>5b<wbr>80<wbr>c8<wbr>df<wbr>cf<wbr>29<wbr>46<wbr>da<wbr>bf<wbr>d9<wbr>b3</span><span class="sA">ac</span></p>
 </div>
 <p class="hexnote">Written as it really is. The <code>0x</code> in the list above is only a way of writing that says "this is hexadecimal". The script itself carries the bytes without it.</p>
 <p>The <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spend</a> carries an unlock, the <code>signature_script</code>. The spender writes it on that input.<br>
@@ -254,11 +260,11 @@ For this we have 66 bytes:</p>
 <ul class="bl">
 <li><span class="n">1 byte</span><span><span class="hx">0x41</span> simply says: "the next 65 bytes are data"</span></li>
 <li><span class="n">64 bytes</span><span>the signature</span></li>
-<li><span class="n">1 byte</span><span><span class="hx">0x01</span> saying: "the signature covers the whole <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a>"</span></li>
+<li><span class="n">1 byte</span><span><span class="hx d">0x01</span> saying: "the signature covers the whole <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a>"</span></li>
 </ul>
 <div class="full">
-<p class="hl"><span class="nm">signature_script</span><span class="lg"><span><i class="sA"></i>1 byte</span><span><i class="sB"></i>64 bytes</span><span><i class="sC"></i>1 byte</span></span></p>
-<p class="bytes"><span class="sA">41</span><span class="sB">7c<wbr>b7<wbr>9c<wbr>11<wbr>bf<wbr>dd<wbr>a0<wbr>77<wbr>6d<wbr>b0<wbr>20<wbr>63<wbr>8c<wbr>10<wbr>d5<wbr>a9<wbr>97<wbr>b2<wbr>73<wbr>b2<wbr>a5<wbr>c2<wbr>e2<wbr>ae<wbr>9c<wbr>00<wbr>a0<wbr>de<wbr>44<wbr>23<wbr>34<wbr>cb<wbr>e2<wbr>ed<wbr>eb<wbr>c2<wbr>cc<wbr>78<wbr>36<wbr>f6<wbr>49<wbr>e6<wbr>7c<wbr>b7<wbr>ac<wbr>7a<wbr>92<wbr>c7<wbr>f4<wbr>ce<wbr>99<wbr>0e<wbr>13<wbr>08<wbr>44<wbr>b5<wbr>f9<wbr>52<wbr>a1<wbr>46<wbr>5f<wbr>86<wbr>8c<wbr>93</span><span class="sC">01</span></p>
+<p class="hl"><span class="nm">signature_script</span><span class="lg"><span><i class="sA"></i>instruction</span><span><i class="sB"></i>data</span></span></p>
+<p class="bytes"><span class="sA">41</span><span class="sB">7c<wbr>b7<wbr>9c<wbr>11<wbr>bf<wbr>dd<wbr>a0<wbr>77<wbr>6d<wbr>b0<wbr>20<wbr>63<wbr>8c<wbr>10<wbr>d5<wbr>a9<wbr>97<wbr>b2<wbr>73<wbr>b2<wbr>a5<wbr>c2<wbr>e2<wbr>ae<wbr>9c<wbr>00<wbr>a0<wbr>de<wbr>44<wbr>23<wbr>34<wbr>cb<wbr>e2<wbr>ed<wbr>eb<wbr>c2<wbr>cc<wbr>78<wbr>36<wbr>f6<wbr>49<wbr>e6<wbr>7c<wbr>b7<wbr>ac<wbr>7a<wbr>92<wbr>c7<wbr>f4<wbr>ce<wbr>99<wbr>0e<wbr>13<wbr>08<wbr>44<wbr>b5<wbr>f9<wbr>52<wbr>a1<wbr>46<wbr>5f<wbr>86<wbr>8c<wbr>93</span><span class="sB">01</span></p>
 </div>
 <p>These 2 scripts exist specifically for this purpose, and written automatically by the wallet. The stack is thrown away after the verification is cleared.</p>
 
@@ -289,6 +295,48 @@ For this we have 66 bytes:</p>
   </div></div>
 </dialog>
 
+
+
+<h2>Hidden transaction scripts</h2>
+
+<p>If you remember from card 1.4, we talked about q and <a class="t" target="_blank" rel="noopener" href="glossary.html#p-address">p addresses</a>. A <a class="t" target="_blank" rel="noopener" href="glossary.html#q-address">q address</a> is a label for an output that carries the basic script we just talked about. Now we will <span class="nolink">address</span> (pun intended) the other kind, the p type <a class="t" target="_blank" rel="noopener" href="glossary.html#address">address</a>. Its outputs carry a script that holds a <a class="t" target="_blank" rel="noopener" href="glossary.html#fingerprint">fingerprint</a> of a bigger* script, the one that will determine the spend rules of the UTXO.</p>
+<p class="fn">* A hidden script will be bigger as long as you are a rational user. It's not forced by the network.</p>
+
+<p>How does it look?<br>
+First, we're introduced to new bytes:</p>
+<ul class="nb">
+<li><span><span class="hx">0xaa</span></span><span>instructs: "<a class="t" target="_blank" rel="noopener" href="glossary.html#hash">hash</a> whatever sits on top of the stack, put the 32-byte hash back."</span></li>
+<li><span><span class="hx">0x87</span></span><span>instructs: "take the top two items off the stack. If they are the same, put true back. If not, put false back."</span></li>
+<li><span><span class="hx">0x4c</span></span><span>instructs: "the next byte is the size of the data."</span></li>
+<li><span><span class="hx d">0xbb</span></span><span>not an instruction. It is the number 187.</span></li>
+<li class="pair"><span><span class="hx">0x4c</span> then <span class="hx d">0xbb</span> - together: "the next 187 bytes are data."</span></li>
+</ul>
+
+<p>The lock on a p address output is 35 bytes:</p>
+<ul class="bl">
+<li><span class="n">1 byte</span><span><span class="hx">0xaa</span></span></li>
+<li><span class="n">1 byte</span><span><span class="hx">0x20</span></span></li>
+<li><span class="n">32 bytes</span><span>the fingerprint</span></li>
+<li><span class="n">1 byte</span><span><span class="hx">0x87</span></span></li>
+</ul>
+<div class="full">
+<p class="hl"><span class="nm">script_public_key</span><span class="lg"><span><i class="sA"></i>instruction</span><span><i class="sB"></i>data</span></span></p>
+<p class="bytes"><span class="sA">aa</span><span class="sA">20</span><span class="sB">84<wbr>85<wbr>ca<wbr>c4<wbr>14<wbr>10<wbr>60<wbr>aa<wbr>a1<wbr>f8<wbr>dd<wbr>b2<wbr>bd<wbr>62<wbr>40<wbr>10<wbr>92<wbr>2f<wbr>eb<wbr>22<wbr>59<wbr>ce<wbr>db<wbr>93<wbr>a0<wbr>63<wbr>5b<wbr>cf<wbr>f1<wbr>39<wbr>2d<wbr>b2</span><span class="sA">87</span></p>
+</div>
+
+<p>The spend carries 255 bytes:</p>
+<ul class="bl">
+<li><span class="n">1 byte</span><span><span class="hx">0x41</span></span></li>
+<li><span class="n">64 bytes</span><span>the signature</span></li>
+<li><span class="n">1 byte</span><span><span class="hx d">0x01</span></span></li>
+<li><span class="n">2 bytes</span><span><span class="hx">0x4c</span> <span class="hx d">0xbb</span></span></li>
+<li><span class="n">187 bytes</span><span>the hidden script</span></li>
+</ul>
+<div class="full">
+<p class="hl"><span class="nm">signature_script</span><span class="lg"><span><i class="sA"></i>instruction</span><span><i class="sB"></i>data</span></span></p>
+<p class="bytes"><span class="sA">41</span><span class="sB">df<wbr>e0<wbr>e1<wbr>66<wbr>cf<wbr>61<wbr>32<wbr>d9<wbr>3b<wbr>d4<wbr>25<wbr>42<wbr>86<wbr>88<wbr>76<wbr>3e<wbr>16<wbr>ac<wbr>39<wbr>ea<wbr>f3<wbr>1b<wbr>45<wbr>61<wbr>ea<wbr>74<wbr>e6<wbr>8d<wbr>51<wbr>5e<wbr>f8<wbr>00<wbr>f9<wbr>db<wbr>21<wbr>3d<wbr>3e<wbr>38<wbr>ed<wbr>7d<wbr>50<wbr>e1<wbr>88<wbr>c0<wbr>1b<wbr>81<wbr>a9<wbr>12<wbr>73<wbr>af<wbr>8d<wbr>13<wbr>37<wbr>4b<wbr>08<wbr>7c<wbr>40<wbr>42<wbr>ca<wbr>d3<wbr>83<wbr>94<wbr>63<wbr>da</span><span class="sB">01</span><span class="sA">4c</span><span class="sB">bb</span><span class="sB blk">187 bytes</span></p>
+</div>
+
 <h2>The stack</h2>
 
 <p>A Kaspa script relies entirely on a stack, a single-ended memory list where instructions pull data from the top and push results back to the top.<br>
@@ -310,7 +358,11 @@ The stack starts completely empty for every transaction input, holds a maximum o
   <div class="rbtns"><button type="button" class="go" id="rnext" hidden>Next instruction</button><button type="button" class="lnk" id="rwrong" hidden>Run it with a wrong signature</button></div>
 </div>
 
-<h2>The script way forward</h2>
+<p>So why does the coin bother with a fingerprint at all?</p>
+<p>Because the spender is the one sending the script. Without a check, they would send <span class="hx">0x51</span>, the one byte that leaves true, and the coin would open.</p>
+<p>The fingerprint is the check. The node hashes whatever script arrived and it must come out equal to the 32 bytes the coin has been holding since the day it was created. Only one script in the world gives those 32 bytes. Send anything else and the compare leaves false.</p>
+
+<h2>Scripts moving forward</h2>
 
 <p>Scripts on outputs are designed to do their instructions from start to finish, with an option to skip part/s. A script cannot rerun itself, adjust, fix or retry a failed attempt. The end result can only be pass or fail, as written.</p>
 <p>Transactions on Kaspa are capped.<br>
@@ -328,9 +380,8 @@ It goes without saying, cross any of these limits and the input fails, and the w
 </div>
 
 <p>Nodes won't take another node's word for validation, each will run every transaction with its own stack. Honest nodes will get the same results.</p>
-
 <h2>Sources</h2>
-<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack that is created for that input and discarded after it: the input's signature script, then the script public key of the UTXO it spends. The signature script may hold only push instructions (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>from_transaction_input</code>, <code>execute_inner</code>, <code>execute_script</code>). A push instruction is the number of bytes that follow it, for every length from 1 to 75, and <code>OpCheckSig</code> is <code>0xac</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). The standard key lock is <code>OpData32</code> key <code>OpCheckSig</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). <code>OpCheckSig</code> takes the key and the signature off the stack, reads the last byte of the signature as the hash type, checks the Schnorr signature against the transaction's signature hash and puts true or false back (<code>opcodes/mod.rs</code>, <code>OpCheckSig</code>, and <code>lib.rs</code>, <code>check_schnorr_signature</code>). True on the stack is the byte <code>01</code>, false is an empty item (<code>data_stack.rs</code>). The run ends in <code>check_error_condition</code>: one item left, and it must be true. At most 244 items on the stack (<code>MAX_STACK_SIZE</code>). Read at release v2.0.1. The 46 microseconds were measured with a small program against the v2.0.1 engine: 20,000 runs of the standard key spend, one input, on one Intel Xeon 2.8 GHz core, 38 of them the Schnorr check, and about 8 when the signature is already in the node's cache. A transaction pasted into the box is read from api.kaspa.org. The ceilings are <code>MAX_SCRIPTS_SIZE_POST_TOCCATA</code>, <code>MAX_OPS_PER_SCRIPT_POST_TOCCATA</code>, <code>MAX_SCRIPT_ELEMENT_SIZE_POST_TOCCATA</code> and <code>MAX_STACK_SIZE</code> (<code>lib.rs</code>), the transaction caps <code>NEW_MAX_SIGNATURE_SCRIPT_LEN</code>, <code>max_script_public_key_len</code>, <code>max_tx_inputs</code> and <code>max_tx_outputs</code> for mainnet (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/params.rs">consensus/core/src/config/params.rs</a>). The budget: one script unit per byte pushed, 100 units to a gram, a signature check <code>mass_per_sig_op</code> of 1,000 grams (<code>consensus/core/src/mass/units.rs</code>, <code>crypto/txscript/src/runtime_resource_meter.rs</code>). The floor a node accepts is <code>DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE</code>, 100,000 sompi per kilogram (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/config.rs">mining/src/mempool/config.rs</a>), and 100,000,000 sompi are one KAS. The bytes on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a>, read from api.kaspa.org on 12 September 2026. The letters and symbols a byte stands for in the hexadecimal window, Hey! and the phrase to decode, follow the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ASCII">ASCII table</a>, one byte per character.</p>
+<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack that is created for that input and discarded after it: the input's signature script, then the script public key of the UTXO it spends. The signature script may hold only push instructions (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>from_transaction_input</code>, <code>execute_inner</code>, <code>execute_script</code>). A push instruction is the number of bytes that follow it, for every length from 1 to 75, <code>OpCheckSig</code> is <code>0xac</code> and <code>OpTrue</code> is <code>0x51</code>, which leaves a single true and is a valid lock on its own (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). The standard key lock is <code>OpData32</code> key <code>OpCheckSig</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). <code>OpCheckSig</code> takes the key and the signature off the stack, reads the last byte of the signature as the hash type, checks the Schnorr signature against the transaction's signature hash and puts true or false back (<code>opcodes/mod.rs</code>, <code>OpCheckSig</code>, and <code>lib.rs</code>, <code>check_schnorr_signature</code>). True on the stack is the byte <code>01</code>, false is an empty item (<code>data_stack.rs</code>). The run ends in <code>check_error_condition</code>: one item left, and it must be true. At most 244 items on the stack (<code>MAX_STACK_SIZE</code>). Read at release v2.0.1. The 46 microseconds were measured with a small program against the v2.0.1 engine: 20,000 runs of the standard key spend, one input, on one Intel Xeon 2.8 GHz core, 38 of them the Schnorr check, and about 8 when the signature is already in the node's cache. A transaction pasted into the box is read from api.kaspa.org. The ceilings are <code>MAX_SCRIPTS_SIZE_POST_TOCCATA</code>, <code>MAX_OPS_PER_SCRIPT_POST_TOCCATA</code>, <code>MAX_SCRIPT_ELEMENT_SIZE_POST_TOCCATA</code> and <code>MAX_STACK_SIZE</code> (<code>lib.rs</code>), the transaction caps <code>NEW_MAX_SIGNATURE_SCRIPT_LEN</code>, <code>max_script_public_key_len</code>, <code>max_tx_inputs</code> and <code>max_tx_outputs</code> for mainnet (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/params.rs">consensus/core/src/config/params.rs</a>). The budget: one script unit per byte pushed, 100 units to a gram, a signature check <code>mass_per_sig_op</code> of 1,000 grams (<code>consensus/core/src/mass/units.rs</code>, <code>crypto/txscript/src/runtime_resource_meter.rs</code>). The floor a node accepts is <code>DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE</code>, 100,000 sompi per kilogram (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/config.rs">mining/src/mempool/config.rs</a>), and 100,000,000 sompi are one KAS. <code>OpBlake2b</code> <code>0xaa</code> takes the top item and puts its blake2b-256 hash back, <code>OpEqual</code> <code>0x87</code> takes the top two and puts back <code>01</code> for equal or an empty item for not, and the direct pushes end at <code>OpData75</code> <code>0x4b</code>, so <code>OpPushData1</code> <code>0x4c</code> carries its length in the byte after it (opcodes/mod.rs). A script lock is <code>OpBlake2b</code> <code>OpData32</code> the 32 byte blake2b-256 of the revealed script <code>OpEqual</code>, and a node decides an output is one by testing those three positions and a length of 35 (standard.rs and script_class.rs, <code>is_pay_to_script_hash</code>). The p address lock and the 255 byte spend on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…501f3d</code></a>. The bytes on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a>, read from api.kaspa.org on 12 September 2026. The letters and symbols a byte stands for in the hexadecimal window, Hey! and the phrase to decode, follow the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ASCII">ASCII table</a>, one byte per character.</p>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.7.html">Last card</a> · <span>Next: <span class="soon">What Toccata added to script</span></span></div>
@@ -371,13 +422,15 @@ function shape(sig,spk){
   if(spk.length===70&&spk.slice(0,4)==='aa20'&&spk.slice(-2)==='87') return {kind:'p'};
   return {kind:'odd'};
 }
-function full(name,a,b,c,nb,pre){
-  return '<div class="full"><p class="hl"><span class="nm">'+name+'</span><span class="lg"><span><i class="sA"></i>1 byte</span><span><i class="sB"></i>'+nb+' bytes</span><span><i class="sC"></i>1 byte</span></span></p>'+
-         '<p class="bytes"><span class="sA" id="'+pre+'a">'+a+'</span><span class="sB" id="'+pre+'b">'+pairs(b)+'</span><span class="sC" id="'+pre+'c">'+c+'</span></p></div>';
+function full(name,a,b,c,nb,pre,cc){
+  /* two colours only: sA is an instruction, sB is data. cc says which the last byte is. */
+  cc = cc || 'sA';
+  return '<div class="full"><p class="hl"><span class="nm">'+name+'</span><span class="lg"><span><i class="sA"></i>instruction</span><span><i class="sB"></i>data</span></span></p>'+
+         '<p class="bytes"><span class="sA" id="'+pre+'a">'+a+'</span><span class="sB" id="'+pre+'b">'+pairs(b)+'</span><span class="'+cc+'" id="'+pre+'c">'+c+'</span></p></div>';
 }
 function drawScripts(){
   var s=cur.sig, k=cur.spk;
-  rscripts.innerHTML=full('signature_script',s.slice(0,2),s.slice(2,-2),s.slice(-2),cur.n-1,'ss')+full('script_public_key',k.slice(0,2),k.slice(2,-2),k.slice(-2),32,'pk');
+  rscripts.innerHTML=full('signature_script',s.slice(0,2),s.slice(2,-2),s.slice(-2),cur.n-1,'ss','sB')+full('script_public_key',k.slice(0,2),k.slice(2,-2),k.slice(-2),32,'pk');
 }
 function light(){
   var ids=['ssa','ssb','ssc','pka','pkb','pkc'],i,e;
@@ -423,7 +476,7 @@ function pickInput(i){
   for(j=0;j<bs.length;j++)bs[j].classList.toggle('sel',j===i);
   var inp=tx.inputs[i], sh=shape(inp.signature_script,(inp.previous_outpoint_resolved||{}).script_public_key);
   if(sh.kind==='key'){note('');start(sh,false);}
-  else if(sh.kind==='p') boundary('Input '+i+' spends a p address, it reveals a script. That run comes later on this card.');
+  else if(sh.kind==='p') boundary('Input '+i+' spends a p address, it reveals a script. This box runs the standard key spend only.');
   else boundary('Input '+i+' is not the standard key spend this box runs.');
 }
 function loadTx(data){
