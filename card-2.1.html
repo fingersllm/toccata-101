@@ -113,6 +113,24 @@
   .ask:hover .hx{border-color:var(--violet)}
   .ask:active{transform:translateY(2px);border-bottom-width:1px}
   @media (prefers-reduced-motion: reduce){.ask{transition:none}.ask:active{transform:none}}
+  /* "256 bytes": a key in the instruction teal holding a 16 by 16 grid of every byte value, row the first hex digit,
+     column the second; teal where the byte is an instruction in use, an outline where not, bright for the ones sections
+     2 to 4 show. A teaser until its page is out (Ron, 2026-09-28), then the whole key becomes the link */
+  .opswrap{display:flex;justify-content:center;margin:1.2rem 0 .6rem}
+  .ops{display:flex;align-items:center;gap:1.15rem;padding:1rem 1.3rem 1rem 1.1rem;border-radius:16px;text-decoration:none;color:var(--head);
+      background:linear-gradient(180deg,var(--bg),var(--t1));border:1px solid var(--t1b);border-bottom-width:3px;box-sizing:border-box;max-width:100%}
+  .ops-g{display:grid;grid-template-columns:repeat(16,8px);grid-auto-rows:8px;gap:2px;flex:none}
+  .ops-g i{border-radius:2px;background:var(--sab);opacity:.5}
+  .ops-g i.no{background:transparent;box-shadow:inset 0 0 0 1px var(--t1b);opacity:1}
+  .ops-g i.met{opacity:1;background:var(--accent);box-shadow:0 0 5px var(--accent)}
+  .ops-t{display:flex;flex-direction:column;align-items:flex-start;gap:.55rem}
+  .ops-r{font:.85rem/1.2 ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
+  .ops-soon{font:600 .7rem/1 system-ui,"Segoe UI",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--soon);
+      border:1px solid var(--soon);border-radius:999px;padding:.3rem .62rem}
+  .ops.lit .ops-g i:not(.no){animation:opsw 1.3s ease-in-out;animation-delay:calc(var(--d) * 22ms)}
+  @keyframes opsw{40%{opacity:1}}
+  @media (prefers-reduced-motion: reduce){.ops.lit .ops-g i:not(.no){animation:none}}
+  @media (max-width:480px){.ops{flex-direction:column;gap:.8rem;padding:1rem 1.2rem}.ops-t{align-items:center}}
   /* the window */
   dialog{max-width:35rem;width:calc(100% - 2rem);border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);padding:0;font:inherit;overflow:hidden;box-shadow:0 18px 50px var(--shade)}
   dialog::backdrop{background:var(--shade)}
@@ -451,6 +469,30 @@
   @media (max-width:480px){.stage{padding:1.8rem .9rem 2.2rem}.stage-go{gap:1.1rem;padding:0}.launch img{width:min(132px,calc((100vw - 82px)/2));height:auto}.launch-l{font-size:.86rem}
       .tback{left:6px;top:6px;width:24px;height:24px}.tback svg{width:14px;height:14px}}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  /* Sources: a box closed by default; inside, the card's sections as groups that open one at a time (one name), each
+     row a claim and its source (Ron, 2026-09-28) */
+  .srcs{padding:0}
+  .srcs summary{display:flex;align-items:baseline;gap:.15rem .8rem;cursor:pointer;list-style:none}
+  .srcs summary::-webkit-details-marker{display:none}
+  .srcs summary::before{content:"";align-self:center;flex:none;width:.42rem;height:.42rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);margin:0 .15rem 0 .1rem;transition:transform .2s}
+  .srcs[open]>summary::before,.srcs-g[open]>summary::before{transform:rotate(45deg)}
+  .srcs summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .srcs>summary{flex-wrap:wrap;padding:.75rem 1rem}
+  .srcs>summary:hover .srcs-t{color:var(--link)}
+  .srcs-t{font-weight:600;color:var(--head)}
+  .srcs-v{font-size:.84rem;color:var(--muted)}
+  .srcs-in{padding:0 1rem .45rem}
+  .srcs-g{border-top:1px solid var(--line)}
+  .srcs-g>summary{padding:.6rem 0;color:var(--head)}
+  .srcs-g>summary:hover{color:var(--link)}
+  .srcs-g .n{margin-left:auto;align-self:center;font-size:.76rem;line-height:1.5;color:var(--muted);background:var(--tint);border-radius:999px;padding:0 .55rem}
+  .srcs ul{list-style:none;margin:0 0 .55rem;padding:0 0 0 1.35rem}
+  .srcs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,15rem);gap:.15rem 1.2rem;padding:.45rem 0;border-top:1px dashed var(--line);line-height:1.45}
+  .srcs .by{font:.78rem/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}
+  .srcs .by a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .srcs .by a:hover{color:var(--head)}
+  @media (prefers-reduced-motion: reduce){.srcs summary::before{transition:none}}
+  @media (max-width:560px){.srcs li{grid-template-columns:minmax(0,1fr)}.srcs ul{padding-left:.9rem}}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
@@ -772,8 +814,82 @@ It goes without saying, cross any of these limits and the input fails, and the w
 </div>
 </div>
 
+<h2>256 bytes</h2>
+
+<p class="opswrap"><span class="ops" id="ops"><span class="ops-g" aria-hidden="true"></span><span class="ops-t"><span class="ops-r">0x00 to 0xff</span><span class="ops-soon">coming soon</span></span></span></p>
+
 <h2>Sources</h2>
-<p class="src">In rusty-kaspa, an input is checked by running two scripts in order on one stack that is created for that input and discarded after it: the input's signature script, then the script public key of the UTXO it spends. The signature script may hold only push instructions (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/lib.rs">crypto/txscript/src/lib.rs</a>, <code>from_transaction_input</code>, <code>execute_inner</code>, <code>execute_script</code>). A push instruction is the number of bytes that follow it, for every length from 1 to 75, <code>OpCheckSig</code> is <code>0xac</code> and <code>OpTrue</code> is <code>0x51</code>, which leaves a single true and is a valid lock on its own (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">crypto/txscript/src/opcodes/mod.rs</a>). The standard key lock is <code>OpData32</code> key <code>OpCheckSig</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>). <code>OpCheckSig</code> takes the key and the signature off the stack, reads the last byte of the signature as the hash type, checks the Schnorr signature against the transaction's signature hash and puts true or false back (<code>opcodes/mod.rs</code>, <code>OpCheckSig</code>, and <code>lib.rs</code>, <code>check_schnorr_signature</code>). True on the stack is the byte <code>01</code>, false is an empty item (<code>data_stack.rs</code>). The run ends in <code>check_error_condition</code>: one item left, and it must be true. At most 244 items on the stack (<code>MAX_STACK_SIZE</code>). Read at release v2.0.1. The ceilings are <code>MAX_SCRIPTS_SIZE_POST_TOCCATA</code>, <code>MAX_OPS_PER_SCRIPT_POST_TOCCATA</code>, <code>MAX_SCRIPT_ELEMENT_SIZE_POST_TOCCATA</code> and <code>MAX_STACK_SIZE</code> (<code>lib.rs</code>), the transaction caps <code>NEW_MAX_SIGNATURE_SCRIPT_LEN</code>, <code>max_script_public_key_len</code>, <code>max_tx_inputs</code> and <code>max_tx_outputs</code> for mainnet (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/params.rs">consensus/core/src/config/params.rs</a>). The budget: one script unit per byte pushed, 100 units to a gram, a signature check <code>mass_per_sig_op</code> of 1,000 grams (<code>consensus/core/src/mass/units.rs</code>, <code>crypto/txscript/src/runtime_resource_meter.rs</code>). The floor a node accepts is <code>DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE</code>, 100,000 sompi per kilogram (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/config.rs">mining/src/mempool/config.rs</a>), and 100,000,000 sompi are one KAS. <code>OpBlake2b</code> <code>0xaa</code> takes the top item and puts its blake2b-256 hash back, <code>OpEqual</code> <code>0x87</code> takes the top two and puts back <code>01</code> for equal or an empty item for not, and the direct pushes run from <code>OpData1</code> <code>0x01</code> to <code>OpData75</code> <code>0x4b</code>, the byte being the count, so <code>OpData34</code> <code>0x22</code> pushes the 34 bytes after it (opcodes/mod.rs). A script lock is <code>OpBlake2b</code> <code>OpData32</code> the 32 byte blake2b-256 of the revealed script <code>OpEqual</code>, and a node decides an output is one by testing those three positions and a length of 35 (standard.rs and script_class.rs, <code>is_pay_to_script_hash</code>). The p address lock and the 101 byte spend on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/cfe8a1fabb0343083760a3905d176a1ef62cc4c5e3d712d0d004d3c06cfcb9ae"><code>cfe8a1fa…fcb9ae</code></a>. The bytes on this page are the real ones from <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914"><code>60a2f205…f145914</code></a>, read from api.kaspa.org on 12 September 2026. The letters and symbols a byte stands for in the hexadecimal window, Hey! and the phrase to decode, follow the <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/ASCII">ASCII table</a>, one byte per character.</p>
+<details class="src srcs">
+<summary><span class="srcs-t">34 sources</span><span class="srcs-v">read at rusty-kaspa v2.1.0</span></summary>
+<div class="srcs-in">
+<details class="srcs-g" name="srcg"><summary>The hexadecimal window<span class="n">1</span></summary>
+<ul>
+<li><span>Letters and symbols as bytes, Hey! and the phrase to decode</span><span class="by"><a href="https://en.wikipedia.org/wiki/ASCII" target="_blank" rel="noopener">ASCII table</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Basic transaction scripts<span class="n">6</span></summary>
+<ul>
+<li><span>A new stack for each input, the spend's script first, then the lock</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> from_<wbr>transaction_<wbr>input, execute_<wbr>inner</span></li>
+<li><span>The spend's script may only push data</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> execute_<wbr>script</span></li>
+<li><span>A push byte is the count of the bytes after it, 0x01 to 0x4b</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpData1 to OpData75</span></li>
+<li><span>The standard key lock is 0x20, the key, 0xac</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/standard.rs" target="_blank" rel="noopener">standard.rs</a></span></li>
+<li><span>0xac checks the signature against the key and the transaction's signature hash, then puts back true or false</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCheckSig · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> check_<wbr>schnorr_<wbr>signature</span></li>
+<li><span>The lock and spend bytes shown, read on 12 September 2026</span><span class="by"><a href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914" target="_blank" rel="noopener">transaction 60a2f205…f145914</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Hidden transaction scripts<span class="n">5</span></summary>
+<ul>
+<li><span>0xaa puts back the 32 byte blake2b hash of the top item</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpBlake2b</span></li>
+<li><span>0x87 puts back 01 when the top two are equal, an empty item when not</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpEqual</span></li>
+<li><span>0x22 pushes the 34 bytes after it</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpData34</span></li>
+<li><span>A 35 byte lock of 0xaa, 0x20, 32 bytes and 0x87 is a script fingerprint</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/script_class.rs" target="_blank" rel="noopener">script_<wbr>class.rs</a> is_<wbr>pay_<wbr>to_<wbr>script_<wbr>hash</span></li>
+<li><span>The p example's lock and 101 byte spend</span><span class="by"><a href="https://explorer.kaspa.org/txs/cfe8a1fabb0343083760a3905d176a1ef62cc4c5e3d712d0d004d3c06cfcb9ae" target="_blank" rel="noopener">transaction cfe8a1fa…fcb9ae</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>The stack<span class="n">4</span></summary>
+<ul>
+<li><span>True is the byte 01, false an empty item</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/data_stack.rs" target="_blank" rel="noopener">data_<wbr>stack.rs</a></span></li>
+<li><span>A run must end with one item, and it must be true</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> check_<wbr>error_<wbr>condition</span></li>
+<li><span>At most 244 items</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> MAX_<wbr>STACK_<wbr>SIZE</span></li>
+<li><span>0x51 puts the number 1 on the stack, a true</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpTrue</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Scripts moving forward<span class="n">6</span></summary>
+<ul>
+<li><span>Scripts up to 1,000,000 bytes and 1,000,000 instructions, an item up to 1,000,000 bytes</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> MAX_<wbr>SCRIPTS_<wbr>SIZE, MAX_<wbr>OPS_<wbr>PER_<wbr>SCRIPT, MAX_<wbr>SCRIPT_<wbr>ELEMENT_<wbr>SIZE</span></li>
+<li><span>1,000 inputs, 1,000 outputs, a 250,000 byte signature script, a 10,000 byte public key script</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/params.rs" target="_blank" rel="noopener">params.rs</a> max_<wbr>tx_<wbr>inputs, max_<wbr>tx_<wbr>outputs, MAX_<wbr>SIGNATURE_<wbr>SCRIPT_<wbr>LEN, max_<wbr>script_<wbr>public_<wbr>key_<wbr>len</span></li>
+<li><span>A hundredth of a gram for each byte pushed</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/mass/units.rs" target="_blank" rel="noopener">units.rs</a> SCRIPT_<wbr>UNITS_<wbr>PER_<wbr>GRAM · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/runtime_resource_meter.rs" target="_blank" rel="noopener">runtime_<wbr>resource_<wbr>meter.rs</a></span></li>
+<li><span>1,000 grams for a signature check</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/params.rs" target="_blank" rel="noopener">params.rs</a> mass_<wbr>per_<wbr>sig_<wbr>op</span></li>
+<li><span>The lowest fee a node takes, 100,000 sompi a kilogram</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/mining/src/mempool/config.rs" target="_blank" rel="noopener">mempool/<wbr>config.rs</a> DEFAULT_<wbr>MINIMUM_<wbr>RELAY_<wbr>TRANSACTION_<wbr>FEE</span></li>
+<li><span>100,000,000 sompi to a KAS, and the most any amount can be</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/constants.rs" target="_blank" rel="noopener">constants.rs</a> SOMPI_<wbr>PER_<wbr>KASPA, MAX_<wbr>SOMPI</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Bob's UTXO<span class="n">5</span></summary>
+<ul>
+<li><span>The 32 bytes a wallet signs cover the whole transaction, the coin's lock and amount included</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/hashing/sighash.rs" target="_blank" rel="noopener">sighash.rs</a> calc_<wbr>schnorr_<wbr>signature_<wbr>hash</span></li>
+<li><span>01 at the end marks the whole transaction as signed</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/hashing/sighash_type.rs" target="_blank" rel="noopener">sighash_<wbr>type.rs</a> SIG_<wbr>HASH_<wbr>ALL</span></li>
+<li><span>A false at the end fails the input</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/errors/src/lib.rs" target="_blank" rel="noopener">errors/<wbr>src/<wbr>lib.rs</a> EvalFalse</span></li>
+<li><span>Ten blocks a second, and a wallet waits 100 of them</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/params.rs" target="_blank" rel="noopener">params.rs</a> BlockrateParams · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/utxo/settings.rs" target="_blank" rel="noopener">wallet settings.rs</a> user_<wbr>transaction_<wbr>maturity_<wbr>period_<wbr>daa</span></li>
+<li><span>Bob's payment</span><span class="by"><a href="https://explorer.kaspa.org/txs/4b24cec9257cde0c92f5335ddd6d2f5d053982ac6c09a3528c2087a85c15a653" target="_blank" rel="noopener">transaction 4b24cec9…c15a653</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Scripts in disguise<span class="n">6</span></summary>
+<ul>
+<li><span>0xae, 0xb0 and 0xc3: several signatures, a lock time, an output's script</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCheckMultiSig, OpCheckLockTimeVerify, OpTxOutputSpk</span></li>
+<li><span>Nodes only pass on outputs of a standard form</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/mining/src/mempool/check_transaction_standard.rs" target="_blank" rel="noopener">check_<wbr>transaction_<wbr>standard.rs</a> RejectOutputScriptClass · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/script_class.rs" target="_blank" rel="noopener">script_<wbr>class.rs</a> ScriptClass</span></li>
+<li><span>The node keeps a copy of the stack before the fingerprint check</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> execute_<wbr>inner, saved_<wbr>stack</span></li>
+<li><span>A longer script is pushed with 0x4c and its length</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpPushData1</span></li>
+<li><span>0x51's fingerprint is ce572162…5b07cd1d</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpBlake2b, on the byte 51</span></li>
+<li><span>The 100 KAS the example spends</span><span class="by"><a href="https://explorer.kaspa.org/txs/1fed7f6d237a29c1ce49997ea23fd40a08947b9d6e6d194d748471c6fe477d41" target="_blank" rel="noopener">transaction 1fed7f6d…fe477d41</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>256 bytes<span class="n">1</span></summary>
+<ul>
+<li><span>The 256 byte values, and which are instructions in use</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a></span></li>
+</ul>
+</details>
+</div>
+</details>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.7.html">Last card</a> · <span>Next: <span class="soon">What Toccata added to script</span></span></div>
@@ -884,6 +1000,20 @@ var open=document.getElementById('askhex'), dlg=document.getElementById('hex');
 open.onclick=function(){dlg.showModal();grow();};
 document.getElementById('hexclose').onclick=function(){dlg.close();};
 dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close();});
+})();
+
+/* "256 bytes": the grid's 256 cells, byte 0x00 first. OPS holds one bit a byte, 1 where the byte is an instruction in
+   use, read from rusty-kaspa's opcode table at v2.1.0 (crypto/txscript/src/opcodes/mod.rs: in use unless its whole
+   body is one error, unassigned, disabled or reserved; 206 of the 256). The light passes once, when the key comes into
+   view */
+(function(){
+var OPS='ffffffffffffffffffff7fffd9ffffff3f99ff3fffffffffffdfffe000000000', MET=[0x20,0x22,0x41,0x51,0x87,0xaa,0xac];
+var key=document.getElementById('ops'), g=key&&key.querySelector('.ops-g'), h='';
+if(!g) return;
+for(var b=0;b<256;b++){var on=(parseInt(OPS[b>>2],16)>>(3-(b&3)))&1;
+  h+='<i'+(on?(MET.indexOf(b)>=0?' class="met"':''):' class="no"')+' style="--d:'+((b>>4)+(b&15))+'"></i>';}
+g.innerHTML=h;
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){key.classList.add('lit');io.disconnect();}},{threshold:.6});io.observe(key);}
 })();
 
 /* the spend presentation. A press: the pill grows over the window. On the q road the window then grows to the
