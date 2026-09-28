@@ -584,9 +584,9 @@ First, we're introduced to new bytes:</p>
 It's a nameless system. An instruction cannot call the signature or the public key by name, it can only work with what sits on top of the stack.<br>
 The stack starts completely empty for every transaction input, holds a maximum of 244 items, and is instantly destroyed by the node once the input is validated or invalidated.</p>
 
-<p>So why does the coin bother with a fingerprint at all?</p>
-<p>Because the spender is the one sending the script. Without a check, they would send <span class="hx">0x51</span>, the one byte that leaves true, and the coin would open.</p>
-<p>The fingerprint is the check. The node hashes whatever script arrived and it must come out equal to the 32 bytes the coin has been holding since the day it was created.</p>
+<p>So why does the output hold a fingerprint at all?</p>
+<p>Because the spend carries the script. Without a check, anyone could spend the coin with <span class="hx">0x51</span>, just one byte that leaves true on top of the stack.</p>
+<p>The fingerprint is the check. The node hashes the script the spend carries, and the result must equal the 32 bytes the output has held since it was created.</p>
 
 <h2>Scripts moving forward</h2>
 
@@ -1149,6 +1149,11 @@ function beatB2a(t,g,lay,b1){
   var amt=$('hamt'), lk=$('lock'), aw=amt.offsetWidth, ah=amt.offsetHeight, lw=lk.offsetWidth, lh=lk.offsetHeight;
   var top=lay.C2.y-lay.ch/2, left=lay.C2.x-lay.cw/2, m=b1.mid;
   var A={x:left+10+aw/2,y:top-ah/2-10}, L={x:left+10+aw+8+lw/2,y:top-lh/2-10};   /* clear of the card (Ron) */
+  /* and clear of the word "node": on a narrow phone the card's left edge comes under it, so the two slide right until
+     B2b's outline (6 px round them) starts 6 px after the word */
+  var nl=$('node').querySelector('.node-l'), rg=document.createRange(); rg.selectNodeContents(nl);
+  var nr=lay.N.x+rg.getBoundingClientRect().width/2+6, nb=lay.N.y+lay.nh/2, o0=top-10-Math.max(ah,lh)-6, o1=top-4;
+  var dx=(o0<nb&&o1>nb-nl.offsetHeight)?Math.max(0,nr-(A.x-aw/2-6)):0; A.x+=dx; L.x+=dx;
   run(amt,[{opacity:0,transform:place(g,m,.6,aw,ah),easing:'ease-out'},{opacity:1,transform:place(g,{x:m.x,y:m.y-18},1,aw,ah),offset:.25,easing:GLIDE},
     {opacity:1,transform:place(g,A,1,aw,ah)}],t+2000,1900,'linear','forwards');
   run(lk,[{opacity:0,transform:place(g,{x:m.x+22,y:m.y+18},.6,lw,lh),easing:'ease-out'},{opacity:1,transform:place(g,{x:m.x+22,y:m.y},1,lw,lh),offset:.25,easing:GLIDE},
@@ -1210,27 +1215,31 @@ function beatB5(t,g,lay,b2,b3,b4){
   /* the wider row must stay clear of the stack: where it would reach it (a middling width), the amount slides left */
   var sL=b3.P.x-b3.w/2, sT=b3.P.y-b3.h/2, sB=b3.P.y+b3.h/2+4+$('stk').querySelector('.stk-l').offsetHeight;   /* its label in */
   var x0o=b2.A.x-b2.aw/2-p, right=x0o+row+2*p, room=Math.max(0,x0o-(lay.N.x+lay.nw/2+8));             /* never past the node */
-  var shift=(y1>sT&&y0<sB&&right+10>sL)?Math.min(right+10-sL,room):0, A={x:b2.A.x-shift,y:y}, s=A.x+b2.aw/2+8;
-  var P0={x:s+w0/2,y:y}, Pk={x:s+w0-5+wk/2,y:y}, Pa={x:s+w0-5+wk-5+wa/2,y:y};
-  var x0=A.x-b2.aw/2-p, x1=Pa.x+wa/2+p, bw=x1-x0, bh=y1-y0, B={x:(x0+x1)/2,y:(y0+y1)/2};
+  var shift=(y1>sT&&y0<sB&&right+10>sL)?Math.min(right+10-sL,room):0, x0=x0o-shift;
+  /* on a narrow phone the row is wider than the room to the stage's edge: the row and its outline scale down, k, to end
+     8 px clear of it (the p road's way with the UTXO's bytes); where the row fits, k is 1 */
+  var edge=g.S.right+parseFloat(getComputedStyle($('show')).paddingRight), k=Math.min(1,(edge-8-x0)/(row+2*p));
+  var A={x:x0+(p+b2.aw/2)*k,y:y}, s=x0+(p+b2.aw+8)*k;
+  var P0={x:s+w0/2*k,y:y}, Pk={x:s+(w0-5+wk/2)*k,y:y}, Pa={x:s+(w0-5+wk-5+wa/2)*k,y:y};
+  var bw=(row+2*p)*k, bh=(y1-y0)*k, B={x:x0+bw/2,y:y};
   o2.style.width=bw.toFixed(1)+'px'; o2.style.height=bh.toFixed(1)+'px';
-  if(shift) run($('hamt'),[{transform:place(g,b2.A,1,b2.aw,b2.ah)},{transform:place(g,A,1,b2.aw,b2.ah)}],t+2000,600,SOFT,'forwards');
+  if(shift||k<1) run($('hamt'),[{transform:place(g,b2.A,1,b2.aw,b2.ah)},{transform:place(g,A,k,b2.aw,b2.ah)}],t+2000,600,SOFT,'forwards');
   run($('lock'),[{opacity:1,transform:place(g,b2.L,1,b2.lw,b2.lh)},{opacity:0,transform:place(g,b2.L,.6,b2.lw,b2.lh)}],t+2000,450,'ease-in','forwards');
   [[l20,P0,w0,h0,0],[lk,Pk,wk,hk,70],[lac,Pa,wa,ha,140]].forEach(function(o){
-    run(o[0],[{opacity:0,transform:place(g,b2.L,.3,o[2],o[3])},{opacity:1,transform:place(g,o[1],1,o[2],o[3])}],t+2150+o[4],750,SOFT,'forwards');
+    run(o[0],[{opacity:0,transform:place(g,b2.L,.3,o[2],o[3])},{opacity:1,transform:place(g,o[1],k,o[2],o[3])}],t+2150+o[4],750,SOFT,'forwards');
   });
   run(o1,[{opacity:1},{opacity:0}],t+2150,400,'ease-in-out','forwards');
   run(o2,[{opacity:0,transform:place(g,B,1,bw,bh)},{opacity:1,transform:place(g,B,1,bw,bh)}],t+2450,600,'ease-out','forwards');
   iglow(l20,t+3400);
   var top=b3.P.y-b3.h/2, D={x:b3.P.x,y:b4.D6.y-hk-5};                 /* on top of the 65 bytes */
   run(sk,[
-    {opacity:0,transform:place(g,Pk,1,wk,hk),easing:'ease-out'},
-    {opacity:1,transform:place(g,{x:Pk.x,y:Pk.y-14},1,wk,hk),offset:.14,easing:GLIDE},
+    {opacity:0,transform:place(g,Pk,k,wk,hk),easing:'ease-out'},
+    {opacity:1,transform:place(g,{x:Pk.x,y:Pk.y-14},k,wk,hk),offset:.14,easing:GLIDE},
     {opacity:1,transform:place(g,{x:D.x,y:top-18},1,wk,hk),offset:.62,easing:'cubic-bezier(.55,0,.9,.45)'},
     {opacity:1,transform:place(g,{x:D.x,y:D.y+3},1,wk,hk),offset:.9,easing:'ease-out'},
     {opacity:1,transform:place(g,D,1,wk,hk)}
   ],t+4000,2400,'linear','forwards');
-  return {P0:P0,w0:w0,h0:h0,Pk:Pk,wk:wk,hk:hk,Pa:Pa,wa:wa,ha:ha,D:D,A:A,shift:shift};
+  return {P0:P0,w0:w0,h0:h0,Pk:Pk,wk:wk,hk:hk,Pa:Pa,wa:wa,ha:ha,D:D,A:A,shift:shift,k:k};
 }
 /* B6, the check, two lines. First, "0xac: the key and the signature come off, the signature is checked against the key,
    the answer goes on.": the ac lights, the key and the 65 bytes lift off, the card glows while the node's own 32 bytes
@@ -1375,10 +1384,11 @@ function beatB7a(t,g,b2,b5){
   var lk=$('lock'), lo=$('lockopen'), L=b2.L, lw=b2.lw, lh=b2.lh;
   glow($('strue'),t+2200,3);
   [[$('lac'),b5.Pa,b5.wa,b5.ha,0],[$('lkey'),b5.Pk,b5.wk,b5.hk,70],[$('l20'),b5.P0,b5.w0,b5.h0,140]].forEach(function(o){
-    run(o[0],[{opacity:1,transform:place(g,o[1],1,o[2],o[3])},{opacity:0,transform:place(g,L,.3,o[2],o[3])}],t+3200+o[4],600,'cubic-bezier(.5,0,.75,0)','forwards');
+    run(o[0],[{opacity:1,transform:place(g,o[1],b5.k,o[2],o[3])},{opacity:0,transform:place(g,L,.3,o[2],o[3])}],t+3200+o[4],600,'cubic-bezier(.5,0,.75,0)','forwards');
   });
   run($('tabsout2'),[{opacity:1},{opacity:0}],t+3300,400,'ease-in-out','forwards');
-  if(b5.shift) run($('hamt'),[{transform:place(g,b5.A,1,b2.aw,b2.ah)},{transform:place(g,b2.A,1,b2.aw,b2.ah)}],t+3400,600,SOFT,'forwards');
+  /* a scaled row (B5's k) grows back only once the row has folded: its 20 sits where the amount's end will be */
+  if(b5.shift||b5.k<1) run($('hamt'),[{transform:place(g,b5.A,b5.k,b2.aw,b2.ah)},{transform:place(g,b2.A,1,b2.aw,b2.ah)}],t+(b5.k<1?3700:3400),600,SOFT,'forwards');
   run(lk,[{opacity:0,transform:place(g,L,.6,lw,lh)},{opacity:1,transform:place(g,L,1,lw,lh)}],t+3600,450,'ease-out','forwards');
   run($('tabsout'),[{opacity:0},{opacity:1}],t+3700,600,'ease-out','forwards');
   /* the padlock opens: the closed one gives way to the open one in the same place, with a small lift */
