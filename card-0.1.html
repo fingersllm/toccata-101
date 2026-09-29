@@ -112,6 +112,13 @@
   :root[data-theme="light"]{color-scheme:light}
   :root[data-theme="dark"]{color-scheme:dark}
   .theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* the credit line: a light passes along it when the reader reaches the bottom of the page (Ron, 2026-09-29) */
+  .foot .by{--shine:var(--accent)}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .foot .by{--shine:var(--head)}}
+  :root[data-theme="dark"] .foot .by{--shine:var(--head)}
+  .foot .by.shine{background:linear-gradient(100deg,var(--muted) 0%,var(--muted) 36%,var(--shine) 50%,var(--muted) 64%,var(--muted) 100%);background-size:260% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:t101-shine 2.2s ease-in-out 1 forwards}
+  @keyframes t101-shine{to{background-position:0 0}}
+  @media (prefers-reduced-motion: reduce){.foot .by.shine{animation:none;background:none;-webkit-text-fill-color:currentColor}}
   /* term links: a regular green link that opens the glossary in a new tab */
   a.t{color:var(--link)}
   a.t:hover{color:var(--head)}
@@ -240,6 +247,9 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
+/* the credit line shines each time the reader reaches the bottom of the page */
+(function(){var by=document.querySelector('.foot .by');if(!by||!('IntersectionObserver' in window))return;
+new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){by.classList.remove('shine');void by.offsetWidth;by.classList.add('shine');}});},{threshold:1}).observe(by);})();
 /* the button follows the system theme when it changes, and a choice made in another tab or before Back */
 (function(){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq){if(mq.addEventListener)mq.addEventListener('change',t101Label);else if(mq.addListener)mq.addListener(t101Label);}
 function sync(){var t=null;try{t=localStorage.getItem('t101-theme');}catch(e){}if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);t101Label();}
