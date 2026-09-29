@@ -55,6 +55,30 @@
   .terms div{margin:.25rem 0}
   .terms b{color:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;margin-right:.5rem;white-space:nowrap}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  /* Sources: a box closed by default; inside, the card's sections as groups that open one at a time (one name), each
+     row a claim and its source (Ron, 2026-09-28) */
+  .srcs{padding:0}
+  .srcs summary{display:flex;align-items:baseline;gap:.15rem .8rem;cursor:pointer;list-style:none}
+  .srcs summary::-webkit-details-marker{display:none}
+  .srcs summary::before{content:"";align-self:center;flex:none;width:.42rem;height:.42rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);margin:0 .15rem 0 .1rem;transition:transform .2s}
+  .srcs[open]>summary::before,.srcs-g[open]>summary::before{transform:rotate(45deg)}
+  .srcs summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .srcs>summary{flex-wrap:wrap;padding:.75rem 1rem}
+  .srcs>summary:hover .srcs-t{color:var(--link)}
+  .srcs-t{font-weight:600;color:var(--head)}
+  .srcs-v{font-size:.84rem;color:var(--muted)}
+  .srcs-in{padding:0 1rem .45rem}
+  .srcs-g{border-top:1px solid var(--line)}
+  .srcs-g>summary{padding:.6rem 0;color:var(--head)}
+  .srcs-g>summary:hover{color:var(--link)}
+  .srcs-g .n{margin-left:auto;align-self:center;font-size:.76rem;line-height:1.5;color:var(--muted);background:var(--tint);border-radius:999px;padding:0 .55rem}
+  .srcs ul{list-style:none;margin:0 0 .55rem;padding:0 0 0 1.35rem}
+  .srcs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,15rem);gap:.15rem 1.2rem;padding:.45rem 0;border-top:1px dashed var(--line);line-height:1.45}
+  .srcs .by{font:.78rem/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}
+  .srcs .by a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .srcs .by a:hover{color:var(--head)}
+  @media (prefers-reduced-motion: reduce){.srcs summary::before{transition:none}}
+  @media (max-width:560px){.srcs li{grid-template-columns:minmax(0,1fr)}.srcs ul{padding-left:.9rem}}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
@@ -69,7 +93,7 @@
   .tx{background:var(--surface);border-radius:14px;padding:1rem 1.1rem 1.1rem}
   .txh{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.4rem 1rem;margin-bottom:.9rem}
   .txh .lbl{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-  .txh .id{font:.8rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted);word-break:break-all}
+  .txh .id{font:.8rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
   @media (max-width:560px){.cols{grid-template-columns:1fr}}
   .col h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 .5rem;font-weight:600}
@@ -105,6 +129,10 @@
   /* highlight, both directions */
   .tx[data-hl="1"] [data-m="1"],.tx[data-hl="2"] [data-m="2"],.tx[data-hl="3"] [data-m="3"],.tx[data-hl="4"] [data-m="4"],.tx[data-hl="5"] [data-m="5"],.tx[data-hl="6"] [data-m="6"]{border-color:var(--accent);background:var(--tint)}
   .legend[data-hl="1"] li[data-m="1"],.legend[data-hl="2"] li[data-m="2"],.legend[data-hl="3"] li[data-m="3"],.legend[data-hl="4"] li[data-m="4"],.legend[data-hl="5"] li[data-m="5"],.legend[data-hl="6"] li[data-m="6"]{background:var(--surface)}
+  /* the theme the reader picked also sets the browser's own parts (scrollbars, form controls); the button shows keyboard focus */
+  :root[data-theme="light"]{color-scheme:light}
+  :root[data-theme="dark"]{color-scheme:dark}
+  .theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   /* term links: a regular green link that opens the glossary in a new tab */
   a.t{color:var(--link)}
   a.t:hover{color:var(--head)}
@@ -122,7 +150,7 @@
 
 <ol class="legend" id="legend">
   <li data-m="1"><span class="m">1</span><b>Input.</b> An existing <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> from a past <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a>, ready to be used.</li>
-  <li data-m="2"><span class="m">2</span><b>Signature.</b> A proof, made with the spender's <a class="t" target="_blank" rel="noopener" href="glossary.html#private-key">private key</a> (seed), that authorizes using this UTXO.</li>
+  <li data-m="2"><span class="m">2</span><b>Signature.</b> A proof, made with the spender's <a class="t" target="_blank" rel="noopener" href="glossary.html#private-key">private key</a>, that authorizes using this UTXO.</li>
   <li data-m="3"><span class="m">3</span><b>Output.</b> The brand-new UTXO(s) created from the combined inputs, representing the payment to the receiver, and any <a class="t" target="_blank" rel="noopener" href="glossary.html#change">change</a> back to the sender.</li>
   <li data-m="4"><span class="m">4</span><b>Change.</b> An output that comes back to the sender's own <a class="t" target="_blank" rel="noopener" href="glossary.html#address">address</a>: what's left from the inputs after the payment and the fee.</li>
   <li data-m="5"><span class="m">5</span><b>Fee.</b> Input minus output, goes to the <a class="t" target="_blank" rel="noopener" href="glossary.html#miner">miner</a> who placed the transaction inside a <a class="t" target="_blank" rel="noopener" href="glossary.html#block">block</a> in the network.</li>
@@ -130,7 +158,63 @@
 </ol>
 
 <h2>Sources</h2>
-<p class="src">In rusty-kaspa a transaction is a version, a list of inputs, a list of outputs, a lock time and a few more fields. An input is a previous outpoint (transaction id and index), a signature script and a sequence. An output is a value and a script public key (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/tx.rs">consensus/core/src/tx.rs</a>). A node checks a transaction on its own (input and output counts, no duplicate inputs, value ranges: <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_isolation.rs">tx_validation_in_isolation.rs</a>) and against the UTXO set (every input must exist and be unspent, total out may not exceed total in, fee = in minus out, the script of every input is run: <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs">tx_validation_in_utxo_context.rs</a>). Read at release v2.0.1. The transaction shown was read from the public Kaspa API on 4 September 2026 and is linked in its header.</p>
+<details class="src srcs">
+<summary><span class="srcs-t">24 sources</span><span class="srcs-v">read at rusty-kaspa v2.1.0</span></summary>
+<div class="srcs-in">
+<details class="srcs-g" name="srcg"><summary>Transaction<span class="n">3</span></summary>
+<ul>
+<li><span>A transaction is a version, inputs, outputs, a lock time and a few more fields</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> Transaction</span></li>
+<li><span>The transaction shown, read from the public Kaspa API on 4 September 2026</span><span class="by"><a href="https://explorer.kaspa.org/txs/84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f" target="_blank" rel="noopener">transaction 84b40f9b…7aee54f</a></span></li>
+<li><span>On mainnet, in a block from 28 August 2026 at 06:42 UTC</span><span class="by"><a href="https://explorer.kaspa.org/txs/84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f" target="_blank" rel="noopener">transaction 84b40f9b…7aee54f</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Input<span class="n">2</span></summary>
+<ul>
+<li><span>An input names a past output by transaction id and index, and has a sequence</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> TransactionInput, previous_<wbr>outpoint, TransactionOutpoint, sequence</span></li>
+<li><span>The four inputs of 2, 2.978014, 54.485802 and 17,159.67 KAS, and where each came from</span><span class="by"><a href="https://explorer.kaspa.org/txs/84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f" target="_blank" rel="noopener">transaction 84b40f9b…7aee54f</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Signature<span class="n">4</span></summary>
+<ul>
+<li><span>Each input carries a signature script</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> signature_<wbr>script</span></li>
+<li><span>A wallet signs each input with the private key</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/sign.rs" target="_blank" rel="noopener">sign.rs</a> sign_<wbr>with_<wbr>multiple_<wbr>v2 · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/hashing/sighash.rs" target="_blank" rel="noopener">sighash.rs</a> calc_<wbr>schnorr_<wbr>signature_<wbr>hash</span></li>
+<li><span>The wallet makes its private keys from the seed</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/bip32/src/xprivate_key.rs" target="_blank" rel="noopener">xprivate_<wbr>key.rs</a> ExtendedPrivateKey::new · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/bip32/src/mnemonic/phrase.rs" target="_blank" rel="noopener">phrase.rs</a> to_<wbr>seed</span></li>
+<li><span>The node checks the signature against the public key in the UTXO's lock</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCheckSig · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> check_<wbr>schnorr_<wbr>signature</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Output<span class="n">3</span></summary>
+<ul>
+<li><span>An output holds an amount and a lock, the script public key</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> TransactionOutput, value, script_<wbr>public_<wbr>key</span></li>
+<li><span>Each output becomes a brand-new UTXO</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_diff.rs" target="_blank" rel="noopener">utxo_<wbr>diff.rs</a> add_<wbr>transaction</span></li>
+<li><span>The payment, 6,678 KAS to kaspa:qq9mgv3m…dlqhxps</span><span class="by"><a href="https://explorer.kaspa.org/txs/84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f" target="_blank" rel="noopener">transaction 84b40f9b…7aee54f</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Change<span class="n">2</span></summary>
+<ul>
+<li><span>A wallet sends what is left after the payment and the fee to its change address</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/tx/generator/generator.rs" target="_blank" rel="noopener">generator.rs</a> change_<wbr>address</span></li>
+<li><span>The change, 10,541.128426 KAS, back to kaspa:qqr0pymt…99hzdyd, the address of all four inputs</span><span class="by"><a href="https://explorer.kaspa.org/txs/84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f" target="_blank" rel="noopener">transaction 84b40f9b…7aee54f</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Fee<span class="n">3</span></summary>
+<ul>
+<li><span>The fee is total in minus total out</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs" target="_blank" rel="noopener">tx_<wbr>validation_<wbr>in_<wbr>utxo_<wbr>context.rs</a> validate_<wbr>populated_<wbr>transaction_<wbr>and_<wbr>get_<wbr>fee</span></li>
+<li><span>The fee goes to the miner whose block holds the transaction</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">utxo_<wbr>validation.rs</a> calculate_<wbr>utxo_<wbr>state · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/coinbase.rs" target="_blank" rel="noopener">coinbase.rs</a> expected_<wbr>coinbase_<wbr>transaction</span></li>
+<li><span>In 17,219.133816 KAS, out 17,219.128426 KAS, fee 0.00539 KAS</span><span class="by"><a href="https://explorer.kaspa.org/txs/84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f" target="_blank" rel="noopener">transaction 84b40f9b…7aee54f</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Node verification<span class="n">7</span></summary>
+<ul>
+<li><span>Checked on its own: input and output counts, no input used twice, amounts in range</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/transaction_validator/tx_validation_in_isolation.rs" target="_blank" rel="noopener">tx_<wbr>validation_<wbr>in_<wbr>isolation.rs</a> check_<wbr>transaction_<wbr>inputs_<wbr>count, check_<wbr>transaction_<wbr>outputs_<wbr>count, check_<wbr>duplicate_<wbr>transaction_<wbr>inputs, check_<wbr>transaction_<wbr>output_<wbr>value_<wbr>ranges</span></li>
+<li><span>Every input must be in the UTXO set, so it exists and is unspent</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">utxo_<wbr>validation.rs</a> validate_<wbr>transaction_<wbr>in_<wbr>utxo_<wbr>context, MissingTxOutpoints</span></li>
+<li><span>The script of every input is run</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs" target="_blank" rel="noopener">tx_<wbr>validation_<wbr>in_<wbr>utxo_<wbr>context.rs</a> check_<wbr>scripts</span></li>
+<li><span>Total out may not be more than total in</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs" target="_blank" rel="noopener">tx_<wbr>validation_<wbr>in_<wbr>utxo_<wbr>context.rs</a> check_<wbr>transaction_<wbr>output_<wbr>values, SpendTooHigh</span></li>
+<li><span>All or nothing: one failed check leaves the whole transaction out</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/pipeline/virtual_processor/utxo_validation.rs" target="_blank" rel="noopener">utxo_<wbr>validation.rs</a> validate_<wbr>transaction_<wbr>in_<wbr>utxo_<wbr>context, calculate_<wbr>utxo_<wbr>state</span></li>
+<li><span>The node takes the spent UTXOs out and adds the new ones</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_diff.rs" target="_blank" rel="noopener">utxo_<wbr>diff.rs</a> add_<wbr>transaction</span></li>
+<li><span>This transaction was accepted</span><span class="by"><a href="https://explorer.kaspa.org/txs/84b40f9b75bcc540ed9830f1d9cfb6867c24bd9c034ae530c7ff44da77aee54f" target="_blank" rel="noopener">transaction 84b40f9b…7aee54f</a></span></li>
+</ul>
+</details>
+</div>
+</details>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.1.html">Last card</a> · <span>Next: <a href="card-1.3.html">FEE-fi-fo-MASS</a></span></div>
@@ -160,7 +244,7 @@ function show(){
   });
   h+='</div></div>';
   h+='<div class="sums" data-m="5"><span class="m">5</span><div class="cell"><b>'+kas(tin)+'</b><span>in</span></div><div class="op">&minus;</div><div class="cell"><b>'+kas(tout)+'</b><span>out</span></div><div class="op">=</div><div class="cell fee"><b>'+kas(fee)+' KAS</b><span>fee, to the miner</span></div></div>';
-  h+='<div class="check" data-m="6"><span class="m">6</span><b>Node verifications:</b> inputs exist and are unspent <span class="ok">✓</span> · every script satisfied <span class="ok">✓</span> · no more outs than in <span class="ok">✓</span><br><b>Accepted, whole.</b></div>';
+  h+='<div class="check" data-m="6"><span class="m">6</span><b>Node verifications:</b> inputs exist and are unspent <span class="ok">✓</span> · every script satisfied <span class="ok">✓</span> · no more KAS out than in <span class="ok">✓</span><br><b>Accepted, whole.</b></div>';
   document.getElementById('tx').innerHTML=h;
   wire();
 }
@@ -169,7 +253,9 @@ function wire(){
   function set(m){tx.setAttribute('data-hl',m||'');lg.setAttribute('data-hl',m||'');}
   document.querySelectorAll('[data-m]').forEach(function(el){
     el.onmouseenter=function(e){e.stopPropagation();set(el.getAttribute('data-m'));};
-    el.onmouseleave=function(){set('');};
+    el.addEventListener('focusin',function(){set(el.getAttribute('data-m'));});
+    el.addEventListener('focusout',function(){set('');});
+    el.onmouseleave=function(){var p=el.parentElement&&el.parentElement.closest('[data-m]');set(p?p.getAttribute('data-m'):'');};
   });
 }
 show();
@@ -177,6 +263,10 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
+/* the button follows the system theme when it changes, and a choice made in another tab or before Back */
+(function(){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq){if(mq.addEventListener)mq.addEventListener('change',t101Label);else if(mq.addListener)mq.addListener(t101Label);}
+function sync(){var t=null;try{t=localStorage.getItem('t101-theme');}catch(e){}if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);t101Label();}
+window.addEventListener('pageshow',function(e){if(e.persisted)sync();});window.addEventListener('storage',function(e){if(e.key==='t101-theme')sync();});})();
 </script>
 </body>
 </html>

@@ -45,12 +45,36 @@
   .theme{white-space:nowrap;flex:none;margin-left:auto}
   .kicker{white-space:nowrap;margin-right:auto}
   @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
-  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em;text-align:center}
   h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
   h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
   .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0 0 1.4rem;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
   p{margin:0 0 1rem}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  /* Sources: a box closed by default; inside, the card's sections as groups that open one at a time (one name), each
+     row a claim and its source (Ron, 2026-09-28) */
+  .srcs{padding:0}
+  .srcs summary{display:flex;align-items:baseline;gap:.15rem .8rem;cursor:pointer;list-style:none}
+  .srcs summary::-webkit-details-marker{display:none}
+  .srcs summary::before{content:"";align-self:center;flex:none;width:.42rem;height:.42rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);margin:0 .15rem 0 .1rem;transition:transform .2s}
+  .srcs[open]>summary::before,.srcs-g[open]>summary::before{transform:rotate(45deg)}
+  .srcs summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .srcs>summary{flex-wrap:wrap;padding:.75rem 1rem}
+  .srcs>summary:hover .srcs-t{color:var(--link)}
+  .srcs-t{font-weight:600;color:var(--head)}
+  .srcs-v{font-size:.84rem;color:var(--muted)}
+  .srcs-in{padding:0 1rem .45rem}
+  .srcs-g{border-top:1px solid var(--line)}
+  .srcs-g>summary{padding:.6rem 0;color:var(--head)}
+  .srcs-g>summary:hover{color:var(--link)}
+  .srcs-g .n{margin-left:auto;align-self:center;font-size:.76rem;line-height:1.5;color:var(--muted);background:var(--tint);border-radius:999px;padding:0 .55rem}
+  .srcs ul{list-style:none;margin:0 0 .55rem;padding:0 0 0 1.35rem}
+  .srcs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,15rem);gap:.15rem 1.2rem;padding:.45rem 0;border-top:1px dashed var(--line);line-height:1.45}
+  .srcs .by{font:.78rem/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}
+  .srcs .by a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .srcs .by a:hover{color:var(--head)}
+  @media (prefers-reduced-motion: reduce){.srcs summary::before{transition:none}}
+  @media (max-width:560px){.srcs li{grid-template-columns:minmax(0,1fr)}.srcs ul{padding-left:.9rem}}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
@@ -79,13 +103,15 @@
   .bar{position:relative;height:14px;background:var(--bg);border:1.5px solid var(--line);border-radius:999px;overflow:hidden}
   .bar .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);transition:width .15s,background .15s}
   .bar .fill.no{background:var(--refused)}
+  @media (prefers-reduced-motion:reduce){.num,.bar .fill{transition:none}}
   .bar .cap{position:absolute;top:0;bottom:0;left:90%;width:1.5px;background:var(--refused)}
   .scale{display:flex;font-size:.72rem;color:var(--muted);margin:.25rem 0 0;position:relative;height:1.2em}
   .scale > span{position:absolute;transform:translateX(-50%);white-space:nowrap}
   .scale > span:first-child{transform:none}
   .scale > span:last-child{transform:translateX(-100%)}
   .scale .sm{display:none}
-  @media (max-width:560px){.scale .lg,.scale .mid{display:none}.scale .sm{display:inline}}
+  @media (max-width:560px){.scale .mid{display:none}}
+  @media (max-width:760px){.scale .lg{display:none}.scale .sm{display:inline}}
   .msg{margin:.8rem 0 0;font-size:.93rem;color:var(--text);min-height:2.6em}
   .msg.no{color:var(--refused);font-weight:600}
   .cap-txt{font-size:.85rem;color:var(--muted);margin:.9rem 0 0}
@@ -93,6 +119,10 @@
   .chain li{margin:0 0 .6rem}
   .chain b{color:var(--head)}
   .chain code{font-size:.82rem}
+  /* the theme the reader picked also sets the browser's own parts (scrollbars, form controls); the button shows keyboard focus */
+  :root[data-theme="light"]{color-scheme:light}
+  :root[data-theme="dark"]{color-scheme:dark}
+  .theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   /* term links: a regular green link that opens the glossary in a new tab */
   a.t{color:var(--link)}
   a.t:hover{color:var(--head)}
@@ -107,13 +137,13 @@
 <p class="one">The fee is a price per gram of weight, and a very small new piece of KAS weighs a lot.</p>
 
 <p>A Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> is weighed in <a class="t" target="_blank" rel="noopener" href="glossary.html#gram">grams</a>, and the <a class="t" target="_blank" rel="noopener" href="glossary.html#fee">fee</a> is a price per gram: 100 <a class="t" target="_blank" rel="noopener" href="glossary.html#sompi">sompi</a> a gram today, a hundred-millionth of a KAS each. A plain payment (one <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> in, two UTXOs out) weighs about two thousand grams and costs a fraction of a cent.</p>
-<p>Two things go on the scale. The first is size: the <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a> and the checking work, the same for 10 KAS and for 10,000. The second is storage. Every <a class="t" target="_blank" rel="noopener" href="glossary.html#piece">piece</a> of KAS you create is a UTXO that every <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> keeps for as long as it exists, so the network prices it. A big piece is light. A small piece is heavy, and the weight climbs fast as the piece shrinks. Carving 1 KAS out of a large piece adds ten thousand grams. 0.1 KAS adds a hundred thousand, and the fee equals the amount. At 0.02 KAS you reach the most a <a class="t" target="_blank" rel="noopener" href="glossary.html#block">block</a> can hold. Below that, the nodes refuse the transaction, whatever fee you offer.</p>
-<p>The heavier of the two weights sets the fee. <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">Spending</a> small pieces you already hold, or merging them, takes weight off the scale. Your <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> does the weighing and picks the pieces. You only feel it when you ask for a very small piece.</p>
+<p>Two things go on the scale. The first is size: the <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a> and the checking work, the same for 10 KAS and for 10,000. The second is storage. Every <a class="t" target="_blank" rel="noopener" href="glossary.html#piece">piece</a> of KAS you create is a UTXO that every <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> keeps for as long as it exists, so the network prices it. A big piece is light. A small piece is heavy, and the weight climbs fast as the piece shrinks. Carving 1 KAS out of a large piece weighs ten thousand grams. 0.1 KAS weighs a hundred thousand, and the fee equals the amount. At 0.02 KAS you reach the most a <a class="t" target="_blank" rel="noopener" href="glossary.html#block">block</a> can hold. Below that, the nodes refuse the transaction, whatever fee you offer.</p>
+<p>The heavier of the two weights sets the fee your <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> pays. <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">Spending</a> small pieces you already hold, or merging them, takes weight off the scale. Your wallet does the weighing and picks the pieces. You only feel it when you ask for a very small piece.</p>
 
 <h2>The piece you create</h2>
 <figure class="w" style="margin:0">
   <div class="wh"><span class="lbl">Carve this out of a large piece</span><span class="wv" id="wv">1<small>KAS</small></span></div>
-  <input type="range" id="ws" min="0" max="1000" value="667" aria-label="the size of the piece you create">
+  <input type="range" id="ws" min="0" max="1000" value="667" aria-label="Carve this out of a large piece: the size of the piece you create">
   <div class="ticks"><span>0.01 KAS</span><span>0.1</span><span>1</span><span>10 KAS</span></div>
   <div class="nums">
     <div class="num" id="n-st"><span class="k">storage weight</span><span class="v" id="wst">10,001 g</span></div>
@@ -122,7 +152,7 @@
   </div>
   <div class="bar"><div class="fill" id="wf"></div><div class="cap"></div></div>
   <div class="scale"><span style="left:0">1,000 g</span><span style="left:33.3%">10,000</span><span class="mid" style="left:66.7%">100,000</span><span style="left:100%"><span class="lg">500,000, the most a block can hold</span><span class="sm">500,000</span></span></div>
-  <p class="msg" id="wmsg"></p>
+  <p class="msg" id="wmsg" aria-live="polite"></p>
   <p class="cap-txt">One piece carved out of a 313 KAS piece, the shape of a real send from 6 September 2026: one input, two outputs, size weight 2,047 grams. The storage weight is the node's formula. Fee at 100 sompi a gram.</p>
 </figure>
 
@@ -135,7 +165,48 @@
 </ol>
 
 <h2>Sources</h2>
-<p class="src">The storage weight is KIP-9 (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/kips/blob/master/kip-0009.md">kaspanet/kips, kip-0009</a>): for each output about 10<sup>12</sup> divided by its value in sompi, minus a relief for the pieces spent, in rusty-kaspa v2.0.1 <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/mass/mod.rs">consensus/core/src/mass/mod.rs</a> (<code>calc_storage_mass</code>) with <code>STORAGE_MASS_PARAMETER = SOMPI_PER_KASPA × 10,000</code> in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/constants.rs">constants.rs</a>. A block holds at most 500,000 grams of storage weight (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/params.rs">config/params.rs</a>) and the mempool refuses a transaction above it (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/check_transaction_limits.rs">mining/src/mempool/check_transaction_limits.rs</a>). The relay floor is 100 sompi per gram of size weight (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/mining/src/mempool/check_transaction_standard.rs">check_transaction_standard.rs</a>), and the network's fee estimate returned 100 sompi per gram in every bucket on 6 September 2026 (<a target="_blank" rel="noopener" href="https://api.kaspa.org/info/fee-estimate">api.kaspa.org/info/fee-estimate</a>). The reference wallet pays the rate times the heavier of the two weights (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/wallet/core/src/tx/generator/generator.rs">wallet/core/src/tx/generator/generator.rs</a>, <code>calc_transaction_fees</code>). The three transactions above were read from api.kaspa.org on 6 September 2026, their storage weight recomputed with the formula and matched to their fees to the sompi.</p>
+<details class="src srcs">
+<summary><span class="srcs-t">25 sources</span><span class="srcs-v">read at rusty-kaspa v2.1.0</span></summary>
+<div class="srcs-in">
+<details class="srcs-g" name="srcg"><summary>Fee and mass<span class="n">17</span></summary>
+<ul>
+<li><span>A transaction is weighed in grams, and the fee is a price per gram</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/mass/units.rs" target="_blank" rel="noopener">units.rs</a> Gram · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> calculated_<wbr>feerate</span></li>
+<li><span>100 sompi a gram in every bucket of the fee estimate, on 6 and 28 September 2026</span><span class="by"><a href="https://api.kaspa.org/info/fee-estimate" target="_blank" rel="noopener">api.kaspa.org/<wbr>info/<wbr>fee-estimate</a></span></li>
+<li><span>The lowest fee a node takes, 100 sompi a gram of size weight</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/mining/src/mempool/check_transaction_standard.rs" target="_blank" rel="noopener">check_<wbr>transaction_<wbr>standard.rs</a> check_<wbr>transaction_<wbr>standard_<wbr>in_<wbr>context · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/mining/src/mempool/config.rs" target="_blank" rel="noopener">mempool/<wbr>config.rs</a> DEFAULT_<wbr>MINIMUM_<wbr>RELAY_<wbr>TRANSACTION_<wbr>FEE</span></li>
+<li><span>A sompi is a hundred-millionth of a KAS</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/constants.rs" target="_blank" rel="noopener">constants.rs</a> SOMPI_<wbr>PER_<wbr>KASPA</span></li>
+<li><span>A plain payment, one in and two out, weighs about 2,000 grams</span><span class="by"><a href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914" target="_blank" rel="noopener">transaction 60a2f205…f145914</a> · <a href="https://github.com/kaspanet/kips/blob/master/kip-0009.md" target="_blank" rel="noopener">KIP-9</a></span></li>
+<li><span>A plain payment costs a fraction of a cent, KAS at $0.046 on 28 September 2026</span><span class="by"><a href="https://api.kaspa.org/info/price" target="_blank" rel="noopener">api.kaspa.org/<wbr>info/<wbr>price</a></span></li>
+<li><span>Size weight is the bytes and the checking work, the same for 10 KAS and for 10,000</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/mass/mod.rs" target="_blank" rel="noopener">mass/<wbr>mod.rs</a> calc_<wbr>non_<wbr>contextual_<wbr>masses · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/params.rs" target="_blank" rel="noopener">params.rs</a> mass_<wbr>per_<wbr>tx_<wbr>byte, mass_<wbr>per_<wbr>script_<wbr>pub_<wbr>key_<wbr>byte, mass_<wbr>per_<wbr>sig_<wbr>op</span></li>
+<li><span>Every node keeps each UTXO, so the network prices it</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0009.md" target="_blank" rel="noopener">KIP-9</a></span></li>
+<li><span>Storage weight is about 10¹² divided by each new piece's value in sompi, minus a relief for the pieces spent</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0009.md" target="_blank" rel="noopener">KIP-9</a> · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/constants.rs" target="_blank" rel="noopener">constants.rs</a> STORAGE_<wbr>MASS_<wbr>PARAMETER = SOMPI_<wbr>PER_<wbr>KASPA * 10_<wbr>000</span></li>
+<li><span>Carving 1 KAS out of a large piece weighs 10,000 grams, 0.1 KAS weighs 100,000</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0009.md" target="_blank" rel="noopener">KIP-9</a></span></li>
+<li><span>A block holds at most 500,000 grams of storage weight, the weight of a 0.02 KAS piece</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/params.rs" target="_blank" rel="noopener">params.rs</a> block_<wbr>mass_<wbr>limits, storage: 500_<wbr>000</span></li>
+<li><span>Nodes refuse a transaction above it, whatever the fee</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/mining/src/mempool/check_transaction_limits.rs" target="_blank" rel="noopener">check_<wbr>transaction_<wbr>limits.rs</a> validate_<wbr>transaction_<wbr>limits_<wbr>in_<wbr>context, RejectStorageMass</span></li>
+<li><span>The heavier of the two weights sets the fee your wallet pays</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/tx/generator/generator.rs" target="_blank" rel="noopener">generator.rs</a> calc_<wbr>transaction_<wbr>fees · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> calculated_<wbr>feerate</span></li>
+<li><span>The reference wallet pays the rate times the heavier weight</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/tx/generator/generator.rs" target="_blank" rel="noopener">generator.rs</a> calc_<wbr>transaction_<wbr>fees · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/tx/mass.rs" target="_blank" rel="noopener">wallet mass.rs</a> combine_<wbr>mass</span></li>
+<li><span>Spending or merging pieces you hold takes weight off</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0009.md" target="_blank" rel="noopener">KIP-9</a></span></li>
+<li><span>Your wallet weighs the transaction and picks the pieces</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/tx/generator/generator.rs" target="_blank" rel="noopener">generator.rs</a> calculate_<wbr>mass, TRANSACTION_<wbr>MASS_<wbr>BOUNDARY_<wbr>FOR_<wbr>ADDITIONAL_<wbr>INPUT_<wbr>ACCUMULATION</span></li>
+<li><span>You feel storage weight only when you ask for a small piece</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0009.md" target="_blank" rel="noopener">KIP-9</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>The piece you create<span class="n">3</span></summary>
+<ul>
+<li><span>The storage weight is the node's formula for one input, in whole numbers</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/mass/mod.rs" target="_blank" rel="noopener">mass/<wbr>mod.rs</a> calc_<wbr>storage_<wbr>mass</span></li>
+<li><span>A real send of 6 September 2026: 313 KAS in, two outputs, size weight 2,047 grams</span><span class="by"><a href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914" target="_blank" rel="noopener">transaction 60a2f205…f145914</a></span></li>
+<li><span>Past 500,000 grams no block can hold the piece</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/pipeline/body_processor/body_validation_in_isolation.rs" target="_blank" rel="noopener">body_<wbr>validation_<wbr>in_<wbr>isolation.rs</a> check_<wbr>block_<wbr>mass, ExceedsStorageMassLimit</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Look at it on chain<span class="n">5</span></summary>
+<ul>
+<li><span>All three pay 100 sompi a gram of the heavier weight, the storage weight worked out and matched to the sompi on 6 September 2026</span><span class="by"><a href="https://api.kaspa.org/docs" target="_blank" rel="noopener">api.kaspa.org</a> transactions · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/mass/mod.rs" target="_blank" rel="noopener">mass/<wbr>mod.rs</a> calc_<wbr>storage_<wbr>mass</span></li>
+<li><span>The explorer's mass is the size weight, the storage weight shows in the fee</span><span class="by"><a href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914" target="_blank" rel="noopener">transaction 60a2f205…f145914</a></span></li>
+<li><span>Carving 0.3 KAS out of a 313 KAS piece: size 2,047 grams, storage 33,333 grams, fee 0.03333 KAS</span><span class="by"><a href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914" target="_blank" rel="noopener">transaction 60a2f205…f145914</a></span></li>
+<li><span>Moving a 0.3 KAS piece whole: storage 203 grams, size 1,813 grams, fee 0.00181 KAS</span><span class="by"><a href="https://explorer.kaspa.org/txs/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d" target="_blank" rel="noopener">transaction 2436d2fc…7501f3d</a></span></li>
+<li><span>Merging five pieces into 3 KAS and change: storage 0, size 6,519 grams, fee 0.00652 KAS</span><span class="by"><a href="https://explorer.kaspa.org/txs/b8c988654950a44b5fd3a4eb31a448a5a721753f1d8e3391717820921098b842" target="_blank" rel="noopener">transaction b8c98865…098b842</a></span></li>
+</ul>
+</details>
+</div>
+</details>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.2.html">Last card</a> · <span>Next: <a href="card-1.4.html">Addresses and Locks</a></span></div>
@@ -147,6 +218,10 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
+/* the button follows the system theme when it changes, and a choice made in another tab or before Back */
+(function(){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq){if(mq.addEventListener)mq.addEventListener('change',t101Label);else if(mq.addListener)mq.addListener(t101Label);}
+function sync(){var t=null;try{t=localStorage.getItem('t101-theme');}catch(e){}if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);t101Label();}
+window.addEventListener('pageshow',function(e){if(e.persisted)sync();});window.addEventListener('storage',function(e){if(e.key==='t101-theme')sync();});})();
 
 /* the slider: one piece carved out of a 313.250522 KAS piece, one input, two outputs (the piece and the change).
    storage weight, as the node computes it (KIP-9, relaxed form for one input):
@@ -158,13 +233,13 @@ t101Label();
       nst=document.getElementById('n-st'), nsz=document.getElementById('n-sz'), nfee=document.getElementById('n-fee');
   function fmtG(g){return g.toLocaleString('en-US')+' g';}
   function fmtKas(sompi){var k=sompi/1e8; var str=k>=1?k.toLocaleString('en-US',{maximumFractionDigits:3}):k.toFixed(5).replace(/0+$/,'').replace(/\.$/,''); return str;}
-  function fmtPct(p){ if(p>=10) return Math.round(p)+'%'; if(p>=1) return p.toFixed(1).replace(/\.0$/,'')+'%'; return p.toPrecision(2).replace(/\.?0+$/,'')+'%'; }
+  function fmtPct(p){ if(p>=10) return Math.round(p).toLocaleString('en-US')+'%'; if(p>=1) return p.toFixed(1).replace(/\.0$/,'')+'%'; return p.toPrecision(2).replace(/\.?0+$/,'')+'%'; }
   function pieceFromSlider(v){ var lg=-2+3*(v/1000); var kas=Math.pow(10,lg); /* round to 3 significant digits */ var m=Math.pow(10,Math.floor(Math.log10(kas))-1); kas=Math.round(kas/m)*m; return Math.max(1000000,Math.round(kas*1e8)); }
   function update(){
     var piece=pieceFromSlider(+s.value); var change=INPUT-piece;
     var storage=Math.floor(C/piece)+Math.floor(C/change)-Math.floor(C/INPUT); if(storage<0)storage=0;
     var heavier=Math.max(storage,SIZE); var refused=storage>CAP; var fee=RATE*heavier;
-    wv.innerHTML=fmtKas(piece)+'<small>KAS</small>';
+    wv.innerHTML=fmtKas(piece)+'<small>KAS</small>'; s.setAttribute('aria-valuetext',fmtKas(piece)+' KAS');
     wst.textContent=fmtG(storage);
     var pos=(Math.log10(Math.max(storage,1000))-3)/3*100; if(pos<0)pos=0; if(pos>100)pos=100;
     wf.style.width=pos+'%'; wf.className='fill'+(refused?' no':'');
@@ -179,7 +254,7 @@ t101Label();
       msg.textContent=(storage>=SIZE?'The storage weight is the heavier. ':'The size weight is the heavier. ')+'The fee is '+heavier.toLocaleString('en-US')+' grams at 100 sompi each: '+fmtKas(fee)+' KAS.';
     }
   }
-  s.addEventListener('input',update); update();
+  s.addEventListener('input',update); window.addEventListener('pageshow',update); update();
 })();
 </script>
 </body>

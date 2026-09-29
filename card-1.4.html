@@ -45,7 +45,7 @@
   .theme{white-space:nowrap;flex:none;margin-left:auto}
   .kicker{white-space:nowrap;margin-right:auto}
   @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
-  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em;text-align:center}
   h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
   h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
   h2 .lc{text-transform:none}
@@ -54,6 +54,30 @@
   strong{color:var(--head)}
   code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  /* Sources: a box closed by default; inside, the card's sections as groups that open one at a time (one name), each
+     row a claim and its source (Ron, 2026-09-28) */
+  .srcs{padding:0}
+  .srcs summary{display:flex;align-items:baseline;gap:.15rem .8rem;cursor:pointer;list-style:none}
+  .srcs summary::-webkit-details-marker{display:none}
+  .srcs summary::before{content:"";align-self:center;flex:none;width:.42rem;height:.42rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);margin:0 .15rem 0 .1rem;transition:transform .2s}
+  .srcs[open]>summary::before,.srcs-g[open]>summary::before{transform:rotate(45deg)}
+  .srcs summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .srcs>summary{flex-wrap:wrap;padding:.75rem 1rem}
+  .srcs>summary:hover .srcs-t{color:var(--link)}
+  .srcs-t{font-weight:600;color:var(--head)}
+  .srcs-v{font-size:.84rem;color:var(--muted)}
+  .srcs-in{padding:0 1rem .45rem}
+  .srcs-g{border-top:1px solid var(--line)}
+  .srcs-g>summary{padding:.6rem 0;color:var(--head)}
+  .srcs-g>summary:hover{color:var(--link)}
+  .srcs-g .n{margin-left:auto;align-self:center;font-size:.76rem;line-height:1.5;color:var(--muted);background:var(--tint);border-radius:999px;padding:0 .55rem}
+  .srcs ul{list-style:none;margin:0 0 .55rem;padding:0 0 0 1.35rem}
+  .srcs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,15rem);gap:.15rem 1.2rem;padding:.45rem 0;border-top:1px dashed var(--line);line-height:1.45}
+  .srcs .by{font:.78rem/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}
+  .srcs .by a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .srcs .by a:hover{color:var(--head)}
+  @media (prefers-reduced-motion: reduce){.srcs summary::before{transition:none}}
+  @media (max-width:560px){.srcs li{grid-template-columns:minmax(0,1fr)}.srcs ul{padding-left:.9rem}}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
@@ -77,12 +101,14 @@
   .lbl b{text-transform:none;font-weight:inherit}
   .in{display:flex;gap:.6rem;flex-wrap:wrap;margin:.5rem 0 .6rem}
   .in input{flex:1 1 320px;font:.95em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:.55rem .7rem;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--head);min-width:0}
-  .in input:focus{outline:none;border-color:var(--accent)}
+  .in input:focus{outline:none;border-color:var(--link)}
+  .in input::placeholder{color:var(--muted)}
   .chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:0 0 .9rem}
   .chip{font:inherit;font-size:.8rem;color:var(--link);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;cursor:pointer}
   .chip:hover{border-color:var(--accent);color:var(--head)}
   .out{display:grid;grid-template-columns:9.5rem 1fr;gap:.45rem .8rem;font-size:.95rem;align-items:baseline}
   @media (max-width:560px){.out{grid-template-columns:1fr}.out .k{margin-top:.3rem}}
+  @media (max-width:340px){.locks .addr{white-space:normal;overflow-wrap:anywhere}}
   .out .k{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
   .out .v{color:var(--head);overflow-wrap:anywhere}
   .out .v.hex{font:.84em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
@@ -109,10 +135,15 @@
   .more summary::-webkit-details-marker{display:none}
   .more summary::before{content:"";width:.45rem;height:.45rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);transition:transform .2s;flex:none;margin-top:-.15rem}
   .more[open] summary::before{transform:rotate(45deg)}
+  @media (prefers-reduced-motion:reduce){.more summary::before{transition:none}}
   .more summary:hover{color:var(--head)}
   .more p{margin:.7rem 0 0;font-size:.95rem}
   .more p:last-child{margin-bottom:.4rem}
   .more code{font-size:.84rem}
+  /* the theme the reader picked also sets the browser's own parts (scrollbars, form controls); the button shows keyboard focus */
+  :root[data-theme="light"]{color-scheme:light}
+  :root[data-theme="dark"]{color-scheme:dark}
+  .theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   /* term links: a regular green link that opens the glossary in a new tab */
   a.t{color:var(--link)}
   a.t:hover{color:var(--head)}
@@ -136,19 +167,19 @@
 <h2>X-ray an address</h2>
 <figure class="w" style="margin:0">
   <span class="lbl" id="alab">Paste any address you want</span>
-  <div class="in"><input id="ain" type="text" spellcheck="false" autocomplete="off" placeholder="kaspa:…" aria-label="a Kaspa address"></div>
+  <div class="in"><input id="ain" type="text" spellcheck="false" autocomplete="off" placeholder="kaspa:…" aria-labelledby="alab"></div>
   <div class="chips">
     <button class="chip" type="button" data-a="kaspa:qpc6655zfnql67xqjm06m735st2h5nfn4qq4hqxgml8jj3k6hlvmxkzy9jz8q">the q address</button>
     <button class="chip" type="button" data-a="kaspa:pzzgtjkyzsgxp24plrwm90tzgqgfytltyfvuakun5p34hnl38ykmyc62fn0pl">the p address</button>
   </div>
-  <div class="out" id="aout"></div>
+  <div class="out" id="aout" aria-live="polite"></div>
 </figure>
 
 <h2><span class="lc">q vs p</span>: tell them apart</h2>
 <table>
 <tr><th></th><th>Key lock</th><th>Script lock</th></tr>
 <tr><td>The address starts with</td><td>q</td><td>p</td></tr>
-<tr><td>The address carries</td><td>a public key, 32 bytes</td><td>the fingerprint of a script, 32 bytes</td></tr>
+<tr><td>The address carries</td><td>a public key, 32 bytes (33 for ECDSA)</td><td>the fingerprint of a script, 32 bytes</td></tr>
 <tr><td>The spend must show</td><td>a <a class="t" target="_blank" rel="noopener" href="glossary.html#signature">signature</a> by that key</td><td>the script, matching the fingerprint, and whatever the script demands</td></tr>
 <tr><td>Who uses it</td><td>every wallet</td><td>every covenant</td></tr>
 </table>
@@ -165,7 +196,7 @@
   <li><b>The script revealed.</b> <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d"><code>2436d2fc…f7501f3d</code></a> spent the p output.
     <details class="more">
       <summary>Read the full case</summary>
-      <p>Transaction <code>60a2f205…</code> made two outputs: 0.3 KAS behind a p address, and the user's change behind a <a class="t" target="_blank" rel="noopener" href="glossary.html#q-address">q address</a>. A p address is the fingerprint (the hash) of a script. At that moment nobody on the network could see the script itself, <strong>only its fingerprint</strong>.</p>
+      <p>Transaction <code>60a2f205…</code> made two outputs: 0.3 KAS behind a p address, and the user's change behind a <a class="t" target="_blank" rel="noopener" href="glossary.html#q-address">q address</a>. A p address is the fingerprint (the hash) of a script. The output shows <strong>only its fingerprint</strong>, not the script itself.</p>
       <p>Then <code>2436d2fc…</code> spent that 0.3 KAS. To spend a p output you must put two things in the <a class="t" target="_blank" rel="noopener" href="glossary.html#input">input</a>: the script itself, and whatever that script demands. So the input carries the script (187 bytes) and a signature (65 bytes).</p>
       <p>The node did two things. First it hashed the script it was handed and compared the result to the 32 bytes inside the p address. <strong>They matched, so this is the script the address was made from</strong> and not a substitute. Only then did it run the script. The script says one thing: key K must sign. The signature was K's, so the script said yes and the 0.3 KAS moved.</p>
       <p>Two extra facts make the example interesting. The script also carries a dead branch (OP_FALSE OP_IF … OP_ENDIF) that the node never executes, because it's a place to stash a text note that off-chain <a class="t" target="_blank" rel="noopener" href="glossary.html#krc-20">KRC-20</a> software reads. That is why this p address is not a Toccata covenant, it's the older trick of hiding data inside a script. And key K is the very same public key the q address is built from. One owner, one key, two locks: the q output is locked by the key directly, the p output is locked by a script that demands the key. That is "Same key, two locks."</p>
@@ -174,7 +205,53 @@
 </ol>
 
 <h2>Sources</h2>
-<p class="src">An address is a prefix, a version byte and a payload, with an 8-character checksum, in rusty-kaspa v2.0.1 <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/lib.rs">crypto/addresses/src/lib.rs</a> (versions 0 PubKey, 32 bytes, 1 PubKeyECDSA, 33 bytes, 8 ScriptHash, 32 bytes) and <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/addresses/src/bech32.rs">bech32.rs</a> (the charset and the checksum). The lock each address stands for is built in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/standard.rs">crypto/txscript/src/standard.rs</a>: <code>OpData32 &lt;key&gt; OpCheckSig</code>, <code>OpData33 &lt;key&gt; OpCheckSigECDSA</code>, <code>OpBlake2b OpData32 &lt;hash&gt; OpEqual</code>, the hash being blake2b-256 of the script. Opcode values are in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/crypto/txscript/src/opcodes/mod.rs">opcodes/mod.rs</a>. The decoder on this page is a line-by-line port of bech32.rs, checked against the node's own test vectors. The two transactions were read from api.kaspa.org on 6 September 2026. The revealed script was hashed with blake2b-256 and matched to the p address.</p>
+<details class="src srcs">
+<summary><span class="srcs-t">26 sources</span><span class="srcs-v">read at rusty-kaspa v2.1.0</span></summary>
+<div class="srcs-in">
+<details class="srcs-g" name="srcg"><summary>Addresses and locks<span class="n">6</span></summary>
+<ul>
+<li><span>An address spells out the lock its output will carry</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/standard.rs" target="_blank" rel="noopener">standard.rs</a> pay_<wbr>to_<wbr>address_<wbr>script</span></li>
+<li><span>An 8 character checksum catches a typo</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/bech32.rs" target="_blank" rel="noopener">bech32.rs</a> checksum, polymod</span></li>
+<li><span>The spend of a p output ends with the script itself</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/standard.rs" target="_blank" rel="noopener">standard.rs</a> pay_<wbr>to_<wbr>script_<wbr>hash_<wbr>signature_<wbr>script</span></li>
+<li><span>The node checks the script against the fingerprint, then runs it, and the run must end true</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> execute_<wbr>inner, check_<wbr>error_<wbr>condition</span></li>
+<li><span>Toccata brought full covenants, as new script opcodes</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a> Activation</span></li>
+<li><span>Covenants live behind p addresses</span><span class="by"><a href="https://docs.kaspa.org/toccata/covenant-state" target="_blank" rel="noopener">docs.kaspa.org</a> Covenant State · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/mining/src/mempool/check_transaction_standard.rs" target="_blank" rel="noopener">check_<wbr>transaction_<wbr>standard.rs</a> RejectOutputScriptClass</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>X-ray an address<span class="n">8</span></summary>
+<ul>
+<li><span>kaspa, kaspatest, kaspasim and kaspadev name the four networks</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/lib.rs" target="_blank" rel="noopener">addresses/<wbr>src/<wbr>lib.rs</a> Prefix</span></li>
+<li><span>An address is a prefix, a version byte and a payload</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/lib.rs" target="_blank" rel="noopener">addresses/<wbr>src/<wbr>lib.rs</a> Address · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/bech32.rs" target="_blank" rel="noopener">bech32.rs</a> decode_<wbr>payload</span></li>
+<li><span>Version byte 0 holds a 32 byte key, 1 a 33 byte ECDSA key, 8 a 32 byte script hash</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/lib.rs" target="_blank" rel="noopener">addresses/<wbr>src/<wbr>lib.rs</a> PubKey, PubKeyECDSA, ScriptHash, public_<wbr>key_<wbr>len</span></li>
+<li><span>Wallets make Schnorr key addresses, ECDSA ones only when asked</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/wallet/mod.rs" target="_blank" rel="noopener">wallet/<wbr>mod.rs</a> Bip32::try_<wbr>new · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/keys/src/derivation/gen1/hd.rs" target="_blank" rel="noopener">gen1/<wbr>hd.rs</a> create_<wbr>address</span></li>
+<li><span>The three locks in bytes, 0x20 key 0xac, 0x21 key 0xab and 0xaa 0x20 hash 0x87</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/standard.rs" target="_blank" rel="noopener">standard.rs</a> pay_<wbr>to_<wbr>pub_<wbr>key, pay_<wbr>to_<wbr>pub_<wbr>key_<wbr>ecdsa, pay_<wbr>to_<wbr>script_<wbr>hash · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpData32, OpData33, OpCheckSig, OpCheckSigECDSA, OpBlake2b, OpEqual</span></li>
+<li><span>The key signs a hash of the transaction</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/hashing/sighash.rs" target="_blank" rel="noopener">sighash.rs</a> calc_<wbr>schnorr_<wbr>signature_<wbr>hash, calc_<wbr>ecdsa_<wbr>signature_<wbr>hash</span></li>
+<li><span>A wrong letter, prefix, version, length or checksum is refused</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/bech32.rs" target="_blank" rel="noopener">bech32.rs</a> decode_<wbr>payload · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/lib.rs" target="_blank" rel="noopener">addresses/<wbr>src/<wbr>lib.rs</a> AddressError</span></li>
+<li><span>This decoder copies bech32.rs line by line and passes the node's own test addresses</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/bech32.rs" target="_blank" rel="noopener">bech32.rs</a> CHARSET, polymod, conv5to8 · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/lib.rs" target="_blank" rel="noopener">addresses/<wbr>src/<wbr>lib.rs</a> cases, test_<wbr>errors</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>q vs p: tell them apart<span class="n">4</span></summary>
+<ul>
+<li><span>Version byte 0 or 1 makes the first letter q, 8 makes it p</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/bech32.rs" target="_blank" rel="noopener">bech32.rs</a> encode_<wbr>payload, CHARSET</span></li>
+<li><span>Both carry 32 bytes, a public key or the script's blake2b-256 hash</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/addresses/src/lib.rs" target="_blank" rel="noopener">addresses/<wbr>src/<wbr>lib.rs</a> public_<wbr>key_<wbr>len · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/standard.rs" target="_blank" rel="noopener">standard.rs</a> pay_<wbr>to_<wbr>script_<wbr>hash_<wbr>script</span></li>
+<li><span>A key lock asks for a signature by that key</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCheckSig · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> check_<wbr>schnorr_<wbr>signature</span></li>
+<li><span>The node's wallet hands out key lock addresses</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/keys/src/derivation/gen1/hd.rs" target="_blank" rel="noopener">gen1/<wbr>hd.rs</a> create_<wbr>address</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Look at it on chain<span class="n">8</span></summary>
+<ul>
+<li><span>One transaction, 0.3 KAS to the p address and the change to the q address, read at api.kaspa.org on 6 September 2026</span><span class="by"><a href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914" target="_blank" rel="noopener">transaction 60a2f205…f145914</a></span></li>
+<li><span>The p output spent and accepted, with a 187 byte script and a 65 byte signature</span><span class="by"><a href="https://explorer.kaspa.org/txs/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d" target="_blank" rel="noopener">transaction 2436d2fc…7501f3d</a></span></li>
+<li><span>The script's blake2b-256 hash matches the p address</span><span class="by"><a href="https://explorer.kaspa.org/txs/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d" target="_blank" rel="noopener">transaction 2436d2fc…7501f3d</a> · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpBlake2b</span></li>
+<li><span>Key K in the script is the q address's key</span><span class="by"><a href="https://explorer.kaspa.org/txs/60a2f20526cd83c783c0890e2de38e5c0527cbf1f838e67f2159f2ed3f145914" target="_blank" rel="noopener">transaction 60a2f205…f145914</a> · <a href="https://explorer.kaspa.org/txs/2436d2fc6330f220b41e7f31cf131b2780f11ae9dad6ccc9970fa527f7501f3d" target="_blank" rel="noopener">transaction 2436d2fc…7501f3d</a></span></li>
+<li><span>OP_FALSE, OP_IF and OP_ENDIF are 0x00, 0x63 and 0x68</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpFalse, OpIf, OpEndIf</span></li>
+<li><span>The node skips what sits inside a false OP_IF</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> is_<wbr>executing, execute_<wbr>opcode</span></li>
+<li><span>KRC-20 software reads the note, marked kasplex</span><span class="by"><a href="https://github.com/kasplex/go-krc20d/blob/3945db9facf6f8c77955ce33bdaa875fc31511ab/explorer/script.go" target="_blank" rel="noopener">go-krc20d/<wbr>script.go</a> parseScriptInput</span></li>
+<li><span>Its opcodes all came before Toccata</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a></span></li>
+</ul>
+</details>
+</div>
+</details>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-1.3.html">Last card</a> · <span>Next: <a href="card-1.5.html">A transaction's journey</a></span></div>
@@ -186,18 +263,24 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
+/* the button follows the system theme when it changes, and a choice made in another tab or before Back */
+(function(){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq){if(mq.addEventListener)mq.addEventListener('change',t101Label);else if(mq.addListener)mq.addListener(t101Label);}
+function sync(){var t=null;try{t=localStorage.getItem('t101-theme');}catch(e){}if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);t101Label();}
+window.addEventListener('pageshow',function(e){if(e.persisted)sync();});window.addEventListener('storage',function(e){if(e.key==='t101-theme')sync();});})();
 
+</script>
+<script>
 /* the decoder: a port of rusty-kaspa crypto/addresses/src/bech32.rs (v2.0.1). No network, nothing leaves the page. */
 (function(){
   var CHARSET='qpzry9x8gf2tvdw0s3jn54khce6mua7l';
   function polymod(values){var c=1n;for(var i=0;i<values.length;i++){var c0=c>>35n;c=((c&0x07ffffffffn)<<5n)^BigInt(values[i]);if(c0&1n)c^=0x98f2bc8e61n;if(c0&2n)c^=0x79b76d99e2n;if(c0&4n)c^=0xf33e5fb3c4n;if(c0&8n)c^=0xae2eabe2a8n;if(c0&16n)c^=0x1e4f43e470n;}return c^1n;}
   function conv5to8(u5){var out=[],buff=0,bits=0;for(var i=0;i<u5.length;i++){buff=(buff<<5)|u5[i];bits+=5;while(bits>=8){bits-=8;out.push((buff>>bits)&0xff);buff&=(1<<bits)-1;}}return out;}
   function decode(str){
-    var s=String(str||'').trim().toLowerCase(); if(!s) return null;
+    var s=String(str||'').trim(); if(!s) return null;
     var i=s.indexOf(':'); if(i<0) return {error:'Invalid address'};
     var prefix=s.slice(0,i), data=s.slice(i+1);
     var names={kaspa:'mainnet',kaspatest:'testnet',kaspasim:'simnet',kaspadev:'devnet'};
-    if(!names[prefix]) return {error:'Invalid address'};
+    if(!Object.prototype.hasOwnProperty.call(names,prefix)) return {error:'Invalid address'};
     if(data.length<8) return {error:'Invalid address'};
     var u5=[]; for(var k=0;k<data.length;k++){var v=CHARSET.indexOf(data[k]); if(v<0) return {error:'Invalid address'}; u5.push(v);}
     var payloadU5=u5.slice(0,-8), checkU5=u5.slice(-8);
@@ -224,13 +307,13 @@ t101Label();
     h+=row('version byte',String(r.version)+(r.version===0?' (a q address)':r.version===1?' (a q address, the rarer kind)':' (a p address)'));
     h+=row('inside',r.hex);
     if(r.version===8){
-      h+=row('the lock, as bytes','<span class="op"><b>aa</b> OP_BLAKE2B</span><span class="op"><b>20</b> push 32 bytes</span><span class="op">the fingerprint</span><span class="op"><b>87</b> OP_EQUAL</span>');
+      h+=row('the lock, as bytes','<span class="op"><b>aa</b> OP_BLAKE2B</span> <span class="op"><b>20</b> push 32 bytes</span> <span class="op">the fingerprint</span> <span class="op"><b>87</b> OP_EQUAL</span>');
       h+=row('a spend must show','the script whose blake2b-256 fingerprint is these 32 bytes, then whatever that script demands');
     } else if(r.version===0){
-      h+=row('the lock, as bytes','<span class="op"><b>20</b> push 32 bytes</span><span class="op">the key</span><span class="op"><b>ac</b> OP_CHECKSIG</span>');
+      h+=row('the lock, as bytes','<span class="op"><b>20</b> push 32 bytes</span> <span class="op">the key</span> <span class="op"><b>ac</b> OP_CHECKSIG</span>');
       h+=row('a spend must show','a Schnorr signature by this key over the transaction');
     } else {
-      h+=row('the lock, as bytes','<span class="op"><b>21</b> push 33 bytes</span><span class="op">the key</span><span class="op"><b>ab</b> OP_CHECKSIGECDSA</span>');
+      h+=row('the lock, as bytes','<span class="op"><b>21</b> push 33 bytes</span> <span class="op">the key</span> <span class="op"><b>ab</b> OP_CHECKSIGECDSA</span>');
       h+=row('a spend must show','an ECDSA signature by this key over the transaction');
     }
     out.innerHTML=h;

@@ -59,6 +59,30 @@
   strong{color:var(--head)}
   code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  /* Sources: a box closed by default; inside, the card's sections as groups that open one at a time (one name), each
+     row a claim and its source (Ron, 2026-09-28) */
+  .srcs{padding:0}
+  .srcs summary{display:flex;align-items:baseline;gap:.15rem .8rem;cursor:pointer;list-style:none}
+  .srcs summary::-webkit-details-marker{display:none}
+  .srcs summary::before{content:"";align-self:center;flex:none;width:.42rem;height:.42rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);margin:0 .15rem 0 .1rem;transition:transform .2s}
+  .srcs[open]>summary::before,.srcs-g[open]>summary::before{transform:rotate(45deg)}
+  .srcs summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .srcs>summary{flex-wrap:wrap;padding:.75rem 1rem}
+  .srcs>summary:hover .srcs-t{color:var(--link)}
+  .srcs-t{font-weight:600;color:var(--head)}
+  .srcs-v{font-size:.84rem;color:var(--muted)}
+  .srcs-in{padding:0 1rem .45rem}
+  .srcs-g{border-top:1px solid var(--line)}
+  .srcs-g>summary{padding:.6rem 0;color:var(--head)}
+  .srcs-g>summary:hover{color:var(--link)}
+  .srcs-g .n{margin-left:auto;align-self:center;font-size:.76rem;line-height:1.5;color:var(--muted);background:var(--tint);border-radius:999px;padding:0 .55rem}
+  .srcs ul{list-style:none;margin:0 0 .55rem;padding:0 0 0 1.35rem}
+  .srcs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,15rem);gap:.15rem 1.2rem;padding:.45rem 0;border-top:1px dashed var(--line);line-height:1.45}
+  .srcs .by{font:.78rem/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}
+  .srcs .by a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .srcs .by a:hover{color:var(--head)}
+  @media (prefers-reduced-motion: reduce){.srcs summary::before{transition:none}}
+  @media (max-width:560px){.srcs li{grid-template-columns:minmax(0,1fr)}.srcs ul{padding-left:.9rem}}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.55rem}
@@ -100,7 +124,7 @@
   .d .slab{stroke:none}
   .d .tx{fill:var(--muted);font:9px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-anchor:middle}
   .d .tx.big{fill:var(--head);font-size:13px;font-weight:700}
-  .d .tx.on{fill:var(--head)}
+  .d .tx.on,.d .slab+.tx{fill:var(--head)}
   .d .mid{stroke:var(--head);stroke-width:2;fill:var(--tint)}
   .d .floor{stroke:var(--head);stroke-width:1.2;stroke-dasharray:3 3}
   .d .clk{fill:var(--bg);stroke:var(--head);stroke-width:1.4}
@@ -110,6 +134,7 @@
   .d .calc{cursor:pointer}
   .d .calc:focus{outline:none}
   .d .calc:hover .bk.big,.d .calc:focus-visible .bk.big{stroke:var(--blue)}
+  .d .calc:focus-visible .bk.big{stroke-width:3.2}
   .d .bk{transform-box:fill-box;transform-origin:center;transition:transform .2s ease,stroke-width .2s ease,stroke .2s ease}
   .d .bk.hit{transform:scale(1.3);stroke:var(--blue);stroke-width:2.6}
   .d .slab{transform-box:fill-box;transform-origin:center;transition:transform .2s ease,opacity .2s ease}
@@ -144,6 +169,7 @@
   .ask.more:hover{border-color:var(--blue);color:var(--head)}
   /* the window */
   dialog{max-width:34rem;width:calc(100% - 2rem);border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);padding:0;font:inherit;overflow:hidden;box-shadow:0 18px 50px var(--shade)}
+  dialog:not([open]){display:none}
   dialog::backdrop{background:var(--shade)}
   .winbar{display:flex;align-items:flex-end;gap:.5rem;background:var(--tint);border-bottom:1px solid var(--line);padding:.45rem .55rem 0}
   .wintab{background:var(--bg);border:1px solid var(--line);border-bottom:1px solid var(--bg);border-radius:8px 8px 0 0;padding:.34rem .8rem;font-size:.8rem;color:var(--head);margin-bottom:-1px;white-space:nowrap}
@@ -161,6 +187,10 @@
   .x{margin:0 .1rem .35rem auto;font:inherit;font-size:1.1rem;line-height:1;color:var(--muted);background:transparent;border:0;cursor:pointer;padding:.1rem .4rem;border-radius:6px}
   .x:hover{color:var(--head);background:var(--bg)}
   .unixnow{font:600 1rem/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--head)}
+  /* the theme the reader picked also sets the browser's own parts (scrollbars, form controls); the button shows keyboard focus */
+  :root[data-theme="light"]{color-scheme:light}
+  :root[data-theme="dark"]{color-scheme:dark}
+  .theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   /* term links: a regular green link that opens the glossary in a new tab */
   a.t{color:var(--link)}
   a.t:hover{color:var(--head)}
@@ -234,7 +264,7 @@
     <p>Every time a <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> is created it captures the network's current DAA score. At the same time, a new and specific DAA score count starts. This count is the <a class="t" target="_blank" rel="noopener" href="glossary.html#coin-age">coin age</a>: the difference between the current global DAA score and the UTXO's creation score.</p>
     <div class="art coinrow">
       <button class="coin" id="coinbtn" type="button" title="Update the coin age" aria-label="Update the coin age"><span class="spin"><span class="ce e4"></span><span class="ce e3"></span><span class="ce e2"></span><span class="ce e1"></span><span class="cb"><i class="mk bk"></i></span><span class="cf"><i class="mk"></i></span></span></button>
-      <div>
+      <div aria-live="polite">
         <div class="age" id="coinage-n">reading</div>
         <div class="tiny" id="coinage-sub">UTXO of 10 KAS</div>
         <div class="tiny" id="coinage-span"></div>
@@ -288,7 +318,7 @@
 
 <dialog id="unix" aria-label="Unix 1970">
   <div class="winbar"><span class="wintab">Unix 1970</span><button class="x" id="unixclose" type="button" aria-label="close">×</button></div>
-  <div class="winbody"><div class="scroll">
+  <div class="winbody"><div class="scroll" tabindex="0">
   <p>A computer cannot store "3 March 2026, 14:22" as a date. It can store one number. To turn a moment into a number you need a point to count from, and every machine has to use the same point. If not, the number will lose its meaning the second it leaves the machine that wrote it.</p>
   <p>The people building Unix at Bell Labs around 1970 needed such a point. They picked the start of the year. As things often do (just like we inherited the timekeeping methods from old civilizations), Unix spread, C spread, the internet spread, and now every phone, browser, database and server on earth counts from that same instant. It's called Unix time. Right now it is <span class="unixnow" id="unixnow">0</span> milliseconds, taken from the device you are reading this on.</p>
   <p>So a lock naming a date holds a plain number, and a lock naming a DAA score holds a plain number in the same slot. The network tells them apart by size alone. Below 500,000,000,000 the number is a DAA score. At or above, it is a date.</p>
@@ -307,10 +337,76 @@
 </dialog>
 
 <h2>Sources</h2>
-<p class="src">The counters are in rusty-kaspa v2.0.1. Ten blocks a second is <code>target_time_per_block</code> of 100 ms in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/config/bps.rs">consensus/core/src/config/bps.rs</a>. Blue score, blue work and the rule that reads them are in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/ghostdag/protocol.rs">ghostdag/protocol.rs</a>. A lock naming a moment is checked in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_header_context.rs">tx_validation_in_header_context.rs</a> (<code>check_tx_is_finalized</code>), which reads the number as a DAA score below <code>LOCK_TIME_THRESHOLD</code> and as a date at or above it. That constant is <code>500_000_000_000</code> in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/constants.rs">consensus/core/src/constants.rs</a>. When the number is a date, the value it is measured against is the past median time, handed in as <code>LockTimeArg::MedianTime</code> in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/pipeline/body_processor/body_validation_in_context.rs">body_validation_in_context.rs</a>. Coin age is in <a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs">tx_validation_in_utxo_context.rs</a> (<code>check_sequence_lock</code>): the coin's own <code>block_daa_score</code> plus the relative lock, measured against the DAA score being validated. Bitcoin's line is <code>LOCKTIME_THRESHOLD = 500000000</code> in <a target="_blank" rel="noopener" href="https://github.com/bitcoin/bitcoin/blob/master/src/script/script.h">src/script/script.h</a>, carrying the comment <code>Tue Nov  5 00:53:20 1985 UTC</code>, which is the same instant written a thousand times smaller. The second is defined by the <a target="_blank" rel="noopener" href="https://www.bipm.org/en/publications/si-brochure">BIPM</a> as 9,192,631,770 periods of the caesium 133 transition, and it replaced the fraction of a day in 1967. Why the Babylonians counted in 60s has never been settled, and the competing explanations are laid out by <a target="_blank" rel="noopener" href="https://mathshistory.st-andrews.ac.uk/HistTopics/Babylonian_numerals/">MacTutor</a>. The DAA score and the coin's age on this page are read live from <a target="_blank" rel="noopener" href="https://api.kaspa.org/">api.kaspa.org</a>, and the coin is one output of <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/addresses/kaspa:qp3teqqzngwu48d5tqfp9hypl7fgg9wxxuuk7qxynj8hj300hgvnyfckj765g?tab=utxos">the address card 1.1 points at</a>.</p>
+<details class="src srcs">
+<summary><span class="srcs-t">38 sources</span><span class="srcs-v">read at rusty-kaspa v2.1.0</span></summary>
+<div class="srcs-in">
+<details class="srcs-g" name="srcg"><summary>Counting time for humans<span class="n">5</span></summary>
+<ul>
+<li><span>Twelve hours for the day and twelve for the night, 24 in all</span><span class="by"><a href="https://en.wikipedia.org/wiki/Hour" target="_blank" rel="noopener">Hour</a> Wikipedia</span></li>
+<li><span>Egypt split the night in twelve by the rising of star groups</span><span class="by"><a href="https://en.wikipedia.org/wiki/Decan" target="_blank" rel="noopener">Decan</a> Wikipedia</span></li>
+<li><span>Why Babylon counted in 60s is still open, finger joints among the ideas</span><span class="by"><a href="https://mathshistory.st-andrews.ac.uk/HistTopics/Babylonian_numerals/" target="_blank" rel="noopener">MacTutor</a></span></li>
+<li><span>A second was 1/86,400 of a mean solar day, until Earth's uneven spin ended that in 1960</span><span class="by"><a href="https://www.bipm.org/en/history-si/second" target="_blank" rel="noopener">history of the second</a> BIPM</span></li>
+<li><span>The atomic second from 1967, 9,192,631,770 periods of the caesium 133 atom</span><span class="by"><a href="https://www.bipm.org/en/publications/si-brochure" target="_blank" rel="noopener">SI Brochure</a> BIPM · <a href="https://www.bipm.org/en/history-si/second" target="_blank" rel="noopener">history of the second</a> BIPM</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>What the network counts<span class="n">8</span></summary>
+<ul>
+<li><span>About ten blocks a second, one every 100 ms</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/bps.rs" target="_blank" rel="noopener">bps.rs</a> target_<wbr>time_<wbr>per_<wbr>block · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/params.rs" target="_blank" rel="noopener">params.rs</a> BlockrateParams::new::&lt;10&gt;</span></li>
+<li><span>The DAA score is a count of blocks</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/difficulty.rs" target="_blank" rel="noopener">difficulty.rs</a> internal_<wbr>calc_<wbr>daa_<wbr>score, calc_<wbr>daa_<wbr>score_<wbr>and_<wbr>mergeset_<wbr>non_<wbr>daa_<wbr>blocks</span></li>
+<li><span>The current DAA score shown, read live</span><span class="by"><a href="https://api.kaspa.org/" target="_blank" rel="noopener">api.kaspa.org</a> info/<wbr>blockdag, virtualDaaScore</span></li>
+<li><span>Blue score: the selected parent's, plus the blue blocks in its merge set</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/ghostdag/protocol.rs" target="_blank" rel="noopener">ghostdag/<wbr>protocol.rs</a> ghostdag, blue_<wbr>score, mergeset_<wbr>blues</span></li>
+<li><span>Blue work: the selected parent's, plus the work of each blue block in its merge set</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/ghostdag/protocol.rs" target="_blank" rel="noopener">ghostdag/<wbr>protocol.rs</a> ghostdag, blue_<wbr>work, calc_<wbr>work</span></li>
+<li><span>A new UTXO keeps the DAA score of the block that accepts it</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_entry.rs" target="_blank" rel="noopener">utxo_<wbr>entry.rs</a> UtxoEntry, block_<wbr>daa_<wbr>score</span></li>
+<li><span>The 10 KAS coin, one output of the address card 1.1 points at</span><span class="by"><a href="https://explorer.kaspa.org/addresses/kaspa:qp3teqqzngwu48d5tqfp9hypl7fgg9wxxuuk7qxynj8hj300hgvnyfckj765g?tab=utxos" target="_blank" rel="noopener">address qp3teqqz…ckj765g</a> · <a href="https://explorer.kaspa.org/txs/c6fe96599262e49baab58f91ce9bb8a795403de7713b0dbcfe451e8459304d3f" target="_blank" rel="noopener">transaction c6fe9659…9304d3f</a></span></li>
+<li><span>Its age, the DAA score now minus the coin's own, read live</span><span class="by"><a href="https://api.kaspa.org/" target="_blank" rel="noopener">api.kaspa.org</a> addresses/<wbr>…/<wbr>utxos, blockDaaScore</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>The blue work window<span class="n">5</span></summary>
+<ul>
+<li><span>A block is found when its hash is at or under the difficulty target</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/pow/src/lib.rs" target="_blank" rel="noopener">pow/<wbr>src/<wbr>lib.rs</a> check_<wbr>pow</span></li>
+<li><span>A block's work comes from its target, a lower target means more work</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/difficulty.rs" target="_blank" rel="noopener">difficulty.rs</a> calc_<wbr>work</span></li>
+<li><span>Difficulty follows how fast blocks arrive</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/difficulty.rs" target="_blank" rel="noopener">difficulty.rs</a> calculate_<wbr>difficulty_<wbr>bits</span></li>
+<li><span>Blue work adds up the work of the blue blocks in a block's past</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/ghostdag/protocol.rs" target="_blank" rel="noopener">ghostdag/<wbr>protocol.rs</a> ghostdag, added_<wbr>blue_<wbr>work</span></li>
+<li><span>The selected chain follows the parent with the most blue work</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/ghostdag/protocol.rs" target="_blank" rel="noopener">ghostdag/<wbr>protocol.rs</a> find_<wbr>selected_<wbr>parent</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>What a miner writes<span class="n">8</span></summary>
+<ul>
+<li><span>The timestamp is Unix time in milliseconds, one integer</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/header.rs" target="_blank" rel="noopener">header.rs</a> Header, timestamp · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/core/src/time.rs" target="_blank" rel="noopener">time.rs</a> unix_<wbr>now</span></li>
+<li><span>The node building the template writes its own clock time</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/pipeline/virtual_processor/processor.rs" target="_blank" rel="noopener">virtual_<wbr>processor/<wbr>processor.rs</a> build_<wbr>block_<wbr>template_<wbr>from_<wbr>virtual_<wbr>state, unix_<wbr>now</span></li>
+<li><span>Consensus takes it only after the past median time</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/pipeline/header_processor/post_pow_validation.rs" target="_blank" rel="noopener">post_<wbr>pow_<wbr>validation.rs</a> check_<wbr>median_<wbr>timestamp, TimeTooOld</span></li>
+<li><span>A node turns it away when it is more than 132 seconds ahead of its clock</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/pipeline/header_processor/pre_ghostdag_validation.rs" target="_blank" rel="noopener">pre_<wbr>ghostdag_<wbr>validation.rs</a> check_<wbr>block_<wbr>timestamp_<wbr>in_<wbr>isolation · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/constants.rs" target="_blank" rel="noopener">config/<wbr>constants.rs</a> TIMESTAMP_<wbr>DEVIATION_<wbr>TOLERANCE</span></li>
+<li><span>1788926495334 is 9 Sep 2026, 04:01:35.334 UTC</span><span class="by"><a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank" rel="noopener">Unix time</a> Wikipedia</span></li>
+<li><span>27 samples, one in every 100 blocks</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/constants.rs" target="_blank" rel="noopener">config/<wbr>constants.rs</a> MEDIAN_<wbr>TIME_<wbr>SAMPLED_<wbr>WINDOW_<wbr>SIZE, PAST_<wbr>MEDIAN_<wbr>TIME_<wbr>SAMPLE_<wbr>INTERVAL · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/bps.rs" target="_blank" rel="noopener">bps.rs</a> past_<wbr>median_<wbr>time_<wbr>sample_<wbr>rate</span></li>
+<li><span>Sorted, the 11 in the middle averaged</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/past_median_time.rs" target="_blank" rel="noopener">past_<wbr>median_<wbr>time.rs</a> calc_<wbr>past_<wbr>median_<wbr>time, AVERAGE_<wbr>FRAME_<wbr>SIZE</span></li>
+<li><span>A lock naming a date is measured against it</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/pipeline/body_processor/body_validation_in_context.rs" target="_blank" rel="noopener">body_<wbr>validation_<wbr>in_<wbr>context.rs</a> LockTimeArg::MedianTime</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Time measurements on Kaspa being utilized by covenants<span class="n">4</span></summary>
+<ul>
+<li><span>A script names a DAA score or a date, and the spend must reach it</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCheckLockTimeVerify</span></li>
+<li><span>The coin moves once the block's DAA score or the past median time passes that number</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/transaction_validator/tx_validation_in_header_context.rs" target="_blank" rel="noopener">tx_<wbr>validation_<wbr>in_<wbr>header_<wbr>context.rs</a> check_<wbr>tx_<wbr>is_<wbr>finalized</span></li>
+<li><span>A script names a coin age, and can read the coin's own DAA score</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCheckSequenceVerify, OpTxInputDaaScore</span></li>
+<li><span>The coin moves once its own DAA score plus that age is reached</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs" target="_blank" rel="noopener">tx_<wbr>validation_<wbr>in_<wbr>utxo_<wbr>context.rs</a> check_<wbr>sequence_<wbr>lock, block_<wbr>daa_<wbr>score</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>The Unix 1970 window<span class="n">8</span></summary>
+<ul>
+<li><span>Unix, built at Bell Labs, counts time from the first moment of 1970</span><span class="by"><a href="https://en.wikipedia.org/wiki/Unix" target="_blank" rel="noopener">Unix</a> Wikipedia · <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank" rel="noopener">Unix time</a> Wikipedia</span></li>
+<li><span>Your device counts milliseconds from that same moment</span><span class="by"><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now" target="_blank" rel="noopener">Date.now()</a> MDN</span></li>
+<li><span>A lock is one number in one slot of the transaction</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> Transaction, lock_<wbr>time</span></li>
+<li><span>Below 500,000,000,000 it is a DAA score, at or above a date</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/transaction_validator/tx_validation_in_header_context.rs" target="_blank" rel="noopener">tx_<wbr>validation_<wbr>in_<wbr>header_<wbr>context.rs</a> get_<wbr>lock_<wbr>time_<wbr>type · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/constants.rs" target="_blank" rel="noopener">constants.rs</a> LOCK_<wbr>TIME_<wbr>THRESHOLD, 500_<wbr>000_<wbr>000_<wbr>000</span></li>
+<li><span>Bitcoin's line, 500,000,000 seconds, falls on 5 November 1985</span><span class="by"><a href="https://github.com/bitcoin/bitcoin/blob/master/src/script/script.h" target="_blank" rel="noopener">script.h</a> LOCKTIME_<wbr>THRESHOLD, 500000000, Tue Nov 5 00:53:20 1985 UTC</span></li>
+<li><span>Kaspa writes that moment in milliseconds, a thousand times larger</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/header.rs" target="_blank" rel="noopener">header.rs</a> timestamp · <a href="https://github.com/kaspanet/docs/blob/main/legacy/Reference/Timelocks.md" target="_blank" rel="noopener">Timelocks</a> Kaspa docs</span></li>
+<li><span>A date today is about 1.79 trillion, a DAA score a few hundred million</span><span class="by"><a href="https://api.kaspa.org/" target="_blank" rel="noopener">api.kaspa.org</a> info/<wbr>blockdag, pastMedianTime, virtualDaaScore</span></li>
+<li><span>About 1,600 years at ten blocks a second to reach the line</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/constants.rs" target="_blank" rel="noopener">constants.rs</a> LOCK_<wbr>TIME_<wbr>THRESHOLD · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/params.rs" target="_blank" rel="noopener">params.rs</a> BlockrateParams</span></li>
+</ul>
+</details>
+</div>
+</details>
 
 <footer class="foot">
-  <div class="nav"><a class="prev" href="card-1.6.html">Last card</a> · <span>Next: <a href="card-2.1.html">Kaspa Script</a></span></div>
+  <div class="nav"><a class="prev" href="card-1.6.html">Last card</a> · <span>Next: <a href="card-2.1.html">Programs carried by Outputs</a></span></div>
   <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio · By FingersLLM</span></div>
 </footer>
 
@@ -319,6 +415,10 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
+/* the button follows the system theme when it changes, and a choice made in another tab or before Back */
+(function(){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq){if(mq.addEventListener)mq.addEventListener('change',t101Label);else if(mq.addListener)mq.addListener(t101Label);}
+function sync(){var t=null;try{t=localStorage.getItem('t101-theme');}catch(e){}if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);t101Label();}
+window.addEventListener('pageshow',function(e){if(e.persisted)sync();});window.addEventListener('storage',function(e){if(e.key==='t101-theme')sync();});})();
 </script>
 <script>
 (function(){
@@ -330,6 +430,7 @@ t101Label();
   var num=function(n){return Number(n).toLocaleString('en-US');};
 
   function j(url){
+    if(!window.fetch)return Promise.reject(new Error('no fetch'));
     var c=('AbortController' in window)?new AbortController():null;
     var to=c?setTimeout(function(){c.abort();},9000):0;
     var opt={headers:{accept:'application/json'}};
@@ -337,23 +438,27 @@ t101Label();
     return fetch(url,opt).then(function(r){
       if(!r.ok)throw new Error(String(r.status));
       return r.json();
-    }).finally(function(){if(to)clearTimeout(to);});
+    }).then(function(x){if(to)clearTimeout(to);return x;},function(e){if(to)clearTimeout(to);throw e;});
   }
   function pick(o,keys){for(var i=0;i<keys.length;i++){if(o&&o[keys[i]]!=null)return o[keys[i]];}return null;}
 
   /* the DAA score, read again every few seconds */
-  var daaNow=null;
+  var daaNow=null, capHTML=$('daacap').innerHTML, capOk=true;
   function showDaa(v,ok){
     $('daa').textContent = ok? num(v) : 'no reading';
     $('daadot').className = ok? 'dot' : 'dot off';
-    $('daacap').textContent = ok? 'approx. current DAA score' : 'no answer from the node';
+    if(ok!==capOk){ capOk=ok; if(ok)$('daacap').innerHTML=capHTML; else $('daacap').textContent='no answer from the node'; }
   }
+  var daaP=null;
   function readDaa(){
-    return j(API+'/info/blockdag').then(function(d){
+    if(daaP)return daaP;
+    daaP=j(API+'/info/blockdag').then(function(d){
       var v=Number(pick(d,['virtualDaaScore','virtual_daa_score','virtualDAAScore']));
       if(!isFinite(v)||v<=0)throw new Error('shape');
       daaNow=v; showDaa(v,true); return v;
     }).catch(function(){ showDaa(null,false); return null; });
+    daaP.then(function(){ daaP=null; });
+    return daaP;
   }
 
   /* the coin: one real output, its age worked out from the score it was made at */
@@ -382,7 +487,6 @@ t101Label();
         var op=list[i].outpoint||{};
         if(pick(op,['transactionId','transaction_id'])===TXID){hit=list[i];break;}
       }
-      if(!hit)hit=list[0];
       var e=hit&&(hit.utxoEntry||hit.utxo_entry);
       var b=Number(pick(e||{},['blockDaaScore','block_daa_score']));
       if(!isFinite(b)||b<=0)throw new Error('shape');
@@ -391,12 +495,12 @@ t101Label();
   }
 
   readDaa().then(readCoin);
-  setInterval(function(){ if(document.visibilityState==='visible') readDaa(); },3000);
+  setInterval(function(){ if(document.visibilityState==='visible') readDaa().then(function(v){ if(v!=null&&born!=null&&$('coinage-n').textContent==='no reading')showAge(); }); },3000);
   var busy=false;
   $('coinbtn').addEventListener('click',function(){
-    if(busy)return; busy=true; var b=$('coinbtn'); b.disabled=true;
+    if(busy)return; busy=true;
     readDaa().then(function(){ return born==null?readCoin():showAge(); })
-             .then(null,function(){}).then(function(){ busy=false; b.disabled=false; });
+             .then(null,function(){}).then(function(){ busy=false; });
   });
 
   /* the age link jumps up to the coin age box and lights it for a moment */
@@ -428,10 +532,16 @@ t101Label();
   var BS={out:'bsnum',busy:false,parts:[1,2,3,4,5,6].map(function(n){return {id:'b'+n,wire:'s'+n,total:n};})};
   var bwv=[3,8,2,9,5],run=0;
   var BW={out:'bwnum',busy:false,parts:bwv.map(function(v,ix){run+=v;return {id:'w'+(ix+1),total:run};})};
+  var say=document.createElement('span');
+  say.setAttribute('aria-live','polite');
+  say.style.cssText='position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap';
+  document.body.appendChild(say);
   function wire(id,cfg){
     var g=$(id); if(!g)return;
-    g.addEventListener('click',function(){ runCalc(cfg); });
-    g.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); runCalc(cfg); } });
+    var go=function(){ if(cfg.busy)return; runCalc(cfg);
+      setTimeout(function(){ say.textContent=g.getAttribute('aria-label').replace('Calculate the ','The ')+' is '+$(cfg.out).textContent; },cfg.parts.length*300+300); };
+    g.addEventListener('click',go);
+    g.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
   }
   wire('bscalc',BS); wire('bwcalc',BW);
 
@@ -439,9 +549,9 @@ t101Label();
   $('unixlink').addEventListener('click',function(e){
     e.preventDefault();
     var b=$('askunix');
-    if(b.scrollIntoView)b.scrollIntoView({block:'nearest',behavior:'smooth'});
+    if(b.scrollIntoView)b.scrollIntoView({block:'nearest',behavior:(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)?'auto':'smooth'});
     clearTimeout(markT);
-    b.classList.add('mark');
+    b.classList.add('mark'); b.focus({preventScroll:true});
     markT=setTimeout(function(){ b.classList.remove('mark'); },3000);
   });
 
@@ -456,11 +566,12 @@ t101Label();
   function shut(){ clearInterval(tick); if(dlg.close)dlg.close(); else dlg.removeAttribute('open'); }
   $('unixclose').addEventListener('click',shut);
   dlg.addEventListener('close',function(){ clearInterval(tick); });
-  dlg.addEventListener('click',function(e){ if(e.target===dlg)shut(); });
+  var downOn=null; document.addEventListener('mousedown',function(e){ downOn=e.target; },true);
+  dlg.addEventListener('click',function(e){ if(e.target===dlg&&downOn===dlg)shut(); });
   function wshut(){ if(wdlg.close)wdlg.close(); else wdlg.removeAttribute('open'); }
   $('askwork').addEventListener('click',function(){ if(wdlg.showModal)wdlg.showModal(); else wdlg.setAttribute('open',''); });
   $('workclose').addEventListener('click',wshut);
-  wdlg.addEventListener('click',function(e){ if(e.target===wdlg)wshut(); });
+  wdlg.addEventListener('click',function(e){ if(e.target===wdlg&&downOn===wdlg)wshut(); });
 })();
 </script>
 </body>

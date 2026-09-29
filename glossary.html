@@ -53,31 +53,56 @@
   .foot a[target="_blank"]{color:var(--ext)}
   .foot a:hover{color:var(--head);border-bottom-color:var(--accent)}
   .foot .by{color:var(--muted)}
-  /* the glossary */
-  .tools{position:sticky;top:0;z-index:2;background:var(--bg);padding:.6rem 0 .5rem;margin:0 0 .4rem;border-bottom:1px solid var(--line)}
+  /* the glossary. --bar is the pinned bar's height: the script below measures it at every width, so a term or a
+     letter jumped to lands below the bar, never under it (the value here only serves a reader without scripts) */
+  :root{--bar:7.2rem}
+  @media (max-width:560px){:root{--bar:6rem}}
+  /* as wide as an entry (both reach .9rem past the text), so nothing scrolling under the bar shows beside it */
+  .tools{position:sticky;top:0;z-index:2;background:var(--bg);padding:.6rem .9rem .5rem;margin:0 -.9rem .4rem;border-bottom:1px solid var(--line)}
   .filter{display:flex;gap:.6rem;align-items:center}
   .filter input{flex:1 1 auto;font:inherit;font-size:.98rem;padding:.5rem .8rem;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);color:var(--head);min-width:0}
   .filter input:focus{outline:none;border-color:var(--accent)}
   .filter .n{font-size:.8rem;color:var(--muted);white-space:nowrap}
+  .showall{font:inherit;font-size:.8rem;color:var(--head);background:var(--tint);border:1px solid var(--accent);border-radius:999px;padding:.2rem .75rem;cursor:pointer;white-space:nowrap;flex:none}
+  .showall:hover{color:#0F2926;background:var(--accent)}
+  .showall:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .showall[hidden]{display:none}
   .az{display:flex;flex-wrap:wrap;gap:.15rem .35rem;margin:.5rem 0 0;font-size:.78rem;letter-spacing:.04em}
   .az a{color:var(--link);text-decoration:none;padding:.05rem .3rem;border-radius:5px;border-bottom:0}
   .az a:hover{background:var(--tint);color:var(--head)}
   .az a.hit{animation:t101-land 4s ease-out 1}
   .az span{color:var(--soon);padding:.05rem .3rem}
+  /* on a phone the letters are one line that scrolls sideways, so the pinned bar stays short; the fade at the
+     right edge says there is more */
+  @media (max-width:560px){
+    .az{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:.1rem 1.4rem .15rem 0;
+        -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 1.4rem),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 1.4rem),transparent)}
+    .az::-webkit-scrollbar{display:none}
+    .az a,.az span{flex:none}
+  }
   dl{margin:.6rem 0 0}
-  .letter{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:1.6rem 0 .2rem;padding:.15rem .8rem;border-radius:8px;scroll-margin-top:5.5rem}
+  .letter{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:1.4rem 0 .1rem;padding:.15rem .8rem;border-radius:8px;scroll-margin-top:calc(var(--bar) + .75rem)}
   .letter:target{animation:t101-land 4s ease-out 1}
   .letter::before{content:"";display:inline-block;width:.45rem;height:.45rem;border-radius:2px;background:var(--accent);margin-right:.5rem;vertical-align:.05em}
-  .term{padding:.1rem .8rem .65rem;margin:0 -.8rem;border-radius:10px;scroll-margin-top:5.6rem}
-  .term + .term dt{border-top:1px solid var(--line);padding-top:.6rem}
-  .term.hide + .term dt{border-top:0}
-  .term:target{animation:t101-land 4s ease-out 1}
+  /* the entries: the term a little larger, more air, a rule between two entries under one letter */
+  .term{padding:.75rem .9rem .8rem;margin:0 -.9rem;border-top:1px solid var(--line);scroll-margin-top:calc(var(--bar) + .75rem)}
+  .term.first{border-top-color:transparent}
+  .term:focus{outline:none}
+  /* the term a card's link opened: marked until the reader types or another term is opened */
+  .term.landed{background:var(--tint);box-shadow:inset 4px 0 0 var(--accent);border-radius:12px;border-top-color:transparent}
+  .term.landed + .term{border-top-color:transparent}
   @keyframes t101-land{0%{background:var(--tint);box-shadow:inset 4px 0 0 var(--accent)}60%{background:var(--tint);box-shadow:inset 4px 0 0 var(--accent)}100%{background:transparent;box-shadow:inset 4px 0 0 transparent}}
-  dt{font-weight:700;color:var(--head)}
-  dd{margin:.15rem 0 0}
+  @media (prefers-reduced-motion:reduce){.az a.hit,.letter:target{animation:none;background:var(--tint)}}
+  dt{font-size:1.06rem;font-weight:700;color:var(--head);letter-spacing:.005em}
+  dd{margin:.25rem 0 0}
   .none{display:none;color:var(--muted);padding:1rem .8rem}
   .none.show{display:block}
   .hide{display:none}
+  /* the theme the reader picked also sets the browser's own parts (scrollbars, form controls); the button shows keyboard focus */
+  :root[data-theme="light"]{color-scheme:light}
+  :root[data-theme="dark"]{color-scheme:dark}
+  .theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -86,107 +111,108 @@
   <button class="theme" id="theme" type="button" onclick="t101Toggle()"><svg class="ico" id="theme-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"></svg><span id="theme-txt">Dark mode</span></button>
 </div>
 <h1>Glossary</h1>
-<p>The terms the cards use, one short explanation each. Tap a term on any card and you land here, on its line. New terms join as the cards land.</p>
+<p>The terms the cards use, one short explanation each. Tap a term on any card and it opens here. New terms join as the cards land.</p>
 
 <div class="tools">
-  <div class="filter"><input id="gfilter" type="search" placeholder="Type a term" aria-label="filter the terms" autocomplete="off" spellcheck="false"><span class="n" id="gcount">68 terms</span></div>
+  <div class="filter"><input id="gfilter" type="search" placeholder="Type a term" aria-label="filter the terms" autocomplete="off" spellcheck="false"><span class="n" id="gcount">68 terms</span><button class="showall" id="gall" type="button" hidden>All terms</button></div>
   <nav class="az" aria-label="letters"><a href="#l-a">A</a><a href="#l-b">B</a><a href="#l-c">C</a><a href="#l-d">D</a><a href="#l-e">E</a><a href="#l-f">F</a><a href="#l-g">G</a><a href="#l-h">H</a><a href="#l-i">I</a><span>J</span><a href="#l-k">K</a><a href="#l-l">L</a><a href="#l-m">M</a><a href="#l-n">N</a><a href="#l-o">O</a><a href="#l-p">P</a><a href="#l-q">Q</a><a href="#l-r">R</a><a href="#l-s">S</a><a href="#l-t">T</a><a href="#l-u">U</a><span>V</span><a href="#l-w">W</a><span>X</span><span>Y</span><span>Z</span></nav>
 </div>
+<p class="sr" id="gsay" role="status" aria-live="polite"></p>
 <dl id="gl">
 <div class="letter" id="l-a">A</div>
-<div class="term" id="address"><dt>address</dt><dd>Spells out the lock an output will carry. It holds nothing. A q address carries a public key, a p address carries the fingerprint of a script.</dd></div>
+<div class="term first" id="address"><dt>address</dt><dd>The lock an output will carry, spelled out in letters. A q address carries a public key, a p address the fingerprint of a script.</dd></div>
 <div class="letter" id="l-b">B</div>
-<div class="term" id="block"><dt>block</dt><dd>A batch of transactions sealed by a miner's proof of work. Kaspa makes ten a second.</dd></div>
-<div class="term" id="blockdag"><dt>blockDAG</dt><dd>Kaspa's ledger: blocks made in parallel, each pointing at several earlier blocks, a web rather than a line.</dd></div>
-<div class="term" id="block-timestamp"><dt>block timestamp</dt><dd>The wall clock time a miner writes into the block it makes. The network only checks that it is not too far ahead and not older than the recent blocks.</dd></div>
-<div class="term" id="blue-block"><dt>blue block</dt><dd>A merged block that was well connected when it arrived, counted in the order and paid. Nearly every block is blue.</dd></div>
-<div class="term" id="blue-score"><dt>blue score</dt><dd>A block's count of the blocks the network agrees came before it. The gap between the newest block's count and an older block's is how many blocks sit on top of that one.</dd></div>
-<div class="term" id="blue-work"><dt>blue work</dt><dd>The proof of work piled up behind a block, counting blue blocks only. The rule that picks the chain compares it.</dd></div>
-<div class="term" id="byte"><dt>byte</dt><dd>The unit data is counted in: eight bits, about one character of text. A key is 32 bytes, a plain transaction a few hundred.</dd></div>
+<div class="term first" id="block"><dt>block</dt><dd>A batch of transactions sealed by proof of work, pointing at earlier blocks. Kaspa makes ten a second.</dd></div>
+<div class="term" id="blockdag"><dt>blockDAG</dt><dd>Kaspa's ledger: blocks made in parallel, each pointing at several earlier blocks, so together they form a DAG.</dd></div>
+<div class="term" id="block-timestamp"><dt>block timestamp</dt><dd>The time a miner's node writes into a block, in milliseconds since 1970. Nodes refuse one too far ahead of their clock or not after the past median time.</dd></div>
+<div class="term" id="blue-block"><dt>blue block</dt><dd>A merged block with at most 124 blue blocks beside it that never saw it. It counts in the blue score, and its miner is paid.</dd></div>
+<div class="term" id="blue-score"><dt>blue score</dt><dd>The number of blue blocks in a block's past. The newest block's blue score minus an older one's is how many blocks sit on top of it.</dd></div>
+<div class="term" id="blue-work"><dt>blue work</dt><dd>The proof of work behind a block, counting blue blocks only. The rule that picks the chain compares it.</dd></div>
+<div class="term" id="byte"><dt>byte</dt><dd>Eight bits, the unit data is counted in. One letter of plain text is one byte, a key is 32.</dd></div>
 <div class="letter" id="l-c">C</div>
-<div class="term" id="chain-block"><dt>chain block</dt><dd>A block the network's ordering puts on the main line. It merges the blocks around it, accepts their transactions once and pays their miners in its coinbase.</dd></div>
-<div class="term" id="change"><dt>change</dt><dd>An output that comes back to the sender's own address: what's left from the inputs after the payment and the fee.</dd></div>
-<div class="term" id="checksum"><dt>checksum</dt><dd>The last eight characters of an address, computed from the rest, so a typo is caught before any coin moves.</dd></div>
-<div class="term" id="coin-age"><dt>coin age</dt><dd>How far the network's DAA score has climbed since the block that made a particular coin. Every coin carries its own.</dd></div>
-<div class="term" id="confirmation"><dt>confirmation</dt><dd>One block on top of the block that accepted your transaction. The reference wallet waits for 100 of them, about ten seconds.</dd></div>
-<div class="term" id="covenant"><dt>covenant</dt><dd>A UTXO locked by a program that inspects the transaction spending it and can refuse it.</dd></div>
-<div class="term" id="crescendo"><dt>Crescendo</dt><dd>The Kaspa upgrade of May 2025 that raised the network to ten blocks per second and added the first, narrow introspection opcodes (KIP-10).</dd></div>
+<div class="term first" id="chain-block"><dt>chain block</dt><dd>A block on the network's main line. It merges the blocks beside it, accepts their transactions and pays their miners.</dd></div>
+<div class="term" id="change"><dt>change</dt><dd>The output a wallet sends back to your own address: what is left of the inputs after the payment and the fee.</dd></div>
+<div class="term" id="checksum"><dt>checksum</dt><dd>The last eight characters of an address, worked out from the rest, so a typo is caught before any coin moves.</dd></div>
+<div class="term" id="coin-age"><dt>coin age</dt><dd>How far the DAA score has climbed since the block that accepted a coin. Every coin carries its own starting score.</dd></div>
+<div class="term" id="confirmation"><dt>confirmation</dt><dd>A block added on top of the one that accepted your transaction. The reference wallet calls a payment confirmed after 100, about ten seconds.</dd></div>
+<div class="term" id="covenant"><dt>covenant</dt><dd>A UTXO whose script sets rules on the transaction that spends it, such as where the coins go and what the next output holds.</dd></div>
+<div class="term" id="crescendo"><dt>Crescendo</dt><dd>The Kaspa hardfork that took the network from one block a second to ten and let a script read its transaction's amounts and addresses.</dd></div>
 <div class="letter" id="l-d">D</div>
-<div class="term" id="daa-score"><dt>DAA score</dt><dd>Kaspa's counter of accumulated work, used as the network's clock for locks and activations.</dd></div>
-<div class="term" id="dag"><dt>DAG</dt><dd>Directed Acyclic Graph: a set of items where each one points back at earlier ones, and no path of those pointers ever leads back to where it started.</dd></div>
-<div class="term" id="difficulty"><dt>difficulty</dt><dd>How many hashing attempts a block takes on average. It adjusts so the network keeps making ten blocks a second.</dd></div>
+<div class="term first" id="daa-score"><dt>DAA score</dt><dd>The network's count of blocks, about ten every second.</dd></div>
+<div class="term" id="dag"><dt>DAG</dt><dd>Directed acyclic graph: items that each point back at earlier ones, where following the pointers never leads back to the start.</dd></div>
+<div class="term" id="difficulty"><dt>difficulty</dt><dd>How hard it is to find a block: the easiest target divided by the current one. It adjusts so the network keeps making ten blocks a second.</dd></div>
 <div class="letter" id="l-e">E</div>
-<div class="term" id="explorer"><dt>explorer</dt><dd>A website that shows the chain: blocks, transactions, addresses and their UTXOs.</dd></div>
+<div class="term first" id="explorer"><dt>explorer</dt><dd>A website that shows what is on chain: blocks, transactions, addresses and their UTXOs.</dd></div>
 <div class="letter" id="l-f">F</div>
-<div class="term" id="fee"><dt>fee</dt><dd>Input minus output, goes to the miner who placed the transaction inside a block in the network.</dd></div>
-<div class="term" id="fee-rate"><dt>fee rate</dt><dd>A transaction's fee divided by its mass, in sompi per gram. Miners fill their blocks with the transactions that pay the most per gram.</dd></div>
-<div class="term" id="fingerprint"><dt>fingerprint</dt><dd>The hash of a script, 32 bytes, the part a p address carries. From the fingerprint alone the script cannot be read.</dd></div>
+<div class="term first" id="fee"><dt>fee</dt><dd>A transaction's inputs minus its outputs, paid to a miner.</dd></div>
+<div class="term" id="fee-rate"><dt>fee rate</dt><dd>A transaction's fee divided by its mass, in sompi per gram. Miners take the highest fee rates first.</dd></div>
+<div class="term" id="fingerprint"><dt>fingerprint</dt><dd>The hash of a script, 32 bytes, the part a p address carries. The script cannot be worked out from it.</dd></div>
 <div class="letter" id="l-g">G</div>
-<div class="term" id="gram"><dt>gram</dt><dd>The unit a transaction's mass is counted in. The fee is a price per gram.</dd></div>
+<div class="term first" id="gram"><dt>gram</dt><dd>The unit a transaction's mass is counted in. A fee is a price per gram.</dd></div>
 <div class="letter" id="l-h">H</div>
-<div class="term" id="hardfork"><dt>hardfork</dt><dd>A change to Kaspa's rules that every node must adopt. It activates at a fixed DAA score and carries a name (Crescendo, Toccata).</dd></div>
-<div class="term" id="hash"><dt>hash</dt><dd>A fixed-size fingerprint computed from any data. Change one byte of the data and the hash changes completely.</dd></div>
+<div class="term first" id="hardfork"><dt>hardfork</dt><dd>A change to Kaspa's rules that starts at a set DAA score. Every node must update, or it splits off from the network.</dd></div>
+<div class="term" id="hash"><dt>hash</dt><dd>A fixed-size value worked out from any data, 32 bytes on Kaspa. Change one byte of the data and the hash changes completely.</dd></div>
 <div class="letter" id="l-i">I</div>
-<div class="term" id="input"><dt>input</dt><dd>An existing UTXO from a past transaction, ready to be used.</dd></div>
-<div class="term" id="introspection"><dt>introspection</dt><dd>A script's ability to read the transaction it is part of: inputs, outputs, amounts, addresses. Narrow since Crescendo, full since Toccata.</dd></div>
+<div class="term first" id="input"><dt>input</dt><dd>The part of a transaction that points to the UTXO it spends and carries what unlocks it, usually a signature.</dd></div>
+<div class="term" id="introspection"><dt>introspection</dt><dd>A script reading the transaction that spends its UTXO, such as its inputs and outputs, their amounts and their addresses.</dd></div>
 <div class="letter" id="l-k">K</div>
-<div class="term" id="kas"><dt>KAS</dt><dd>Kaspa's coin. 1 KAS is 100,000,000 sompi.</dd></div>
+<div class="term first" id="kas"><dt>KAS</dt><dd>Kaspa's coin. 1 KAS is 100,000,000 sompi.</dd></div>
 <div class="term" id="key-lock"><dt>key lock</dt><dd>The lock a q address stands for: this key must sign. Whoever holds the matching private key can spend.</dd></div>
-<div class="term" id="krc-20"><dt>KRC-20</dt><dd>A token convention that writes a note into a transaction for an off-chain program (an indexer) to read. The node itself skips the note.</dd></div>
+<div class="term" id="krc-20"><dt>KRC-20</dt><dd>A token convention that writes a note into a transaction's script for software outside the node to read. The node itself skips the note.</dd></div>
 <div class="letter" id="l-l">L</div>
-<div class="term" id="layer-1"><dt>Layer 1 (L1)</dt><dd>The Kaspa network itself, as opposed to anything built on top of it. A covenant runs on L1, checked by every node.</dd></div>
-<div class="term" id="lock"><dt>lock</dt><dd>What an output carries besides its amount: the script that decides what a spending transaction must show. Its technical name is the script public key.</dd></div>
+<div class="term first" id="layer-1"><dt>Layer 1 (L1)</dt><dd>The Kaspa network itself, where every node checks every transaction.</dd></div>
+<div class="term" id="lock"><dt>lock</dt><dd>The script on an output that decides what a spending transaction must show. Its technical name is the script public key.</dd></div>
 <div class="letter" id="l-m">M</div>
-<div class="term" id="mainnet"><dt>mainnet</dt><dd>The real Kaspa network, where KAS has value. Its addresses start with kaspa:, test network addresses with kaspatest:.</dd></div>
-<div class="term" id="mass"><dt>mass</dt><dd>A transaction's weight in grams, what the fee is priced by: a size weight and a storage weight, the heavier one counts.</dd></div>
-<div class="term" id="mempool"><dt>mempool</dt><dd>A node's waiting room: the transactions it has checked and holds until a miner puts them in a block.</dd></div>
-<div class="term" id="merge-set"><dt>merge set</dt><dd>The blocks a chain block brings into the order: everything in its past that the previous chain block had not covered.</dd></div>
-<div class="term" id="miner"><dt>miner</dt><dd>A node that orders accepted transactions into blocks by proof of work, and collects the fees.</dd></div>
+<div class="term first" id="mainnet"><dt>mainnet</dt><dd>The real Kaspa network, where KAS has value. Its addresses start with kaspa:, a test network's with kaspatest:.</dd></div>
+<div class="term" id="mass"><dt>mass</dt><dd>A transaction's weight in grams. It has a size weight and a storage weight, and the heavier one sets what a wallet pays.</dd></div>
+<div class="term" id="mempool"><dt>mempool</dt><dd>The transactions a node has checked and holds until a miner puts them in a block.</dd></div>
+<div class="term" id="merge-set"><dt>merge set</dt><dd>The blocks a block brings into the order: everything in its past that its selected parent had not covered.</dd></div>
+<div class="term" id="miner"><dt>miner</dt><dd>Someone who builds blocks and does the proof of work that seals them, collecting the subsidy and the fees.</dd></div>
 <div class="letter" id="l-n">N</div>
-<div class="term" id="node"><dt>node</dt><dd>A computer running Kaspa that checks every transaction against the rules and keeps the set of UTXOs.</dd></div>
+<div class="term first" id="node"><dt>node</dt><dd>A computer running Kaspa's software that checks every transaction and block against the rules and keeps the UTXO set.</dd></div>
 <div class="letter" id="l-o">O</div>
-<div class="term" id="output"><dt>output</dt><dd>A piece of KAS created by a transaction, with an amount and a lock.</dd></div>
+<div class="term first" id="output"><dt>output</dt><dd>An amount of KAS and a lock, created by a transaction.</dd></div>
 <div class="letter" id="l-p">P</div>
-<div class="term" id="p-address"><dt>p address</dt><dd>An address that starts with p. It carries the fingerprint of a script, and a spend must show the script itself.</dd></div>
-<div class="term" id="parent"><dt>parent</dt><dd>An earlier block a new block points at. A Kaspa block points at every tip its miner saw, so it has several.</dd></div>
-<div class="term" id="past-median-time"><dt>past median time</dt><dd>The middle value of the times written on the recent blocks. A new block has to be later than it, so network time never moves backwards.</dd></div>
-<div class="term" id="peer"><dt>peer</dt><dd>Another node this node talks to. Nodes announce transactions and blocks to their peers, and every peer checks for itself.</dd></div>
-<div class="term" id="piece"><dt>piece</dt><dd>The word cards 1.1 to 1.3 use for a UTXO.</dd></div>
-<div class="term" id="private-key"><dt>private key</dt><dd>The secret a wallet keeps (the seed makes it). Whoever holds it can spend what its public key locks.</dd></div>
-<div class="term" id="proof-of-work"><dt>proof of work (PoW)</dt><dd>The computation a miner must do to make a block valid. It is what makes Kaspa's history costly to rewrite and reorganize.</dd></div>
-<div class="term" id="public-key"><dt>public key</dt><dd>The key an address is made from, safe to show. Only the matching private key can make a signature it accepts.</dd></div>
+<div class="term first" id="p-address"><dt>p address</dt><dd>An address that starts with p. It carries the fingerprint of a script, and a spend must show the script and meet it.</dd></div>
+<div class="term" id="parent"><dt>parent</dt><dd>An earlier block a new block points at. A Kaspa block points at up to 16 of the newest blocks its miner saw.</dd></div>
+<div class="term" id="past-median-time"><dt>past median time</dt><dd>The middle of the times written on recent blocks, worked out by every node. A new block's time must be later, so network time never runs backwards.</dd></div>
+<div class="term" id="peer"><dt>peer</dt><dd>Another node this node is connected to. Nodes pass transactions and blocks to their peers, and every peer checks them for itself.</dd></div>
+<div class="term" id="piece"><dt>piece</dt><dd>Another word for a UTXO.</dd></div>
+<div class="term" id="private-key"><dt>private key</dt><dd>The secret a wallet makes from its seed and keeps. Whoever holds it can spend what its public key locks.</dd></div>
+<div class="term" id="proof-of-work"><dt>proof of work (PoW)</dt><dd>The work a miner does to make a block valid: trying number after number until the block's hash is at or under the target.</dd></div>
+<div class="term" id="public-key"><dt>public key</dt><dd>The key an address is made from, safe to show. A signature made with the matching private key checks against it.</dd></div>
 <div class="letter" id="l-q">Q</div>
-<div class="term" id="q-address"><dt>q address</dt><dd>An address that starts with q. It carries a public key, and a spend must show that key's signature.</dd></div>
+<div class="term first" id="q-address"><dt>q address</dt><dd>An address that starts with q. It carries a public key, and a spend must show that key's signature.</dd></div>
 <div class="letter" id="l-r">R</div>
-<div class="term" id="red-block"><dt>red block</dt><dd>A merged block that arrived too late for its neighbours. Kept, its transactions still count, but its miner is paid nothing for it.</dd></div>
+<div class="term first" id="red-block"><dt>red block</dt><dd>A merged block with more than 124 blue blocks beside it that never saw it. It is kept and its transactions count, but its miner is not paid for it.</dd></div>
 <div class="letter" id="l-s">S</div>
-<div class="term" id="script"><dt>script</dt><dd>The small program every output carries, run by every node when the output is spent.</dd></div>
-<div class="term" id="script-lock"><dt>script lock</dt><dd>The lock a p address stands for: show the script that matches the fingerprint, then satisfy it. Every covenant lives behind one.</dd></div>
-<div class="term" id="script-public-key"><dt>script public key</dt><dd>The lock on an output: a small program attached to the UTXO that determines what a spending transaction must show, for a normal wallet the signature of a key.</dd></div>
-<div class="term" id="selected-parent"><dt>selected parent</dt><dd>Of a block's parents, the one with the most work behind it. Following selected parents from the newest block gives the chain.</dd></div>
-<div class="term" id="signature"><dt>signature</dt><dd>A proof, made with the spender's private key (seed), that authorizes using a UTXO.</dd></div>
-<div class="term" id="signature-script"><dt>signature script</dt><dd>The half of the program the spender brings, carried by the input. It may only put data on the stack, it cannot compute.</dd></div>
-<div class="term" id="size-weight"><dt>size weight</dt><dd>The weight of a transaction's bytes and checking work (compute mass), about two thousand grams for a plain payment, the same whatever the amounts.</dd></div>
-<div class="term" id="sompi"><dt>sompi</dt><dd>The unit amounts are counted in. 1 KAS is 100,000,000 sompi.</dd></div>
-<div class="term" id="spend"><dt>spend</dt><dd>To use a UTXO as an input. The UTXO is consumed and its amount moves into the new outputs.</dd></div>
-<div class="term" id="stack"><dt>stack</dt><dd>The small pile of values a script runs on. An instruction takes what it needs off the top and puts its result back. At most 244 items at any moment.</dd></div>
-<div class="term" id="storage-weight"><dt>storage weight</dt><dd>The weight of the new pieces a transaction creates (storage mass): about 10¹² divided by each piece's value in sompi, minus a relief for the pieces it spends. Small pieces are heavy, and past 500,000 grams no block can hold the transaction.</dd></div>
-<div class="term" id="subsidy"><dt>subsidy</dt><dd>The new KAS a block brings into existence, set by the rules for its DAA score and shrinking over the years.</dd></div>
+<div class="term first" id="script"><dt>script</dt><dd>A small program of one-byte instructions that every output carries. Every node runs it when the output is spent.</dd></div>
+<div class="term" id="script-lock"><dt>script lock</dt><dd>The lock a p address stands for: show the script that matches the fingerprint, then meet it. Every covenant lives behind one.</dd></div>
+<div class="term" id="script-public-key"><dt>script public key</dt><dd>The technical name of an output's lock: the script that sets the conditions for spending the output.</dd></div>
+<div class="term" id="selected-parent"><dt>selected parent</dt><dd>Of a block's parents, the one with the most blue work behind it. Following selected parents back from the newest block gives the chain.</dd></div>
+<div class="term" id="signature"><dt>signature</dt><dd>A proof made from a hash of the transaction with a private key. Every node checks it against the matching public key.</dd></div>
+<div class="term" id="signature-script"><dt>signature script</dt><dd>The script an input carries to unlock the output it spends. It may only put data on the stack.</dd></div>
+<div class="term" id="size-weight"><dt>size weight</dt><dd>The weight of a transaction's bytes and of checking it, about 2,000 grams for a plain payment, whatever the amounts.</dd></div>
+<div class="term" id="sompi"><dt>sompi</dt><dd>The smallest unit of KAS, and the one every amount on Kaspa is counted in. 1 KAS is 100,000,000 sompi.</dd></div>
+<div class="term" id="spend"><dt>spend</dt><dd>To use a UTXO as a transaction's input. Once the transaction is accepted, every node removes that UTXO from its UTXO set.</dd></div>
+<div class="term" id="stack"><dt>stack</dt><dd>The single-ended list a script works on: instructions take data from the top and put their results back on top. It holds at most 244 items.</dd></div>
+<div class="term" id="storage-weight"><dt>storage weight</dt><dd>The weight of the new pieces a transaction creates: about 10¹² divided by each piece's value in sompi, less a relief for the pieces it spends. Small pieces are heavy.</dd></div>
+<div class="term" id="subsidy"><dt>subsidy</dt><dd>The new KAS a block brings into existence. The rules set it by the block's DAA score, and it shrinks every month.</dd></div>
 <div class="letter" id="l-t">T</div>
-<div class="term" id="target"><dt>target</dt><dd>The bar a block's hash must fall under. The lower the target, the more attempts a block takes.</dd></div>
-<div class="term" id="toccata"><dt>Toccata</dt><dd>The Kaspa upgrade, active on mainnet since 30 June 2026. Made the rules a transaction can carry general: a program that reads the whole transaction, keeps memory between spends and carries an identity.</dd></div>
-<div class="term" id="transaction"><dt>transaction</dt><dd>Spends existing UTXOs (its inputs) and creates brand-new ones (its outputs), accepted or refused by every node as a whole.</dd></div>
+<div class="term first" id="target"><dt>target</dt><dd>The number a block's hash must be at or under. The lower the target, the more tries it takes to find a block.</dd></div>
+<div class="term" id="toccata"><dt>Toccata</dt><dd>The Kaspa hardfork that brought covenants: a UTXO's script can read the whole transaction, keep state between spends and carry an identity.</dd></div>
+<div class="term" id="transaction"><dt>transaction</dt><dd>A transfer that spends UTXOs as its inputs and creates new outputs. Every node accepts it whole or refuses it whole.</dd></div>
 <div class="letter" id="l-u">U</div>
-<div class="term" id="unix-time"><dt>Unix time</dt><dd>How computers store a moment: the number of seconds, or milliseconds, since the start of 1 January 1970.</dd></div>
-<div class="term" id="utxo"><dt>UTXO</dt><dd>Unspent transaction output. A piece of KAS created by an earlier transaction and not yet spent, with its own amount and its own lock. A balance is the sum of them.</dd></div>
-<div class="term" id="utxo-set"><dt>UTXO set</dt><dd>Every unspent output on the network, kept by each node. A transaction's inputs must be in it, and each block moves pieces out of it and new ones into it.</dd></div>
+<div class="term first" id="unix-time"><dt>Unix time</dt><dd>How computers count a moment: the seconds, or milliseconds, since the start of 1 January 1970 UTC.</dd></div>
+<div class="term" id="utxo"><dt>UTXO</dt><dd>Unspent transaction output: an output no transaction has spent yet. A wallet's balance is the sum of its UTXOs.</dd></div>
+<div class="term" id="utxo-set"><dt>UTXO set</dt><dd>Every unspent output, kept by each node. A transaction's inputs must be in it, and each accepted transaction takes its inputs out and puts its outputs in.</dd></div>
 <div class="letter" id="l-w">W</div>
-<div class="term" id="wallet"><dt>wallet</dt><dd>The software that keeps your keys, adds up the UTXOs they can unlock, and builds and signs your transactions.</dd></div>
+<div class="term first" id="wallet"><dt>wallet</dt><dd>The software that keeps your keys, adds up the UTXOs they can unlock, and builds and signs your transactions.</dd></div>
 </dl>
 <p class="none" id="gnone">No term matches that. Try a shorter word.</p>
 
 <footer class="foot">
-  <div class="nav"><a href="index.html">Table of content</a> · <span>Next: <a href="card-0.1.html">Wind Of Change</a></span></div>
+  <div class="nav"><a href="index.html">Table of contents</a> · <span>Next: <a href="card-0.1.html">Wind Of Change</a></span></div>
   <div class="meta"><span>Free to use · Found a mistake? <a target="_blank" rel="noopener" href="https://github.com/fingersllm/toccata-101/issues">Tell us</a></span><span class="by">Made with Slancio · By FingersLLM</span></div>
 </footer>
 
@@ -195,20 +221,110 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
-/* the filter: keeps the terms whose name, or a word of it, starts with what is typed; the letters left empty are hidden */
+/* the button follows the system theme when it changes, and a choice made in another tab or before Back */
+(function(){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq){if(mq.addEventListener)mq.addEventListener('change',t101Label);else if(mq.addListener)mq.addListener(t101Label);}
+function sync(){var t=null;try{t=localStorage.getItem('t101-theme');}catch(e){}if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);t101Label();}
+window.addEventListener('pageshow',function(e){if(e.persisted)sync();});window.addEventListener('storage',function(e){if(e.key==='t101-theme')sync();});})();
+/* the list. The filter keeps the terms whose name, or a word of it, starts with what is typed, and hides the letters
+   left empty. A card's link (glossary.html#<term>) opens that term alone, marked, right under the search bar, with an
+   "All terms" button: it brings back the whole list, the term still marked and in view below the pinned bar. Typing
+   leaves the one-term view. A letter, another address or none shows the whole list. Back, forward and a change of
+   address follow the same rules: an entry left through "All terms", a letter or typing comes back as the whole list. */
 (function(){
-  var inp=document.getElementById('gfilter'), terms=document.querySelectorAll('.term'), letters=document.querySelectorAll('.letter'), none=document.getElementById('gnone'), count=document.getElementById('gcount'), total=terms.length;
+  var root=document.documentElement, bar=document.querySelector('.tools'), inp=document.getElementById('gfilter'),
+      terms=document.querySelectorAll('.term'), letters=document.querySelectorAll('.letter'), none=document.getElementById('gnone'),
+      count=document.getElementById('gcount'), all=document.getElementById('gall'), say=document.getElementById('gsay'),
+      az=document.querySelectorAll('.az a'), total=terms.length, landed=null, solo=false, told=0, GAP=12;
+  /* the pinned bar's height, read at every width: the landings below are measured against it */
+  function measure(){root.style.setProperty('--bar',bar.offsetHeight+'px');}
+  measure();
+  if(window.ResizeObserver){new ResizeObserver(function(){measure();}).observe(bar);}else{window.addEventListener('resize',measure);}
   function hit(term,q){var t=term.toLowerCase();if(t.indexOf(q)===0)return true;var w=t.split(/[^a-z0-9]+/);for(var k=0;k<w.length;k++){if(w[k].indexOf(q)===0)return true;}return false;}
-  function run(){
-    var q=inp.value.trim().toLowerCase(), shown=0;
-    for(var i=0;i<terms.length;i++){var name=terms[i].querySelector('dt').textContent;var ok=!q||hit(name,q);terms[i].classList.toggle('hide',!ok);if(ok)shown++;}
-    for(var j=0;j<letters.length;j++){var any=false,e=letters[j].nextElementSibling;while(e&&!e.classList.contains('letter')){if(e.classList.contains('term')&&!e.classList.contains('hide')){any=true;break;}e=e.nextElementSibling;}letters[j].classList.toggle('hide',!any);}
+  function label(t){return t.querySelector('dt').textContent;}
+  /* hides the letters left empty and the rule above the first term shown under each letter, counts what is shown */
+  function tidy(){
+    var shown=0;
+    for(var j=0;j<letters.length;j++){
+      var any=false,e=letters[j].nextElementSibling;
+      while(e&&!e.classList.contains('letter')){
+        if(e.classList.contains('term')){var on=!e.classList.contains('hide');e.classList.toggle('first',on&&!any);if(on){any=true;shown++;}}
+        e=e.nextElementSibling;
+      }
+      letters[j].classList.toggle('hide',!any);
+    }
     none.classList.toggle('show',shown===0);
+    return shown;
+  }
+  function run(){
+    var q=inp.value.trim().toLowerCase();
+    for(var i=0;i<terms.length;i++){terms[i].classList.toggle('hide',!!q&&!hit(label(terms[i]),q));}
+    var shown=tidy();
     count.textContent=(q?shown+' of '+total:total)+' terms';
   }
-  inp.addEventListener('input',run);
-  /* a pressed letter lights up in the row for a few seconds, its divider in the list lights up on arrival */
-  var az=document.querySelectorAll('.az a'); for(var a=0;a<az.length;a++){az[a].addEventListener('click',function(){for(var b=0;b<az.length;b++)az[b].classList.remove('hit');var el=this;void el.offsetWidth;el.classList.add('hit');setTimeout(function(){el.classList.remove('hit');},4000);});}
+  function one(t){
+    solo=true; inp.value='';
+    for(var i=0;i<terms.length;i++){terms[i].classList.toggle('hide',terms[i]!==t);}
+    tidy(); count.textContent='1 of '+total+' terms'; all.hidden=false;
+  }
+  function whole(){solo=false; all.hidden=true; run();}
+  function mark(t){
+    if(landed&&landed!==t){landed.classList.remove('landed');landed.removeAttribute('tabindex');}
+    landed=t||null;
+    if(t){t.classList.add('landed');t.setAttribute('tabindex','-1');}
+  }
+  /* puts an entry just below the pinned bar */
+  function under(el){var y=el.getBoundingClientRect().top+window.pageYOffset-bar.offsetHeight-GAP;window.scrollTo(0,Math.max(0,Math.round(y)));}
+  function hold(el){try{el.focus({preventScroll:true});}catch(e){}}
+  function tell(msg){var n=++told;say.textContent='';setTimeout(function(){if(n===told)say.textContent=msg;},120);}
+  /* what this history entry became, so back, forward and a reload bring it back: 'all' after "All terms" or a
+     letter (the whole list, the term marked), 'bare' after typing (the whole list, no mark), nothing on arrival */
+  function kept(){try{var s=history.state;return s&&(s.t101==='all'||s.t101==='bare')?s.t101:'';}catch(e){return '';}}
+  function keep(mode){try{if(kept()!==mode)history.replaceState({t101:mode},'');}catch(e){}}
+  function target(){
+    var h=location.hash.slice(1), id=h;
+    if(!h)return null;
+    try{id=decodeURIComponent(h);}catch(e){}
+    return document.getElementById(id)||document.getElementById(h);
+  }
+  function route(first){
+    var el=target();
+    if(el&&el.classList.contains('term')){
+      var mode=kept();
+      if(mode==='bare'){mark(null);whole();return;}
+      mark(el);
+      if(mode==='all'){inp.value='';whole();under(el);tell('All '+total+' terms, '+label(el)+' marked.');}
+      else{one(el);window.scrollTo(0,0);tell(label(el)+', shown alone. All terms brings back the list.');}
+      hold(el);
+      return;
+    }
+    var moved=solo;
+    if(solo)whole();
+    if(el&&el.classList.contains('letter')){
+      if(el.classList.contains('hide')){inp.value='';run();moved=true;}
+      if(moved&&!first)under(el);
+    }
+  }
+  inp.addEventListener('input',function(){
+    if(solo||landed){keep('bare');solo=false;all.hidden=true;mark(null);}
+    run();
+  });
+  all.addEventListener('click',function(){
+    keep('all'); inp.value=''; whole();
+    if(landed){under(landed);hold(landed);tell('All '+total+' terms, '+label(landed)+' marked.');}
+  });
+  /* a pressed letter leaves the one-term view and clears a filter that hides it, then lights up in the row for a
+     few seconds; its divider in the list lights up on arrival */
+  for(var a=0;a<az.length;a++){az[a].addEventListener('click',function(){
+    var el=document.getElementById(this.getAttribute('href').slice(1));
+    if(solo){keep('all');whole();}
+    if(el&&el.classList.contains('hide')){inp.value='';run();}
+    for(var b=0;b<az.length;b++)az[b].classList.remove('hit');
+    var me=this;void me.offsetWidth;me.classList.add('hit');setTimeout(function(){me.classList.remove('hit');},4000);
+  });}
+  window.addEventListener('hashchange',function(){route(false);});
+  route(true);
+  /* the browser's own jump to the address can come after this script: the one-term view stays at the top */
+  window.addEventListener('load',function(){if(solo)window.scrollTo(0,0);});
 })();
 </script>
 </body>

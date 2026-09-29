@@ -44,13 +44,37 @@
   .theme{white-space:nowrap;flex:none;margin-left:auto}
   .kicker{white-space:nowrap;margin-right:auto}
   @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
-  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em;text-align:center}
   h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
   h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
   .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0 0 1.6rem;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
   p{margin:0 0 1rem}
   strong{color:var(--head)}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  /* Sources: a box closed by default; inside, the card's sections as groups that open one at a time (one name), each
+     row a claim and its source (Ron, 2026-09-28) */
+  .srcs{padding:0}
+  .srcs summary{display:flex;align-items:baseline;gap:.15rem .8rem;cursor:pointer;list-style:none}
+  .srcs summary::-webkit-details-marker{display:none}
+  .srcs summary::before{content:"";align-self:center;flex:none;width:.42rem;height:.42rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);margin:0 .15rem 0 .1rem;transition:transform .2s}
+  .srcs[open]>summary::before,.srcs-g[open]>summary::before{transform:rotate(45deg)}
+  .srcs summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .srcs>summary{flex-wrap:wrap;padding:.75rem 1rem}
+  .srcs>summary:hover .srcs-t{color:var(--link)}
+  .srcs-t{font-weight:600;color:var(--head)}
+  .srcs-v{font-size:.84rem;color:var(--muted)}
+  .srcs-in{padding:0 1rem .45rem}
+  .srcs-g{border-top:1px solid var(--line)}
+  .srcs-g>summary{padding:.6rem 0;color:var(--head)}
+  .srcs-g>summary:hover{color:var(--link)}
+  .srcs-g .n{margin-left:auto;align-self:center;font-size:.76rem;line-height:1.5;color:var(--muted);background:var(--tint);border-radius:999px;padding:0 .55rem}
+  .srcs ul{list-style:none;margin:0 0 .55rem;padding:0 0 0 1.35rem}
+  .srcs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,15rem);gap:.15rem 1.2rem;padding:.45rem 0;border-top:1px dashed var(--line);line-height:1.45}
+  .srcs .by{font:.78rem/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}
+  .srcs .by a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .srcs .by a:hover{color:var(--head)}
+  @media (prefers-reduced-motion: reduce){.srcs summary::before{transition:none}}
+  @media (max-width:560px){.srcs li{grid-template-columns:minmax(0,1fr)}.srcs ul{padding-left:.9rem}}
   figure{margin:1.8rem 0;padding:1rem;background:var(--surface);border-radius:10px}
   figcaption{font-size:.9rem;color:var(--muted);margin-top:.6rem}
   table{border-collapse:collapse;width:100%;font-size:.95rem}
@@ -63,6 +87,7 @@
   .lad .y{color:var(--head);font-weight:600}
   .lad .n{color:var(--soon)}
   .lad .p{color:var(--muted)}
+  @media (max-width:480px){.lad{min-width:0}.lad th:not(:first-child){white-space:normal}.lad th,.lad td{padding:.55rem .35rem}.lad tr:first-child th{letter-spacing:.02em;font-size:.76rem}}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
@@ -82,6 +107,11 @@
   svg .no-text{fill:var(--refused);font-weight:600}
   svg .m-flow{fill:var(--muted)} svg .m-ok{fill:var(--accent)} svg .m-no{fill:var(--refused)}
   svg .divider{stroke:var(--line);stroke-dasharray:4 4}
+  @media (max-width:480px){figure{overflow:hidden}figure svg{width:130%}svg text{font-size:15px}}
+  /* the theme the reader picked also sets the browser's own parts (scrollbars, form controls); the button shows keyboard focus */
+  :root[data-theme="light"]{color-scheme:light}
+  :root[data-theme="dark"]{color-scheme:dark}
+  .theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   /* term links: a regular green link that opens the glossary in a new tab */
   a.t{color:var(--link)}
   a.t:hover{color:var(--head)}
@@ -96,7 +126,7 @@
 
 <p class="one">Since 30 June 2026, the program on a Kaspa output can read the whole transaction spending it and refuse. Money can be locked, released, split or handed over under conditions.</p>
 
-<p>Every <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> carries a <a class="t" target="_blank" rel="noopener" href="glossary.html#script-public-key">script public key</a>, a small program that decides what a <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spending</a> <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> must show. Before <a class="t" target="_blank" rel="noopener" href="glossary.html#toccata">Toccata</a> that program could check a <a class="t" target="_blank" rel="noopener" href="glossary.html#signature">signature</a> or a <a class="t" target="_blank" rel="noopener" href="glossary.html#hash">hash</a>, so almost everything on Kaspa was one <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> paying another. <a class="t" target="_blank" rel="noopener" href="glossary.html#crescendo">Crescendo</a> let it read its own transaction: the <a class="t" target="_blank" rel="noopener" href="glossary.html#input">inputs</a> and <a class="t" target="_blank" rel="noopener" href="glossary.html#output">outputs</a>, their amounts and their <a class="t" target="_blank" rel="noopener" href="glossary.html#address">addresses</a>. It still could not keep anything from one spend to the next, and it could not carry an identity across spends.</p>
+<p>Every <a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">UTXO</a> carries a <a class="t" target="_blank" rel="noopener" href="glossary.html#script-public-key">script public key</a>, a small program that decides what a <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spending</a> <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> must show. Before <a class="t" target="_blank" rel="noopener" href="glossary.html#toccata">Toccata</a> that program could check a <a class="t" target="_blank" rel="noopener" href="glossary.html#signature">signature</a> or a <a class="t" target="_blank" rel="noopener" href="glossary.html#hash">hash</a>, so almost everything on Kaspa was one <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> paying another. <a class="t" target="_blank" rel="noopener" href="glossary.html#crescendo">Crescendo</a> let it read its own transaction: the <a class="t" target="_blank" rel="noopener" href="glossary.html#input">inputs</a> and <a class="t" target="_blank" rel="noopener" href="glossary.html#output">outputs</a>, their amounts and their <a class="t" target="_blank" rel="noopener" href="glossary.html#address">addresses</a>. It still could not keep state from one spend to the next, and it could not carry an identity across spends.</p>
 
 <p>Toccata made that program general. It can read the whole transaction, keep state from one spend to the next, carry an identity across its whole life, and refuse the spend when its conditions are not met. Every <a class="t" target="_blank" rel="noopener" href="glossary.html#node">node</a> runs it before the transaction is accepted. A UTXO locked this way is a <strong><a class="t" target="_blank" rel="noopener" href="glossary.html#covenant">covenant</a></strong>. That opens options for what <a class="t" target="_blank" rel="noopener" href="glossary.html#layer-1">Layer 1</a> coins and assets can do.</p>
 
@@ -147,13 +177,58 @@
 </table></div>
 
 <h2>New possibilities</h2>
-<p>Things you could only do through an exchange or a custodian, like <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a> savings until a date, leave coins to someone if you disappear, trade one asset for another with a stranger and much more, can now be done with your own keys and a transaction <a class="t" target="_blank" rel="noopener" href="glossary.html#fee">fee</a>.</p>
+<p>Things you could only do through an exchange or a custodian, like trade one asset for another with a stranger and much more, can now be done with your own keys and a transaction <a class="t" target="_blank" rel="noopener" href="glossary.html#fee">fee</a>.</p>
 
 <h2>Look at it on chain</h2>
-<p>Open this transaction in an <a class="t" target="_blank" rel="noopener" href="glossary.html#explorer">explorer</a>: <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063fa"><code>f378111b…a063fa</code></a>, from 8 September 2026. Its first input is not an ordinary address but a <a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a> of 2,732 <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a>, and the explorer marks the transaction as a covenant carrying on, one output in, one output out.</p>
+<p>Open this transaction in an <a class="t" target="_blank" rel="noopener" href="glossary.html#explorer">explorer</a>: <a target="_blank" rel="noopener" href="https://kaspa.stream/transactions/f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063fa"><code>f378111b…a063fa</code></a>, from 8 September 2026. Its 0.51 KAS input is not an ordinary address but a <a class="t" target="_blank" rel="noopener" href="glossary.html#script">script</a> of 2,732 <a class="t" target="_blank" rel="noopener" href="glossary.html#byte">bytes</a>, and the explorer marks the transaction as a covenant carrying on, one output in, one output out.</p>
 
 <h2>Sources</h2>
-<p class="src">Toccata is the hardfork that activated general covenants on Kaspa mainnet: KIP-17 (full transaction introspection, byte-string operations, signature checks over arbitrary data, the ZK opcode), KIP-20 (covenant identifiers), KIP-21 (partitioned sequencing commitments) and KIP-16 (zero-knowledge proof verification). The first, narrow introspection opcodes, KIP-10, were already live since Crescendo (May 2025). Toccata activated at a fixed DAA score on 30 June 2026. Node release v2.0.0 (5 June 2026) was the activation release. The KIP texts are at <a target="_blank" rel="noopener" href="https://github.com/kaspanet/kips">github.com/kaspanet/kips</a>.</p>
+<details class="src srcs">
+<summary><span class="srcs-t">21 sources</span><span class="srcs-v">read at rusty-kaspa v2.1.0</span></summary>
+<div class="srcs-in">
+<details class="srcs-g" name="srcg"><summary>What Toccata changed<span class="n">9</span></summary>
+<ul>
+<li><span>Toccata activated on 30 June 2026, at a fixed DAA score</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/docs/toccata-guide.md" target="_blank" rel="noopener">toccata-guide.md</a> · <a href="https://explorer.kaspa.org/blocks/13cef6bdbf70296d0da26259193e3461f120e5cd5c649b428415814c5c345931" target="_blank" rel="noopener">block 13cef6bd…c345931</a></span></li>
+<li><span>The activation release, node v2.0.0 of 5 June 2026</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v2.0.0" target="_blank" rel="noopener">release v2.0.0</a> Mainnet Toccata Release</span></li>
+<li><span>Coins locked, released, split or handed over under conditions</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a> Abstract, Use Cases · <a href="https://docs.kaspa.org/programmability/covenants" target="_blank" rel="noopener">Covenants, Kaspa docs</a></span></li>
+<li><span>Every UTXO carries a script public key</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_entry.rs" target="_blank" rel="noopener">utxo_<wbr>entry.rs</a> UtxoEntry, script_<wbr>public_<wbr>key</span></li>
+<li><span>Before Toccata it could check a signature or a hash</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCheckSig, OpBlake2b, OpSHA256</span></li>
+<li><span>Toccata, the hardfork that brought general covenants to mainnet</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/docs/toccata-guide.md" target="_blank" rel="noopener">toccata-guide.md</a></span></li>
+<li><span>A program that ends on false refuses the spend</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> check_<wbr>error_<wbr>condition, EvalFalse</span></li>
+<li><span>Every node runs it before it accepts the transaction</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs" target="_blank" rel="noopener">tx_<wbr>validation_<wbr>in_<wbr>utxo_<wbr>context.rs</a> validate_<wbr>populated_<wbr>transaction_<wbr>and_<wbr>get_<wbr>fee, check_<wbr>scripts</span></li>
+<li><span>A UTXO locked this way is a covenant</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a> Abstract</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Long story short<span class="n">1</span></summary>
+<ul>
+<li><span>The program travels with L1 assets too</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a> Use Cases · <a href="https://docs.kaspa.org/programmability/covenants" target="_blank" rel="noopener">Covenants, Kaspa docs</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>What Toccata added<span class="n">8</span></summary>
+<ul>
+<li><span>KIP-10, the first narrow reads, came with Crescendo in May 2025</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0010.md" target="_blank" rel="noopener">KIP-10</a> · <a href="https://github.com/kaspanet/kips/blob/master/kip-0014.md" target="_blank" rel="noopener">KIP-14</a> · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/config/params.rs" target="_blank" rel="noopener">params.rs</a> crescendo_<wbr>activation</span></li>
+<li><span>Those reads see the inputs and outputs, their amounts and addresses</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpTxInputCount, OpTxOutputCount, OpTxInputAmount, OpTxOutputAmount, OpTxInputSpk, OpTxOutputSpk</span></li>
+<li><span>KIP-17: the whole transaction, byte strings, signatures over any data, the ZK opcode</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a> · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCat, OpCheckSigFromStack, OpZkPrecompile</span></li>
+<li><span>State kept from one spend to the next</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a> Motivation · <a href="https://docs.kaspa.org/toccata" target="_blank" rel="noopener">Toccata Dev Guide</a></span></li>
+<li><span>Covenant IDs, KIP-20, carry an identity across spends</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md" target="_blank" rel="noopener">KIP-20</a> · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_entry.rs" target="_blank" rel="noopener">utxo_<wbr>entry.rs</a> covenant_<wbr>id</span></li>
+<li><span>KIP-21, partitioned sequencing commitments</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0021.md" target="_blank" rel="noopener">KIP-21</a></span></li>
+<li><span>KIP-16, zero-knowledge proof checks</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0016.md" target="_blank" rel="noopener">KIP-16</a></span></li>
+<li><span>The KIP texts</span><span class="by"><a href="https://github.com/kaspanet/kips" target="_blank" rel="noopener">github.com/<wbr>kaspanet/<wbr>kips</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>New possibilities<span class="n">1</span></summary>
+<ul>
+<li><span>One asset traded for another with a stranger</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0017.md" target="_blank" rel="noopener">KIP-17</a> Use Cases · <a href="https://docs.kaspa.org/programmability/covenants" target="_blank" rel="noopener">Covenants, Kaspa docs</a></span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Look at it on chain<span class="n">2</span></summary>
+<ul>
+<li><span>Sent on 8 September 2026, its 0.51 KAS input a 2,732 byte script</span><span class="by"><a href="https://explorer.kaspa.org/txs/f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063fa" target="_blank" rel="noopener">transaction f378111b…fa063fa</a></span></li>
+<li><span>The explorer marks a covenant carrying on, 1 to 1</span><span class="by"><a href="https://kaspa.stream/transactions/f378111bf9f531d0b48b030b3c7ad5bde55912a66c3e245aa0b7e8590fa063fa" target="_blank" rel="noopener">kaspa.stream</a> Continuation, 1 to 1</span></li>
+</ul>
+</details>
+</div>
+</details>
 
 <footer class="foot">
   <div class="nav"><span>Next: <a href="card-1.1.html">Unspent Transaction Output</a></span></div>
@@ -165,6 +240,10 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
+/* the button follows the system theme when it changes, and a choice made in another tab or before Back */
+(function(){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq){if(mq.addEventListener)mq.addEventListener('change',t101Label);else if(mq.addListener)mq.addListener(t101Label);}
+function sync(){var t=null;try{t=localStorage.getItem('t101-theme');}catch(e){}if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);t101Label();}
+window.addEventListener('pageshow',function(e){if(e.persisted)sync();});window.addEventListener('storage',function(e){if(e.key==='t101-theme')sync();});})();
 </script>
 </body>
 </html>

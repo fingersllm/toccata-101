@@ -44,7 +44,7 @@
   .theme{white-space:nowrap;flex:none;margin-left:auto}
   .kicker{white-space:nowrap;margin-right:auto}
   @media (max-width:480px){.kicker{font-size:.72rem;letter-spacing:.05em}.theme{font-size:.74rem;padding:.2rem .6rem}}
-  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em}
+  h1{font-size:1.75rem;line-height:1.2;margin:.6rem 0 1.2rem;color:var(--head);letter-spacing:-.01em;text-align:center}
   h2{font-size:.86rem;margin:2.4rem 0 .7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
   h2::after{content:"";display:block;width:2rem;height:2px;background:var(--accent);margin-top:.35rem}
   .one{font-size:1.15rem;font-weight:600;line-height:1.45;margin:0 0 1rem;padding:.9rem 1.1rem;background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;color:var(--head)}
@@ -54,6 +54,30 @@
   p{margin:0 0 1rem}
   strong{color:var(--head)}
   .src{font-size:.93rem;color:var(--text);background:var(--surface);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.8rem 1rem;overflow-wrap:anywhere}
+  /* Sources: a box closed by default; inside, the card's sections as groups that open one at a time (one name), each
+     row a claim and its source (Ron, 2026-09-28) */
+  .srcs{padding:0}
+  .srcs summary{display:flex;align-items:baseline;gap:.15rem .8rem;cursor:pointer;list-style:none}
+  .srcs summary::-webkit-details-marker{display:none}
+  .srcs summary::before{content:"";align-self:center;flex:none;width:.42rem;height:.42rem;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);margin:0 .15rem 0 .1rem;transition:transform .2s}
+  .srcs[open]>summary::before,.srcs-g[open]>summary::before{transform:rotate(45deg)}
+  .srcs summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .srcs>summary{flex-wrap:wrap;padding:.75rem 1rem}
+  .srcs>summary:hover .srcs-t{color:var(--link)}
+  .srcs-t{font-weight:600;color:var(--head)}
+  .srcs-v{font-size:.84rem;color:var(--muted)}
+  .srcs-in{padding:0 1rem .45rem}
+  .srcs-g{border-top:1px solid var(--line)}
+  .srcs-g>summary{padding:.6rem 0;color:var(--head)}
+  .srcs-g>summary:hover{color:var(--link)}
+  .srcs-g .n{margin-left:auto;align-self:center;font-size:.76rem;line-height:1.5;color:var(--muted);background:var(--tint);border-radius:999px;padding:0 .55rem}
+  .srcs ul{list-style:none;margin:0 0 .55rem;padding:0 0 0 1.35rem}
+  .srcs li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,15rem);gap:.15rem 1.2rem;padding:.45rem 0;border-top:1px dashed var(--line);line-height:1.45}
+  .srcs .by{font:.78rem/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}
+  .srcs .by a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--accent)}
+  .srcs .by a:hover{color:var(--head)}
+  @media (prefers-reduced-motion: reduce){.srcs summary::before{transition:none}}
+  @media (max-width:560px){.srcs li{grid-template-columns:minmax(0,1fr)}.srcs ul{padding-left:.9rem}}
   .foot{margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem;font-size:.88rem;color:var(--muted)}
   .foot .nav{display:block}
   .foot .meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
@@ -96,6 +120,10 @@
   .btn:disabled{opacity:.45;cursor:not-allowed}
   .note{margin:1rem 0 0;padding:.8rem 1rem;border:1px solid var(--line);border-radius:10px;font-size:.93rem}
   .note b{display:block;color:var(--head);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;margin-bottom:.25rem}
+  /* the theme the reader picked also sets the browser's own parts (scrollbars, form controls); the button shows keyboard focus */
+  :root[data-theme="light"]{color-scheme:light}
+  :root[data-theme="dark"]{color-scheme:dark}
+  .theme:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   /* term links: a regular green link that opens the glossary in a new tab */
   a.t{color:var(--link)}
   a.t:hover{color:var(--head)}
@@ -113,7 +141,6 @@
   <b>pieces</b><i class="eq">=</i><span>UTXOs.</span>
   <b>lock</b><i class="eq">=</i><span>the output's script public key, a small program attached to the UTXO that determines what a spending transaction must show. For a normal wallet it is the signature of a key.</span>
 </div>
-</div>
 
 <p>A Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#transaction">transaction</a> creates <a class="t" target="_blank" rel="noopener" href="glossary.html#output">outputs</a>: <a class="t" target="_blank" rel="noopener" href="glossary.html#piece">pieces</a> of KAS, each with an amount and a <a class="t" target="_blank" rel="noopener" href="glossary.html#lock">lock</a>. A piece that no later transaction has <a class="t" target="_blank" rel="noopener" href="glossary.html#spend">spent</a> is an <strong><a class="t" target="_blank" rel="noopener" href="glossary.html#utxo">unspent transaction output</a></strong>, a UTXO. This is what the network stores, not balances, UTXOs. The amounts a <a class="t" target="_blank" rel="noopener" href="glossary.html#wallet">wallet</a> sums are counted in <a class="t" target="_blank" rel="noopener" href="glossary.html#sompi">sompi</a>: 1 KAS is 100,000,000 sompi.</p>
 
@@ -126,9 +153,9 @@
   <div class="sub" id="sub"></div>
   <div class="lbl" style="margin-top:.9rem">The network stores</div>
   <div class="pieces" id="pieces"></div>
-  <div class="pickline" id="pickline"></div>
+  <div class="pickline" id="pickline" aria-live="polite"></div>
   <div class="btns" id="btns"></div>
-  <p class="cap" id="cap"></p>
+  <p class="cap" id="cap" aria-live="polite"></p>
 </div>
 <div class="note">
   <b>More than a date</b>
@@ -139,7 +166,44 @@
 <p>Open an <a class="t" target="_blank" rel="noopener" href="glossary.html#address">address</a> in the Kaspa <a class="t" target="_blank" rel="noopener" href="glossary.html#explorer">explorer</a> and look at its UTXO list: <a target="_blank" rel="noopener" href="https://explorer.kaspa.org/addresses/kaspa:qp3teqqzngwu48d5tqfp9hypl7fgg9wxxuuk7qxynj8hj300hgvnyfckj765g?tab=utxos"><code>kaspa:qp3teqqzngwu48…fckj765g</code></a>. You see pieces, each with an amount and the transaction that created it, not one number. This address holds the three pieces from above, 10, 2 and 0.5 KAS, sent to it on 8 September 2026 and left there.</p>
 
 <h2>Sources</h2>
-<p class="src">In rusty-kaspa, an unspent output is a <code>UtxoEntry</code>: an amount in sompi, a script public key (the lock), the DAA score of the block that created it, and whether it came from mining (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/utxo/utxo_entry.rs">consensus/core/src/utxo/utxo_entry.rs</a>). A transaction output carries a value and a script public key (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/tx.rs">consensus/core/src/tx.rs</a>). <code>SOMPI_PER_KASPA = 100,000,000</code> (<a target="_blank" rel="noopener" href="https://github.com/kaspanet/rusty-kaspa/blob/v2.0.1/consensus/core/src/constants.rs">consensus/core/src/constants.rs</a>). Read at release v2.0.1.</p>
+<details class="src srcs">
+<summary><span class="srcs-t">21 sources</span><span class="srcs-v">read at rusty-kaspa v2.1.0</span></summary>
+<div class="srcs-in">
+<details class="srcs-g" name="srcg"><summary>UTXO: your balance is a set of pieces, not a number<span class="n">12</span></summary>
+<ul>
+<li><span>The network stores a set of UTXOs</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/model/stores/utxo_set.rs" target="_blank" rel="noopener">utxo_<wbr>set.rs</a> UtxoSetStore · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/model/stores/virtual_state.rs" target="_blank" rel="noopener">virtual_<wbr>state.rs</a> VirtualStores, utxo_<wbr>set</span></li>
+<li><span>A UTXO holds an amount in sompi and a lock</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_entry.rs" target="_blank" rel="noopener">utxo_<wbr>entry.rs</a> UtxoEntry, amount, script_<wbr>public_<wbr>key</span></li>
+<li><span>A UTXO keeps the DAA score of the block that accepted it, and whether it came from mining</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_entry.rs" target="_blank" rel="noopener">utxo_<wbr>entry.rs</a> block_<wbr>daa_<wbr>score, is_<wbr>coinbase</span></li>
+<li><span>A balance is the UTXO amounts added up</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/indexes/utxoindex/src/stores/indexed_utxos.rs" target="_blank" rel="noopener">indexed_<wbr>utxos.rs</a> get_<wbr>balance_<wbr>from_<wbr>script_<wbr>public_<wbr>keys · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/utxo/context.rs" target="_blank" rel="noopener">wallet context.rs</a> calculate_<wbr>balance</span></li>
+<li><span>The lock is a small program that checks what the spending transaction shows</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx/script_public_key.rs" target="_blank" rel="noopener">script_<wbr>public_<wbr>key.rs</a> ScriptPublicKey · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/lib.rs" target="_blank" rel="noopener">lib.rs</a> execute_<wbr>inner</span></li>
+<li><span>A normal wallet's lock asks for a signature from its key</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/standard.rs" target="_blank" rel="noopener">standard.rs</a> pay_<wbr>to_<wbr>pub_<wbr>key · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCheckSig</span></li>
+<li><span>A transaction creates outputs, each with an amount and a lock</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> Transaction, TransactionOutput, value, script_<wbr>public_<wbr>key</span></li>
+<li><span>An output stays a UTXO until a transaction spends it</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_diff.rs" target="_blank" rel="noopener">utxo_<wbr>diff.rs</a> add_<wbr>transaction</span></li>
+<li><span>1 KAS is 100,000,000 sompi</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/constants.rs" target="_blank" rel="noopener">constants.rs</a> SOMPI_<wbr>PER_<wbr>KASPA</span></li>
+<li><span>A payment spends whole UTXOs and creates new ones</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> TransactionInput, previous_<wbr>outpoint · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_diff.rs" target="_blank" rel="noopener">utxo_<wbr>diff.rs</a> add_<wbr>transaction</span></li>
+<li><span>Change is what is left after the payment and the fee</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/tx/generator/generator.rs" target="_blank" rel="noopener">generator.rs</a> change_<wbr>output_<wbr>value · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/transaction_validator/tx_validation_in_utxo_context.rs" target="_blank" rel="noopener">tx_<wbr>validation_<wbr>in_<wbr>utxo_<wbr>context.rs</a> validate_<wbr>populated_<wbr>transaction_<wbr>and_<wbr>get_<wbr>fee</span></li>
+<li><span>Each UTXO under a covenant carries the covenant's id</span><span class="by"><a href="https://github.com/kaspanet/kips/blob/master/kip-0020.md" target="_blank" rel="noopener">KIP-20</a> · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> TransactionOutput, covenant, CovenantBinding · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/utxo/utxo_entry.rs" target="_blank" rel="noopener">utxo_<wbr>entry.rs</a> covenant_<wbr>id</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>One balance, three UTXOs<span class="n">5</span></summary>
+<ul>
+<li><span>Every UTXO points to the transaction that created it</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/tx.rs" target="_blank" rel="noopener">tx.rs</a> TransactionOutpoint, transaction_<wbr>id, index</span></li>
+<li><span>The fee goes to a miner</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/src/processes/coinbase.rs" target="_blank" rel="noopener">coinbase.rs</a> expected_<wbr>coinbase_<wbr>transaction, total_<wbr>fees</span></li>
+<li><span>A fee of 0.005 KAS, above the lowest a node takes, 100 sompi a gram</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/mining/src/mempool/config.rs" target="_blank" rel="noopener">mempool/<wbr>config.rs</a> DEFAULT_<wbr>MINIMUM_<wbr>RELAY_<wbr>TRANSACTION_<wbr>FEE · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/mining/src/mempool/check_transaction_standard.rs" target="_blank" rel="noopener">check_<wbr>transaction_<wbr>standard.rs</a> RejectInsufficientComputeFee</span></li>
+<li><span>A wallet picks the UTXOs for you</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/wallet/core/src/tx/generator/generator.rs" target="_blank" rel="noopener">generator.rs</a> get_<wbr>utxo_<wbr>entry</span></li>
+<li><span>A lock can block a spend until a set date</span><span class="by"><a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/crypto/txscript/src/opcodes/mod.rs" target="_blank" rel="noopener">opcodes/<wbr>mod.rs</a> OpCheckLockTimeVerify · <a href="https://github.com/kaspanet/rusty-kaspa/blob/v2.1.0/consensus/core/src/constants.rs" target="_blank" rel="noopener">constants.rs</a> LOCK_<wbr>TIME_<wbr>THRESHOLD</span></li>
+</ul>
+</details>
+<details class="srcs-g" name="srcg"><summary>Look at it on chain<span class="n">4</span></summary>
+<ul>
+<li><span>The address's UTXO list, all three still there on 28 September 2026</span><span class="by"><a href="https://explorer.kaspa.org/addresses/kaspa:qp3teqqzngwu48d5tqfp9hypl7fgg9wxxuuk7qxynj8hj300hgvnyfckj765g?tab=utxos" target="_blank" rel="noopener">kaspa:qp3teqqzngwu48…fckj765g</a></span></li>
+<li><span>The 10 KAS UTXO, sent on 8 September 2026</span><span class="by"><a href="https://explorer.kaspa.org/txs/c6fe96599262e49baab58f91ce9bb8a795403de7713b0dbcfe451e8459304d3f" target="_blank" rel="noopener">transaction c6fe9659…9304d3f</a></span></li>
+<li><span>The 2 KAS UTXO, sent on 8 September 2026</span><span class="by"><a href="https://explorer.kaspa.org/txs/c086360ef238cc44485b9bb89813ce5cdfa8bff0292789e28b2bdc60c1d5d551" target="_blank" rel="noopener">transaction c086360e…1d5d551</a></span></li>
+<li><span>The 0.5 KAS UTXO, sent on 8 September 2026</span><span class="by"><a href="https://explorer.kaspa.org/txs/04ded1b40840f6e6afed3e83bb148c4dd3995734a4620185fb7f7efb235536ac" target="_blank" rel="noopener">transaction 04ded1b4…35536ac</a></span></li>
+</ul>
+</details>
+</div>
+</details>
 
 <footer class="foot">
   <div class="nav"><a class="prev" href="card-0.1.html">Last card</a> · <span>Next: <a href="card-1.2.html">Transaction, All or Nothing</a></span></div>
@@ -148,16 +212,17 @@
 
 <script>
 var mode='idle', locked=false, picked={};
-var FEE=0.0006, PAY=3, NEED=PAY+FEE;
+var FEE=0.005, PAY=3, NEED=PAY+FEE;
 var LOCK='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
 var RULE='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>';
 var BASE=[{id:'u10',a:10},{id:'u2',a:2},{id:'u05',a:0.5}];
 function r4(x){return Math.round(x*1e4)/1e4;}
 function fmt(k){return r4(k).toString()+' KAS';}
 function pickedSum(){var t=0;BASE.forEach(function(b){if(picked[b.id])t+=b.a;});return r4(t);}
+function tapKey(e,id){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();tap(id);}}
 function box(p){
   var cls=p.cls||'', ico=cls.indexOf('fee')>=0?'':(cls.indexOf('cov')>=0?RULE:LOCK);
-  var on=p.id?' onclick="tap(\''+p.id+'\')"':'';
+  var on=p.id?' role="button" tabindex="0" aria-pressed="'+(picked[p.id]?'true':'false')+'" data-id="'+p.id+'" onclick="tap(\''+p.id+'\')" onkeydown="tapKey(event,\''+p.id+'\')"':'';
   return '<div class="pc '+cls+'"'+on+'>'+ico+'<div class="amt">'+fmt(p.a)+'</div><div class="who">'+p.who+'</div></div>';
 }
 function render(){
@@ -177,9 +242,9 @@ function render(){
     list.push(locked?{a:2,who:covWho,cls:'cov'}:{a:2,who:'untouched'});
     list.push({a:0.5,who:'untouched'});
     list.push({a:3,who:'new UTXO, locked to your friend\'s key',cls:'new'});
-    list.push({a:6.9994,who:'new UTXO back to you, your change',cls:'new'});
+    list.push({a:6.995,who:'new UTXO back to you, your change',cls:'new'});
     list.push({a:FEE,who:'fee sent to the miner',cls:'fee'});
-    bal=9.4994;
+    bal=9.495;
     cap=locked?'The payment came out of the 10 UTXO. The covenant 2 UTXO sat untouched next to it, and so did the 0.5.':'The 10 UTXO was consumed whole. Two new UTXOs exist now, and the 2 and 0.5 were never touched. Fee sent to the miner.';
     btns='<button class="btn alt" type="button" onclick="reset()">Start over</button>'
         +'<button class="btn alt" type="button" onclick="lock()">'+(locked?'Remove the savings lock':'Put the 2 KAS UTXO under a savings lock')+'</button>';
@@ -210,16 +275,20 @@ function render(){
     cap=(n===1?'One UTXO':n+' UTXOs')+' consumed whole. One new UTXO for your friend'+(change>0?', one back to you as change.':'.')+' Fee sent to the miner.';
     btns='<button class="btn alt" type="button" onclick="reset()">Start over</button>';
   }
+  var ae=document.activeElement, fk=null;
+  try{if(ae&&ae.parentNode&&(ae.parentNode.id==='btns'||ae.parentNode.id==='pieces')&&ae.matches(':focus-visible'))fk=ae.getAttribute('data-id')||ae.getAttribute('onclick');}catch(e){}
   document.getElementById('pieces').innerHTML=list.map(box).join('');
   document.getElementById('bal').innerHTML=bal.toString()+'<small>KAS</small>';
   var comp='';
-  if(mode==='paid') comp='untouched 2.5 + change 6.9994';
+  if(mode==='paid') comp='untouched 2.5 + change 6.995';
   if(mode==='sent'){var un=r4(12.5-pickedSum()), ch=r4(pickedSum()-NEED); comp=(un>0?'untouched '+un+' + ':'')+'change '+ch;}
   document.getElementById('sub').textContent=[comp,locked?'2 KAS of it under a covenant':''].filter(Boolean).join(' · ');
   document.getElementById('pickline').textContent=pl;
   document.getElementById('btns').innerHTML=btns;
   document.getElementById('cap').textContent=cap;
+  if(fk)refocus(fk);
 }
+function refocus(k){var c=document.querySelectorAll('#pieces [data-id],#btns button'),i,f=null;for(i=0;i<c.length&&!f;i++)if((c[i].getAttribute('data-id')||c[i].getAttribute('onclick'))===k&&!c[i].disabled)f=c[i];for(i=0;i<c.length&&!f;i++)if(!c[i].disabled)f=c[i];if(!f)return;try{f.focus({preventScroll:true});f.scrollIntoView({block:'nearest'});}catch(e){f.focus();}}
 function pay(){mode='paid';render();}
 function startPick(){mode='pick';picked={};render();}
 function tap(id){if(mode!=='pick')return;picked[id]=!picked[id];render();}
@@ -231,6 +300,10 @@ function t101IsDark(){var c=document.documentElement.getAttribute('data-theme');
 function t101Label(){var b=document.getElementById('theme');if(!b)return;var d=t101IsDark();var t=document.getElementById('theme-txt');if(t)t.textContent=d?'Light mode':'Dark mode';var i=document.getElementById('theme-ico');if(i)i.innerHTML=d?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>':'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');}
 function t101Toggle(){var next=t101IsDark()?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('t101-theme',next);}catch(e){}t101Label();}
 t101Label();
+/* the button follows the system theme when it changes, and a choice made in another tab or before Back */
+(function(){var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');if(mq){if(mq.addEventListener)mq.addEventListener('change',t101Label);else if(mq.addListener)mq.addListener(t101Label);}
+function sync(){var t=null;try{t=localStorage.getItem('t101-theme');}catch(e){}if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);t101Label();}
+window.addEventListener('pageshow',function(e){if(e.persisted)sync();});window.addEventListener('storage',function(e){if(e.key==='t101-theme')sync();});})();
 </script>
 </body>
 </html>
