@@ -1,0 +1,23 @@
+{
+  "campaign": "m1",
+  "clock_ms": 1791381098027,
+  "counted": [],
+  "covenant_id": "787e6f3c2d865c06c4fa52b97d4a3b9e163dbd3b424b7c20b6c886492822dedf",
+  "genesis_outpoint": "1fed7f6d237a29c1ce49997ea23fd40a08947b9d6e6d194d748471c6fe477d41:1",
+  "goal_kas": 4,
+  "keeper": "0.1.0",
+  "last_block": "f2b55c1982fdf35a18ab5eb460c4498c41a7f281aca06a0ac72ec3a47bee773f",
+  "min_kas": 2,
+  "network": "mainnet",
+  "payee": "kaspa:qqa2z6s64jreupshtw46csrpxct4k57s84y03gss7950mnphlpm2yhy72g8s8",
+  "refund_date_ms": 1795996800000,
+  "vault": {
+    "address": "kaspa:ppef0jhz8fqrm3wtxl6796yn4aqhsm5w3sd2qh4y067acxzjrusn6l6mg7kfn",
+    "count": 0,
+    "outpoint": "99c3a2b5c1ed724bac2665c1665f3e65f1293ee6450ec07f0b8c2885f87bd9ad:0",
+    "phase": "CANCELLED",
+    "total_sompi": 0,
+    "value_sompi": 195196300
+  },
+  "waiting": []
+}
