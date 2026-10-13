@@ -1,6 +1,6 @@
 {
   "campaign": "rehearsal",
-  "clock_ms": 1791893988225,
+  "clock_ms": 1791894837252,
   "counted": [
     {
       "amount": 1000000000,
@@ -12,7 +12,7 @@
   "genesis_outpoint": "fa0fa99eb4a6c963a3f97ab9efa7c446b26bce67afd0ddb07b76c7f440700534:0",
   "goal_kas": 1000,
   "keeper": "0.1.0",
-  "last_block": "75708372b159a9a3fbfc77794ca0b27ba19008ec47f621839932153903558db0",
+  "last_block": "1577c6ff7ac2fde89a23376f0b01f35d767911af982378e6be2da7d999e4bb2c",
   "min_kas": 10,
   "network": "testnet-10",
   "payee": "kaspatest:qq85m3ymvjfpw6vccahj5dqq6e7cz6gnhdhsm3auvv7efca3qnpavq6kvyfsu",
@@ -25,11 +25,5 @@
     "total_sompi": 1000000000,
     "value_sompi": 1997489580
   },
-  "waiting": [
-    {
-      "amount_sompi": 1050000000,
-      "contributor": "kaspatest:qzyjgkq7l3hc593sa9jklsx9lncjx7m8y76s79snstqzg06a4jggq4vr7qu58",
-      "outpoint": "08a1402152fc7ca9a47b0e01447d3d48f62d4074daa12d05c3528ab00495f16a:0"
-    }
-  ]
+  "waiting": []
 }
