@@ -1,6 +1,6 @@
 {
   "campaign": "rehearsal-refund",
-  "clock_ms": 1791895391606,
+  "clock_ms": 1791895412243,
   "counted": [
     {
       "amount": 1000000000,
@@ -12,7 +12,7 @@
   "genesis_outpoint": "65487cc6f7622779c1c8e4ab24bfb5ea429cb92e2db519eb9b0ade12d8e9ad2c:1",
   "goal_kas": 1000,
   "keeper": "0.1.0",
-  "last_block": "7e72b34eceadda8a47e03a9be21507b533f305455b834b70d911fc71ee4eb981",
+  "last_block": "03bf10dd12e2ce1bb1fde575b7132bf491c48d2bc8048d4700a0073f4cab2782",
   "min_kas": 10,
   "network": "testnet-10",
   "payee": "kaspatest:qq85m3ymvjfpw6vccahj5dqq6e7cz6gnhdhsm3auvv7efca3qnpavq6kvyfsu",
@@ -25,5 +25,11 @@
     "total_sompi": 1000000000,
     "value_sompi": 1997489580
   },
-  "waiting": []
+  "waiting": [
+    {
+      "amount_sompi": 2000000000,
+      "contributor": "kaspatest:qrr35x5nhv43xyk2cq5ym6xkljqll75629vhr36rl0lfknzemz8vxcppej7lu",
+      "outpoint": "748ed4ab84c83893045c1cd7d6088981324dbe4a74cb2c5cbae534e5919184e2:0"
+    }
+  ]
 }

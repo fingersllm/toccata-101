@@ -1,6 +1,6 @@
 {
   "campaign": "rehearsal",
-  "clock_ms": 1791895391606,
+  "clock_ms": 1791895412243,
   "counted": [
     {
       "amount": 1000000000,
@@ -27,7 +27,7 @@
   "genesis_outpoint": "fa0fa99eb4a6c963a3f97ab9efa7c446b26bce67afd0ddb07b76c7f440700534:0",
   "goal_kas": 1000,
   "keeper": "0.1.0",
-  "last_block": "7e72b34eceadda8a47e03a9be21507b533f305455b834b70d911fc71ee4eb981",
+  "last_block": "03bf10dd12e2ce1bb1fde575b7132bf491c48d2bc8048d4700a0073f4cab2782",
   "min_kas": 10,
   "network": "testnet-10",
   "payee": "kaspatest:qq85m3ymvjfpw6vccahj5dqq6e7cz6gnhdhsm3auvv7efca3qnpavq6kvyfsu",
