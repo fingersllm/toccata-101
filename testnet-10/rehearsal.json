@@ -1,29 +1,34 @@
 {
   "campaign": "rehearsal",
-  "clock_ms": 1791894837252,
+  "clock_ms": 1791894876856,
   "counted": [
     {
       "amount": 1000000000,
       "contributor": "kaspatest:qrr35x5nhv43xyk2cq5ym6xkljqll75629vhr36rl0lfknzemz8vxcppej7lu",
       "outpoint": "ecc6eedcdafbf112bb7dcd54306df1dbd7a988acbee1a02c936fb9b684657ad6:1"
+    },
+    {
+      "amount": 2000000000,
+      "contributor": "kaspatest:qzy3rjau4lsdwrfaflpazjtz8qn72us3f6x524ry5ncalghqu59l7ffhc4hxu",
+      "outpoint": "2e9effc07670616f2c0625d35eb050c3b2d3e6a45794fbcc14d8a6e2d22d0378:1"
     }
   ],
   "covenant_id": "fc6abce1251777db99bbd007c61482d0dffb66ccede233c6dea749a8cd3d199c",
   "genesis_outpoint": "fa0fa99eb4a6c963a3f97ab9efa7c446b26bce67afd0ddb07b76c7f440700534:0",
   "goal_kas": 1000,
   "keeper": "0.1.0",
-  "last_block": "1577c6ff7ac2fde89a23376f0b01f35d767911af982378e6be2da7d999e4bb2c",
+  "last_block": "a7c396c0cd7cdd3954ddc73d0358e79859d07c6c5977deeeb75f23db4a637a8b",
   "min_kas": 10,
   "network": "testnet-10",
   "payee": "kaspatest:qq85m3ymvjfpw6vccahj5dqq6e7cz6gnhdhsm3auvv7efca3qnpavq6kvyfsu",
   "refund_date_ms": 1795996800000,
   "vault": {
-    "address": "kaspatest:pqkxcnfad7f2tjh4zaew80jsz0rhgpvrepzsgna23w2yckhrxz8qy5t03gd67",
-    "count": 1,
-    "outpoint": "ecc6eedcdafbf112bb7dcd54306df1dbd7a988acbee1a02c936fb9b684657ad6:0",
+    "address": "kaspatest:pzf07h6cq6np603tzpvfyr7c2uu4ksy3cwan3p6ewmk95dkuhskvk8tff54l6",
+    "count": 2,
+    "outpoint": "2e9effc07670616f2c0625d35eb050c3b2d3e6a45794fbcc14d8a6e2d22d0378:0",
     "phase": "OPEN",
-    "total_sompi": 1000000000,
-    "value_sompi": 1997489580
+    "total_sompi": 3000000000,
+    "value_sompi": 1994979160
   },
   "waiting": []
 }
