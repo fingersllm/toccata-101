@@ -12,7 +12,7 @@
   "genesis_outpoint": "65487cc6f7622779c1c8e4ab24bfb5ea429cb92e2db519eb9b0ade12d8e9ad2c:1",
   "goal_kas": 1000,
   "keeper": "0.1.0",
-  "last_block": "03bf10dd12e2ce1bb1fde575b7132bf491c48d2bc8048d4700a0073f4cab2782",
+  "last_block": "3fafbff46ca34183d0175daf90cd8a53f8052ef36b52d88b555182bb5d9d3481",
   "min_kas": 10,
   "network": "testnet-10",
   "payee": "kaspatest:qq85m3ymvjfpw6vccahj5dqq6e7cz6gnhdhsm3auvv7efca3qnpavq6kvyfsu",
@@ -30,6 +30,11 @@
       "amount_sompi": 2000000000,
       "contributor": "kaspatest:qrr35x5nhv43xyk2cq5ym6xkljqll75629vhr36rl0lfknzemz8vxcppej7lu",
       "outpoint": "748ed4ab84c83893045c1cd7d6088981324dbe4a74cb2c5cbae534e5919184e2:0"
+    },
+    {
+      "amount_sompi": 1000000000,
+      "contributor": "kaspatest:qzyjgkq7l3hc593sa9jklsx9lncjx7m8y76s79snstqzg06a4jggq4vr7qu58",
+      "outpoint": "0a4d651bec2a8ef5f844478e7fdcd87bcb94e5a8a3ce95b2ce257f9dab135d8a:0"
     }
   ]
 }
