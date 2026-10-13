@@ -1,0 +1,23 @@
+{
+  "campaign": "rehearsal-refund",
+  "clock_ms": 1791872365693,
+  "counted": [],
+  "covenant_id": "5b12147a68c77cb714c84c344f747332bfe2f2cd1a2ee4b589281898fcc09bbb",
+  "genesis_outpoint": "65487cc6f7622779c1c8e4ab24bfb5ea429cb92e2db519eb9b0ade12d8e9ad2c:1",
+  "goal_kas": 1000,
+  "keeper": "0.1.0",
+  "last_block": "804bac6005ef962f534999036c1353a9c6c0cd245645c9f1e814e430eb40b17b",
+  "min_kas": 10,
+  "network": "testnet-10",
+  "payee": "kaspatest:qq85m3ymvjfpw6vccahj5dqq6e7cz6gnhdhsm3auvv7efca3qnpavq6kvyfsu",
+  "refund_date_ms": 1792368000000,
+  "vault": {
+    "address": "kaspatest:prpqnjk7vqlmfx5m3jslsqc0f73d8sdv6pwf6567exuk07w3m2rrvqjw2kyqj",
+    "count": 0,
+    "outpoint": "a1d0740994409d29368259e08043e457b170abe75c005dee2d40368104f205d1:0",
+    "phase": "OPEN",
+    "total_sompi": 0,
+    "value_sompi": 2000000000
+  },
+  "waiting": []
+}

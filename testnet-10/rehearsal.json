@@ -1,0 +1,23 @@
+{
+  "campaign": "rehearsal",
+  "clock_ms": 1791872365693,
+  "counted": [],
+  "covenant_id": "fc6abce1251777db99bbd007c61482d0dffb66ccede233c6dea749a8cd3d199c",
+  "genesis_outpoint": "fa0fa99eb4a6c963a3f97ab9efa7c446b26bce67afd0ddb07b76c7f440700534:0",
+  "goal_kas": 1000,
+  "keeper": "0.1.0",
+  "last_block": "804bac6005ef962f534999036c1353a9c6c0cd245645c9f1e814e430eb40b17b",
+  "min_kas": 10,
+  "network": "testnet-10",
+  "payee": "kaspatest:qq85m3ymvjfpw6vccahj5dqq6e7cz6gnhdhsm3auvv7efca3qnpavq6kvyfsu",
+  "refund_date_ms": 1795996800000,
+  "vault": {
+    "address": "kaspatest:prh5sedghahj27686hsvgwklvzssne0t8m59aqlzs2uz7vnsuzxlzq06fzw66",
+    "count": 0,
+    "outpoint": "65487cc6f7622779c1c8e4ab24bfb5ea429cb92e2db519eb9b0ade12d8e9ad2c:0",
+    "phase": "OPEN",
+    "total_sompi": 0,
+    "value_sompi": 2000000000
+  },
+  "waiting": []
+}
