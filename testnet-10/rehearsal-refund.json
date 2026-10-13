@@ -1,23 +1,29 @@
 {
   "campaign": "rehearsal-refund",
-  "clock_ms": 1791895320906,
-  "counted": [],
+  "clock_ms": 1791895391606,
+  "counted": [
+    {
+      "amount": 1000000000,
+      "contributor": "kaspatest:qrr35x5nhv43xyk2cq5ym6xkljqll75629vhr36rl0lfknzemz8vxcppej7lu",
+      "outpoint": "4088290520aa10d37a82936a810308266b408c32bb9303f95c50a46715159895:1"
+    }
+  ],
   "covenant_id": "5b12147a68c77cb714c84c344f747332bfe2f2cd1a2ee4b589281898fcc09bbb",
   "genesis_outpoint": "65487cc6f7622779c1c8e4ab24bfb5ea429cb92e2db519eb9b0ade12d8e9ad2c:1",
   "goal_kas": 1000,
   "keeper": "0.1.0",
-  "last_block": "367cc9c9c7a4d61cf24dbbfeeac7094667766957fa1716685a80518e6e57fd10",
+  "last_block": "7e72b34eceadda8a47e03a9be21507b533f305455b834b70d911fc71ee4eb981",
   "min_kas": 10,
   "network": "testnet-10",
   "payee": "kaspatest:qq85m3ymvjfpw6vccahj5dqq6e7cz6gnhdhsm3auvv7efca3qnpavq6kvyfsu",
   "refund_date_ms": 1792368000000,
   "vault": {
-    "address": "kaspatest:prpqnjk7vqlmfx5m3jslsqc0f73d8sdv6pwf6567exuk07w3m2rrvqjw2kyqj",
-    "count": 0,
-    "outpoint": "a1d0740994409d29368259e08043e457b170abe75c005dee2d40368104f205d1:0",
+    "address": "kaspatest:prahsm750cam6zd3t02wmxwecjnncdv84jr08wvtx7cs3trz9va46sffv8j3e",
+    "count": 1,
+    "outpoint": "4088290520aa10d37a82936a810308266b408c32bb9303f95c50a46715159895:0",
     "phase": "OPEN",
-    "total_sompi": 0,
-    "value_sompi": 2000000000
+    "total_sompi": 1000000000,
+    "value_sompi": 1997489580
   },
   "waiting": []
 }
