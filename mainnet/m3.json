@@ -1,6 +1,6 @@
 {
   "campaign": "m3",
-  "clock_ms": 1791980418952,
+  "clock_ms": 1792002034342,
   "counted": [
     {
       "amount": 200000000,
@@ -12,7 +12,7 @@
   "genesis_outpoint": "23874be8f373ea2ba8c4ff81d8adedd6891630794ebc3279dacdc28bf4668fbc:1",
   "goal_kas": 4,
   "keeper": "0.1.0",
-  "last_block": "0ba17c427eb86467de5d59ddf7a479895e79566eaa5a5af2dd6266f6bc4d64fa",
+  "last_block": "0f2a5cd3a0287109ec99586254c8de3dbddd6efdf9c1349bfdfa3050dca29e8f",
   "min_kas": 2,
   "network": "mainnet",
   "payee": "kaspa:qqa2z6s64jreupshtw46csrpxct4k57s84y03gss7950mnphlpm2yhy72g8s8",
