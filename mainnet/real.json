@@ -1,0 +1,23 @@
+{
+  "campaign": "real",
+  "clock_ms": 1792061078836,
+  "counted": [],
+  "covenant_id": "2be2706a18302144f49323561c97d87a7af82b89f56f8df13855ed783f066300",
+  "genesis_outpoint": "103224435f0f7b0d37562d82cd397c90dfd53381edde3a1c32ec597c6697053c:1",
+  "goal_kas": 100000,
+  "keeper": "0.1.0",
+  "last_block": "ae572f7e99de70b1707760e0432c69334dc2ea22cb8abc498ad74843db72c44b",
+  "min_kas": 1000,
+  "network": "mainnet",
+  "payee": "kaspa:qzm4076ex5u0sqtu5uue67ccfhdttv40ceaf8r60yhz5ddgfag9pvmdf23927",
+  "refund_date_ms": 1795996800000,
+  "vault": {
+    "address": "kaspa:pputhzwzaukaep8ctje5sutkza0r37dljcw4lggfhp42s2flase6u9dgh5p6l",
+    "count": 0,
+    "outpoint": "5a8ade87bc12e223e6f231990869c7270526076148593a164f2d0432470cb23e:0",
+    "phase": "OPEN",
+    "total_sompi": 0,
+    "value_sompi": 2000000000
+  },
+  "waiting": []
+}
