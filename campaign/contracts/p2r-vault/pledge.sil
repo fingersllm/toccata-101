@@ -1,0 +1,109 @@
+pragma silverscript ^0.1.0;
+
+// Crowdfund pledge: one address per contributor, made by the page from the contributor's own address.
+// The P2R-vault, design B ("counted coins"), Ron's choice of 2026-09-30. Build candidate: the claims it must meet are
+// `../../p2r-vault-claims.md`; the design is `../../p2r-vault.md`.
+//
+// One template serves every campaign, every contributor, and both kinds of pledge coin:
+//   an uncounted pledge (counted = 0): an ordinary wallet payment to the pledge address;
+//   a counted coin (counted = 1): made only by the campaign's count, bound to the campaign's covenant id, holding
+//   exactly what the campaign counted from one pledge.
+// State (outside the template hash):
+//   campaign    the campaign's covenant id
+//   kind, key   the contributor's address: version 0x00 Schnorr, 0x01 ECDSA, 0x08 P2SH; a 33-byte payload
+//   refundDate  the campaign's refund date, unix milliseconds
+//   minPledge   the campaign's minimum, sompi
+//   counted     0x00 uncounted, 0x01 counted
+contract CrowdfundPledge(
+    byte[32] initCampaign,
+    byte initKind,
+    byte[33] initKey,
+    temporal initRefundDate,
+    int initMinPledge,
+    byte initCounted
+) {
+    byte[32] campaign = initCampaign;
+    byte kind = initKind;
+    byte[33] key = initKey;
+    temporal refundDate = initRefundDate;
+    int minPledge = initMinPledge;
+    byte counted = initCounted;
+
+    int constant MAX_REFUND_FEE = 5000000; // 0.05 KAS
+    int constant UNIT = 100000000; // 1 KAS: only whole KAS are counted
+
+    function refundSpk() : byte[] {
+        byte[] spk = byte[](0x);
+        if (kind == byte(0x00)) {
+            spk = byte[](new ScriptPubKeyP2PK(pubkey(byte[32](key.slice(0, 32)))));
+        } else if (kind == byte(0x01)) {
+            spk = byte[](0x000021) + byte[](key) + byte[](0xab);
+        } else {
+            require(kind == byte(0x08));
+            spk = byte[](new ScriptPubKeyP2SH(byte[32](key.slice(0, 32))));
+        }
+        return spk;
+    }
+
+    // The output at this input's own index pays the contributor back, as an ordinary coin with no covenant id.
+    // The sender may keep at most MAX_REFUND_FEE as the network fee.
+    function payBack() {
+        int idx = this.activeInputIndex;
+        int value = tx.inputs[idx].value;
+        require(value > MAX_REFUND_FEE);
+        require(tx.outputs[idx].value >= value - MAX_REFUND_FEE);
+        require(tx.outputs[idx].scriptPubKey == refundSpk());
+        require(OpOutputCovenantId(idx) == byte[32](0x0000000000000000000000000000000000000000000000000000000000000000));
+    }
+
+    function campaignRunsTag(byte[] tag) {
+        require(this.activeInputIndex > 0);
+        require(OpInputCovenantId(0) == campaign);
+        require(OpTxPayloadLen() == 1);
+        require(OpTxPayloadSubstr(0, 1) == tag);
+    }
+
+    // Uncounted: counted by the campaign at input 0 (payload 0x01), which validates this input and the counted
+    // coin it becomes.
+    entry merge() {
+        require(counted == byte(0x00));
+        campaignRunsTag(byte[](0x01));
+    }
+
+    // Uncounted: anyone may send it back after the refund date.
+    entry refundAfterDate() {
+        require(counted == byte(0x00));
+        require(tx.time >= refundDate);
+        payBack();
+    }
+
+    // Uncounted: a pledge the campaign can never count (under the minimum, or not a whole number of KAS) may go
+    // back at any time.
+    entry refundUncountable() {
+        require(counted == byte(0x00));
+        int value = tx.inputs[this.activeInputIndex].value;
+        require(value < minPledge || value % UNIT != 0);
+        payBack();
+    }
+
+    // Either kind: back to the contributor while the campaign at input 0 releases (payload 0x03). It releases only
+    // when cancelled, or from the refund date on.
+    entry refundWithRelease() {
+        campaignRunsTag(byte[](0x03));
+        payBack();
+    }
+
+    // Uncounted only: back to the contributor early, while the campaign is done (payload 0x04).
+    entry refundWithDone() {
+        require(counted == byte(0x00));
+        campaignRunsTag(byte[](0x04));
+        payBack();
+    }
+
+    // Counted only: to the payee, while the campaign at input 0 collects (payload 0x06). The campaign validates the
+    // payout.
+    entry collect() {
+        require(counted == byte(0x01));
+        campaignRunsTag(byte[](0x06));
+    }
+}

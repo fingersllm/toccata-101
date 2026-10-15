@@ -1,0 +1,25 @@
+{
+  "compiler": "silverc v1.0.0 (3ed973335b59269293564805cc2c58a14595ec03)",
+  "CrowdfundPledge": {
+    "bytecode_bytes": 903,
+    "state_offset": 1,
+    "state_len": 89,
+    "prefix_len": 1,
+    "suffix_len": 813,
+    "prefix_sha256": "8254c329a92850f6d539dd376f4816ee2764517da5e0235514af433164480d7a",
+    "suffix_sha256": "43b3b88a629051b990d0cb4be6bfa50dfee6a528ddf58fc7c9fe2dc6742406de",
+    "template_hash": "d5e92aa1cc9bbb72b8821b17b86d53ce5e22097fc0615b2a7bb1560816a036b8",
+    "source_sha256": "f9439ad7b9b0275dfcf036d0c44a65bf61bbaf32ffbfd6aeb010d073d038f936"
+  },
+  "CrowdfundCampaign": {
+    "bytecode_bytes": 10114,
+    "state_offset": 1,
+    "state_len": 123,
+    "prefix_len": 1,
+    "suffix_len": 9990,
+    "prefix_sha256": "8254c329a92850f6d539dd376f4816ee2764517da5e0235514af433164480d7a",
+    "suffix_sha256": "d0700c450952a73a90c8c22936ab83ce9b4e4006177236aa4b880b7263ff3d80",
+    "template_hash": "75ba391386848509ab1cbe0e57acaa26decc8854ce12a860f0dcf884cc7df190",
+    "source_sha256": "4bf576231a52dc4dfb6d1c7f78a671ba277da0fbab69852ca328b19c79cc5eb6"
+  }
+}

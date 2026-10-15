@@ -1,0 +1,12 @@
+{
+  "network": "mainnet",
+  "name": "real",
+  "covenantId": "2be2706a18302144f49323561c97d87a7af82b89f56f8df13855ed783f066300",
+  "settings": {
+    "goalSompi": 10000000000000,
+    "minSompi": 100000000000,
+    "payee": "kaspa:qzm4076ex5u0sqtu5uue67ccfhdttv40ceaf8r60yhz5ddgfag9pvmdf23927",
+    "cancelAddress": "kaspa:qq3fmu7s2ljdsxvcq8ylskkjz7q849h0ranjk4e7we6sqy5qrca45247tynyp",
+    "refundDateMs": 1795996800000
+  }
+}
