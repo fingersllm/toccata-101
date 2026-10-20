@@ -1,6 +1,6 @@
 {
   "campaign": "rehearsal-refund",
-  "clock_ms": 1792511443244,
+  "clock_ms": 1792533046132,
   "counted": [
     {
       "amount": 1000000000,
@@ -12,7 +12,7 @@
   "genesis_outpoint": "65487cc6f7622779c1c8e4ab24bfb5ea429cb92e2db519eb9b0ade12d8e9ad2c:1",
   "goal_kas": 1000,
   "keeper": "0.1.0",
-  "last_block": "e500ea2276ef5fbbef81e8dff4b3160b0dce3a01d377e2361d7d7c8ef7c306d8",
+  "last_block": "99d2c1e4e4e263ac6c11efcf69615cc916efb2ded4fd6327b492e52516f1368b",
   "min_kas": 10,
   "network": "testnet-10",
   "payee": "kaspatest:qq85m3ymvjfpw6vccahj5dqq6e7cz6gnhdhsm3auvv7efca3qnpavq6kvyfsu",
